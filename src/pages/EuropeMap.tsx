@@ -1,22 +1,22 @@
 import MainContent from '../components/MainContent';
-import Wrapper from '../components/Wrapper';
+import MapFilters from '../components/MapFilters';
+import MapLayout from '../components/MapLayout';
 
 function EuropeMap() {
-  console.log('alo');
   return (
-    <Wrapper>
-      <Wrapper.Left>
-        <div className="p-4">Left Sidebar</div>
-      </Wrapper.Left>
+    <MapLayout>
+      <MapLayout.Left>
+        <MapFilters />
+      </MapLayout.Left>
 
-      <Wrapper.Main>
+      <MapLayout.Main>
         <MainContent />
-      </Wrapper.Main>
+      </MapLayout.Main>
 
-      <Wrapper.Right>
+      <MapLayout.Right>
         <div className="p-4">Right Sidebar</div>
-      </Wrapper.Right>
-    </Wrapper>
+      </MapLayout.Right>
+    </MapLayout>
   );
 }
 
