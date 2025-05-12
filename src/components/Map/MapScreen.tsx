@@ -1,29 +1,23 @@
-import { MapContainer, Marker, Popup, TileLayer, useMapEvent, ZoomControl } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, ZoomControl } from 'react-leaflet';
 import type { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { City } from '../types/api.types';
-
-function ZoomListener({ onZoomChange }: { onZoomChange?: (zoom: number) => void }) {
-  useMapEvent('zoomend', (event) => {
-    const newZoom = event.target.getZoom();
-    if (onZoomChange) {
-      onZoomChange(newZoom);
-    }
-  });
-
-  return null;
-}
+import type { City } from '../../types/api.types';
+import type { MapData } from '../../types/map.types';
+import BoundsListener from './BoundsListener';
+import { MapResizer } from './MapResizer';
 
 function MapScreen({
   position,
   zoom,
   pins,
-  onZoomChange,
+  onBoundsChange,
+  onPinClick,
 }: {
   position: LatLngExpression;
   zoom: number;
   pins: City[];
-  onZoomChange?: (zoom: number) => void;
+  onBoundsChange?: (data: MapData) => void;
+  onPinClick?: (city: City) => void;
 }) {
   return (
     <div className="w-full h-full">
@@ -35,6 +29,7 @@ function MapScreen({
         scrollWheelZoom={false}
         zoomControl={false}
       >
+        <MapResizer />
         <TileLayer
           {...{
             attribution:
@@ -43,10 +38,20 @@ function MapScreen({
           }}
         />
         <ZoomControl position="bottomright" />
-        <ZoomListener onZoomChange={onZoomChange} />
+        <BoundsListener onBoundsChange={onBoundsChange} />
 
         {pins?.map((pin) => (
-          <Marker key={pin.id} position={[pin.lat, pin.lng]}>
+          <Marker
+            key={pin.id}
+            position={[pin.lat, pin.lng]}
+            eventHandlers={{
+              click: () => {
+                if (onPinClick) {
+                  onPinClick(pin);
+                }
+              },
+            }}
+          >
             <Popup>{pin.name ?? `Pin ${pin.id}`}</Popup>
           </Marker>
         ))}

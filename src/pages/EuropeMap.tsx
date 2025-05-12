@@ -1,3 +1,4 @@
+import CitySide from '../components/CitySide';
 import MainContent from '../components/MainContent';
 import MapFilters from '../components/MapFilters';
 import MapLayout from '../components/MapLayout';
@@ -14,7 +15,7 @@ function EuropeMap() {
       </MapLayout.Main>
 
       <MapLayout.Right>
-        <div className="p-4">Right Sidebar</div>
+        <CitySide />
       </MapLayout.Right>
     </MapLayout>
   );

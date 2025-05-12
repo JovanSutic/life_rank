@@ -1,21 +1,5 @@
-import { createContext, useContext, useState, type ReactNode, type FC } from 'react';
-
-interface MapLayoutContextType {
-  showLeft: boolean;
-  showRight: boolean;
-  toggleLeft: () => void;
-  toggleRight: () => void;
-}
-
-const MapLayoutContext = createContext<MapLayoutContextType | null>(null);
-
-const useLayout = () => {
-  const context = useContext(MapLayoutContext);
-  if (!context) {
-    throw new Error('useMapLayout must be used within a <MapLayout>');
-  }
-  return context;
-};
+import type { ReactNode, FC } from 'react';
+import { useMapStore } from '../stores/mapStore'; // Adjust path
 
 interface MapLayoutProps {
   children: ReactNode;
@@ -25,49 +9,39 @@ const MapLayout: FC<MapLayoutProps> & {
   Main: FC<MapLayoutProps>;
   Left: FC<MapLayoutProps>;
   Right: FC<MapLayoutProps>;
-  useLayout: () => MapLayoutContextType;
 } = ({ children }) => {
-  const [showLeft, setShowLeft] = useState(false);
-  const [showRight, setShowRight] = useState(false);
-
-  const toggleLeft = () => setShowLeft((prev) => !prev);
-  const toggleRight = () => setShowRight((prev) => !prev);
-
-  return (
-    <MapLayoutContext.Provider value={{ showLeft, showRight, toggleLeft, toggleRight }}>
-      <div className="w-screen h-screen flex overflow-hidden">{children}</div>
-    </MapLayoutContext.Provider>
-  );
+  return <div className="w-screen h-screen flex overflow-hidden">{children}</div>;
 };
 
 const Left: FC<MapLayoutProps> = ({ children }) => {
-  const { showLeft } = useLayout();
+  const leftOpen = useMapStore((state) => state.leftOpen);
 
   return (
     <div
       className={`
         h-full overflow-hidden transition-[width] duration-[500ms] ease-in-out
         fixed md:relative top-0 left-0 z-1001
-        bg-gray-100 ${showLeft ? 'w-full lg:w-[250px]' : 'w-[0px]'}
+        bg-gray-100 ${leftOpen ? 'w-full lg:w-[250px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full lg:w-[250px]">{showLeft && children}</div>
+      <div className="h-full bg-gray-100 w-full lg:w-[250px]">{leftOpen && children}</div>
     </div>
   );
 };
 
 const Right: FC<MapLayoutProps> = ({ children }) => {
-  const { showRight } = useLayout();
+  const rightOpen = useMapStore((state) => state.rightOpen);
 
   return (
     <div
       className={`
         h-full overflow-hidden transition-[width] duration-[500ms] ease-in-out
+        bg-gray-100 
         fixed md:relative top-0 right-0 z-50
-        bg-gray-100 ${showRight ? 'w-full md:w-[320px]' : 'w-[0px]'}
+        ${rightOpen ? 'w-full md:w-[320px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full md:w-[320px]">{showRight && children}</div>
+      <div className="h-full bg-gray-100 w-full md:w-[320px]">{rightOpen && children}</div>
     </div>
   );
 };
@@ -81,6 +55,5 @@ const Main: FC<MapLayoutProps> = ({ children }) => {
 MapLayout.Main = Main;
 MapLayout.Left = Left;
 MapLayout.Right = Right;
-MapLayout.useLayout = useLayout;
 
 export default MapLayout;
