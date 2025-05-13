@@ -21,8 +21,8 @@ async function fetchCities(bounds?: {
   const west = -8.041992187500002;
   try {
     const queryParams = bounds
-      ? `?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&take=30`
-      : `?north=${north}&south=${south}&east=${east}&west=${west}&take=30`;
+      ? `?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&take=30&sortBy=size&order=desc`
+      : `?north=${north}&south=${south}&east=${east}&west=${west}&take=30&sortBy=size&order=desc`;
 
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/cities${queryParams}`);
     return res.data.data;

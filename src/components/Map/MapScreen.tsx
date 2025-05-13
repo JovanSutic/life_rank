@@ -1,4 +1,4 @@
-import { MapContainer, Marker, Popup, TileLayer, ZoomControl } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
 import type { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { City } from '../../types/api.types';
@@ -51,9 +51,7 @@ function MapScreen({
                 }
               },
             }}
-          >
-            <Popup>{pin.name ?? `Pin ${pin.id}`}</Popup>
-          </Marker>
+          ></Marker>
         ))}
       </MapContainer>
     </div>
