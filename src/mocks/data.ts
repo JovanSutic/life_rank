@@ -1,4 +1,4 @@
-import type { City } from '../types/api.types';
+import type { Budget, City } from '../types/api.types';
 
 export const cities: City[] = [
   {
@@ -8,6 +8,7 @@ export const cities: City[] = [
     search: 'Amsterdam',
     lat: 52.377956,
     lng: 4.89707,
+    size: 100000,
     seaside: true,
   },
   {
@@ -17,6 +18,7 @@ export const cities: City[] = [
     search: 'Paris',
     lat: 48.858093,
     lng: 2.294694,
+    size: 100000,
     seaside: false,
   },
   {
@@ -26,6 +28,7 @@ export const cities: City[] = [
     search: 'Rome',
     lat: 41.89193,
     lng: 12.51133,
+    size: 100000,
     seaside: false,
   },
   {
@@ -35,6 +38,7 @@ export const cities: City[] = [
     search: 'Barcelona',
     lat: 41.38879,
     lng: 2.15899,
+    size: 100000,
     seaside: true,
   },
   {
@@ -44,6 +48,7 @@ export const cities: City[] = [
     search: 'Madrid',
     lat: 40.416775,
     lng: -3.70379,
+    size: 100000,
     seaside: false,
   },
   {
@@ -53,6 +58,7 @@ export const cities: City[] = [
     search: 'Berlin',
     lat: 52.5373,
     lng: 13.356085,
+    size: 100000,
     seaside: false,
   },
   {
@@ -62,6 +68,7 @@ export const cities: City[] = [
     search: 'Vienna',
     lat: 48.20849,
     lng: 16.37208,
+    size: 100000,
     seaside: false,
   },
   {
@@ -71,6 +78,7 @@ export const cities: City[] = [
     search: 'Budapest',
     lat: 47.526642,
     lng: 19.046394,
+    size: 100000,
     seaside: false,
   },
   {
@@ -80,6 +88,7 @@ export const cities: City[] = [
     search: 'Belgrade',
     lat: 44.80401,
     lng: 20.46513,
+    size: 100000,
     seaside: false,
   },
   {
@@ -89,6 +98,19 @@ export const cities: City[] = [
     search: 'Athens',
     lat: 37.970833,
     lng: 23.72611,
+    size: 100000,
     seaside: false,
+  },
+];
+
+export const budgets: Budget[] = [
+  {
+    id: 267,
+    cityId: 9,
+    yearId: 16,
+    avg_price: 1751.45,
+    currency: 'EUR',
+    type: 'SOLO',
+    created_at: '2025-05-09T17:49:46.415Z',
   },
 ];

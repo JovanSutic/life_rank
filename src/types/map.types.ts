@@ -7,3 +7,13 @@ export interface MapData {
   west: number;
   zoom: number;
 }
+
+export interface CityPanelData {
+  cityName: string;
+  countryName: string;
+  inhabitants: number;
+  climate: string;
+  budgetSolo: number;
+  budgetPair: number;
+  budgetFamily: number;
+}
