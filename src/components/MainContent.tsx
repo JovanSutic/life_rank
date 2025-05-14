@@ -61,7 +61,6 @@ export default function MainContent() {
 
   const handleBoundsChange = (mapData: MapData) => {
     const { north, south, east, west } = mapData;
-    console.log('ovde');
     setBounds({ north, south, east, west });
   };
 
