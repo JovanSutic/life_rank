@@ -37,10 +37,10 @@ const Right: FC<MapLayoutProps> = ({ children }) => {
         h-full overflow-hidden transition-[width] duration-[500ms] ease-in-out
         bg-gray-100 
         fixed md:relative top-0 right-0 z-1001
-        ${rightOpen ? 'w-full lg:w-[320px]' : 'w-[0px]'}
+        ${rightOpen ? 'w-full lg:w-[400px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full lg:w-[320px]">{rightOpen && children}</div>
+      <div className="h-full bg-gray-100 w-full lg:w-[400px]">{rightOpen && children}</div>
     </div>
   );
 };

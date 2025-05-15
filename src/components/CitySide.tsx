@@ -58,20 +58,20 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
               <span className="text-gray-600">🧍 Solo:</span>
             </Tooltip>
 
-            <span className="font-semibold text-blue-800">{budgetSolo.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgetSolo.toLocaleString()} €</span>
           </li>
           <li className="flex items-center gap-2">
             <Tooltip text={'Monthly cost for two adults living together'}>
               <span className="text-gray-600">🧑‍🤝‍🧑 Pair:</span>
             </Tooltip>
 
-            <span className="font-semibold text-blue-800">{budgetPair.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgetPair.toLocaleString()} €</span>
           </li>
           <li className="flex items-center gap-2">
             <Tooltip text={'Monthly cost for a family of 4'}>
               <span className="text-gray-600">👨‍👩‍👧‍👦 Family:</span>
             </Tooltip>
-            <span className="font-semibold text-blue-800">{budgetFamily.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgetFamily.toLocaleString()} €</span>
           </li>
         </ul>
       </div>
