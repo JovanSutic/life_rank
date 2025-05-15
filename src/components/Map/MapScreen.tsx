@@ -5,6 +5,7 @@ import type { City } from '../../types/api.types';
 import type { MapData } from '../../types/map.types';
 import BoundsListener from './BoundsListener';
 import { MapResizer } from './MapResizer';
+import createCustomIcon from './MapIcon';
 
 function MapScreen({
   position,
@@ -44,6 +45,7 @@ function MapScreen({
           <Marker
             key={pin.id}
             position={[pin.lat, pin.lng]}
+            icon={createCustomIcon()}
             eventHandlers={{
               click: () => {
                 if (onPinClick) {
