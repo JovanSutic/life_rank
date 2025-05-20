@@ -5,7 +5,7 @@ import type { CityPanelData } from '../types/map.types';
 import Tooltip from './Tooltip';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import type { Budget } from '../types/api.types';
+import { SocialType, type Budget } from '../types/api.types';
 import AsyncStateWrapper from './AsyncWrapper';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
@@ -107,8 +107,6 @@ export default function CitySide() {
     retry: 2,
   });
 
-  console.log(budgets);
-
   return (
     <div className="w-full h-full bg-white flex flex-col p-4">
       <div className="flex justify-end">
@@ -127,9 +125,9 @@ export default function CitySide() {
             countryName: focusCity?.country || '',
             inhabitants: focusCity?.size || 0,
             climate: 'hot and rainy',
-            budgetSolo: budgets?.[0]?.avg_price || 0,
-            budgetPair: 2000,
-            budgetFamily: 3000,
+            budgetSolo: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
+            budgetPair: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
+            budgetFamily: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
           }}
         />
       </AsyncStateWrapper>
