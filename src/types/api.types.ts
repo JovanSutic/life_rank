@@ -18,3 +18,11 @@ export interface Budget {
   type?: string;
   created_at?: string;
 }
+
+export const SocialType = {
+  SOLO: 'SOLO',
+  PAIR: 'PAIR',
+  FAMILY: 'FAMILY',
+} as const;
+
+export type SocialType = (typeof SocialType)[keyof typeof SocialType];
