@@ -9,6 +9,7 @@ export interface MapData {
 }
 
 export interface CityPanelData {
+  cityId: number;
   cityName: string;
   countryName: string;
   inhabitants: number;
