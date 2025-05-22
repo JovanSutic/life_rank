@@ -7,12 +7,21 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { SocialType, type Budget } from '../types/api.types';
 import AsyncStateWrapper from './AsyncWrapper';
+import { Link } from 'react-router-dom';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   if (!cityData) return null;
 
-  const { cityName, countryName, inhabitants, climate, budgetSolo, budgetPair, budgetFamily } =
-    cityData;
+  const {
+    cityId,
+    cityName,
+    countryName,
+    inhabitants,
+    climate,
+    budgetSolo,
+    budgetPair,
+    budgetFamily,
+  } = cityData;
 
   return (
     <div className="p-1 overflow-y-auto h-full">
@@ -74,6 +83,16 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
             <span className="font-semibold text-blue-600">{budgetFamily.toLocaleString()} €</span>
           </li>
         </ul>
+        <div className="flex items-center justify-between mt-2">
+          <Link
+            to={`/budget/${cityName}?id=${cityId}`}
+            rel="noopener noreferrer"
+            className="flex items-center text-sm text-blue-600 hover:underline"
+          >
+            Current info on weather
+            <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" />
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -121,6 +140,7 @@ export default function CitySide() {
       <AsyncStateWrapper isLoading={isLoading || isFetching} isError={isError} error={error}>
         <CityInfoPanel
           cityData={{
+            cityId: focusCity?.id || 0,
             cityName: focusCity?.name || '',
             countryName: focusCity?.country || '',
             inhabitants: focusCity?.size || 0,
