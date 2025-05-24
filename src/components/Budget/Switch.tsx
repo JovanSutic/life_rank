@@ -1,20 +1,11 @@
-import { useEffect, useState } from 'react';
 import type { SwitchProps } from '../../types/budget.types';
 import { colorMap } from './budgetMaps';
 
-function Switch({ options, defaultValue, onChange, color = 'blue', className = '' }: SwitchProps) {
-  const [active, setActive] = useState(defaultValue ?? options[0]);
-
-  useEffect(() => {
-    onChange(active);
-  }, [active, onChange]);
-
+function Switch({ options, value, onChange, color = 'blue', className = '' }: SwitchProps) {
   const styles = colorMap[color];
 
   const handleClick = (value: string) => {
-    if (value !== active) {
-      setActive(value);
-    }
+    onChange(value);
   };
 
   return (
@@ -27,12 +18,12 @@ function Switch({ options, defaultValue, onChange, color = 'blue', className = '
       <div
         className={`absolute top-1 left-1 w-[calc(50%-0.25rem)] h-8 rounded-full transition-all duration-300 ${styles.handle}`}
         style={{
-          transform: active === options[0] ? 'translateX(0)' : 'translateX(100%)',
+          transform: value === options[0] ? 'translateX(0)' : 'translateX(100%)',
         }}
       ></div>
 
       {options.map((option) => {
-        const isActive = option === active;
+        const isActive = option === value;
         return (
           <button
             key={option}

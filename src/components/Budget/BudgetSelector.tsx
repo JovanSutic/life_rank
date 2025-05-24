@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
-
-type BudgetOption = 'solo' | 'pair' | 'family';
+import { SocialType } from '../../types/api.types';
 
 type BudgetSelectorProps = {
   budgets: {
-    solo: number;
-    pair: number;
-    family: number;
+    SOLO: number;
+    PAIR: number;
+    FAMILY: number;
   };
-  onChange: (value: BudgetOption) => void;
-  defaultValue?: BudgetOption;
+  onChange: (value: SocialType) => void;
+  defaultValue?: SocialType;
 };
 
 const labels = {
-  solo: { emoji: '🧍', name: 'Solo' },
-  pair: { emoji: '🧑‍🤝‍🧑', name: 'Pair' },
-  family: { emoji: '👨‍👩‍👧‍👦', name: 'Family' },
+  SOLO: { emoji: '🧍', name: 'Solo' },
+  PAIR: { emoji: '🧑‍🤝‍🧑', name: 'Pair' },
+  FAMILY: { emoji: '👨‍👩‍👧‍👦', name: 'Family' },
 };
 
 const BudgetSelector: React.FC<BudgetSelectorProps> = ({
   budgets,
   onChange,
-  defaultValue = 'solo',
+  defaultValue = SocialType.SOLO,
 }) => {
-  const [active, setActive] = useState<BudgetOption>(defaultValue);
+  const [active, setActive] = useState<SocialType>(defaultValue);
 
-  const handleSelect = (key: BudgetOption) => {
+  const handleSelect = (key: SocialType) => {
     setActive(key);
     onChange(key);
   };
 
   return (
     <div className="flex gap-4 mb-6">
-      {(['solo', 'pair', 'family'] as BudgetOption[]).map((key) => {
+      {[SocialType.SOLO, SocialType.PAIR, SocialType.FAMILY].map((key) => {
         const isActive = active === key;
         return (
           <button
@@ -42,10 +41,10 @@ const BudgetSelector: React.FC<BudgetSelectorProps> = ({
               ${isActive ? 'bg-blue-100 border-blue-500 shadow-md' : 'bg-white border-gray-300'}
               hover:border-blue-400 hover:bg-blue-50`}
           >
-            <div className="text-2xl mb-1">{labels[key].emoji}</div>
+            <div className="text-2xl mb-1">{labels[key as SocialType].emoji}</div>
             <div className="text-sm font-medium text-gray-800 mb-1">{labels[key].name}</div>
             <div className="text-lg font-semibold text-blue-600">
-              {budgets[key].toLocaleString()} €
+              {budgets[key as SocialType].toLocaleString()} €
             </div>
           </button>
         );
