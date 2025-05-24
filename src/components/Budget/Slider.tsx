@@ -1,28 +1,19 @@
-import { useEffect, useState } from 'react';
 import type { SliderProps } from '../../types/budget.types';
 import { colorMap } from './budgetMaps';
 
-function Slider({ options, defaultValue, onChange, color = 'blue', className = '' }: SliderProps) {
-  const [active, setActive] = useState(defaultValue ?? options[0]);
-
-  useEffect(() => {
-    onChange(active);
-  }, [active, onChange]);
-
+function Slider({ options, value, onChange, color = 'blue', className = '' }: SliderProps) {
   const styles = colorMap[color];
-  const activeIndex = options.findIndex((opt) => opt === active);
+  const activeIndex = options.findIndex((opt) => opt === value);
 
   const handleClick = (value: string) => {
-    if (value !== active) {
-      setActive(value);
-    }
+    onChange(value);
   };
 
   return (
     <div className={`relative w-full ${styles.bg} rounded-full px-1 py-1 ${className}`}>
       <div className="relative z-10 flex w-full gap-2">
         {options.map((option) => {
-          const isActive = option === active;
+          const isActive = option === value;
           return (
             <button
               key={option}

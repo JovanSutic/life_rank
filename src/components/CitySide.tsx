@@ -89,8 +89,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
             rel="noopener noreferrer"
             className="flex items-center text-sm text-blue-600 hover:underline"
           >
-            Current info on weather
-            <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" />
+            Customize your budget
           </Link>
         </div>
       </div>
@@ -124,6 +123,7 @@ export default function CitySide() {
     queryFn: () => fetchBudgets(focusCity!.id),
     enabled: !!focusCity?.id,
     retry: 2,
+    staleTime: 60 * 60 * 1000,
   });
 
   return (
