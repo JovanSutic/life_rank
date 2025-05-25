@@ -27,6 +27,16 @@ export const colorMap: Record<
   },
 };
 
+export const apartmentControlMap = {
+  apartment_outer: 'Outer areas',
+  apartment_central: 'Central location',
+  apartment_small: 'Smaller apartment',
+  apartment_big: 'Bigger apartment',
+  apartment_low: 'Low price',
+  apartment_avg: 'Average',
+  apartment_high: 'High price',
+};
+
 export const SOLO_BUDGET: BudgetItem[] = [
   { productId: 27, quantity: 1 }, // Rent (1-bedroom city center)
   { productId: 38, quantity: 0.5 }, // Utilities
@@ -167,24 +177,24 @@ export const FAMILY_BUDGET: BudgetItem[] = [
 ];
 
 export const CLOTHES_HIGH_SOLO: BudgetItem[] = [
-  { productId: 44, quantity: 0.4 }, // Jeans
-  { productId: 45, quantity: 0.4 }, // Summer dress
-  { productId: 46, quantity: 0.4 }, // Running shoes
-  { productId: 47, quantity: 0.2 }, // Leather business shoes
+  { productId: 44, quantity: 0.6 }, // Jeans
+  { productId: 45, quantity: 0.6 }, // Summer dress
+  { productId: 46, quantity: 0.6 }, // Running shoes
+  { productId: 47, quantity: 0.3 }, // Leather business shoes
 ];
 
 export const CLOTHES_HIGH_PAIR: BudgetItem[] = [
-  { productId: 44, quantity: 0.8 }, // Jeans
-  { productId: 45, quantity: 0.8 }, // Summer dress
-  { productId: 46, quantity: 0.8 }, // Running shoes
-  { productId: 47, quantity: 0.4 }, // Leather business shoes
+  { productId: 44, quantity: 1 }, // Jeans
+  { productId: 45, quantity: 1 }, // Summer dress
+  { productId: 46, quantity: 1 }, // Running shoes
+  { productId: 47, quantity: 0.6 }, // Leather business shoes
 ];
 
 export const CLOTHES_HIGH_FAMILY: BudgetItem[] = [
-  { productId: 44, quantity: 1 }, // Jeans
-  { productId: 45, quantity: 1 }, // Dress
-  { productId: 46, quantity: 1 }, // Shoes
-  { productId: 47, quantity: 0.8 }, // Business shoes
+  { productId: 44, quantity: 1.5 }, // Jeans
+  { productId: 45, quantity: 1.5 }, // Dress
+  { productId: 46, quantity: 1.5 }, // Shoes
+  { productId: 47, quantity: 1 }, // Business shoes
 ];
 
 export const CLOTHES_MEDIUM_SOLO: BudgetItem[] = [
@@ -231,9 +241,9 @@ export const CLOTHES_LOW_FAMILY: BudgetItem[] = [
 
 export const OUT_HIGH_SOLO: BudgetItem[] = [
   { productId: 13, quantity: 10 }, // Domestic beer (store)
-  { productId: 48, quantity: 6 }, // Imported beer (store)
-  { productId: 4, quantity: 20 }, // Domestic beer (restaurant)
-  { productId: 5, quantity: 12 }, // Imported beer (restaurant)
+  { productId: 48, quantity: 10 }, // Imported beer (store)
+  { productId: 4, quantity: 25 }, // Domestic beer (restaurant)
+  { productId: 5, quantity: 15 }, // Imported beer (restaurant)
   { productId: 23, quantity: 3 }, // Wine
   { productId: 24, quantity: 8 }, // Cigarettes
 ];
@@ -242,16 +252,16 @@ export const OUT_HIGH_PAIR: BudgetItem[] = [
   { productId: 13, quantity: 15 }, // Domestic beer (store)
   { productId: 48, quantity: 15 }, // Imported beer (store)
   { productId: 4, quantity: 35 }, // Domestic beer (restaurant)
-  { productId: 5, quantity: 20 }, // Imported beer (restaurant)
+  { productId: 5, quantity: 35 }, // Imported beer (restaurant)
   { productId: 23, quantity: 6 }, // Wine
-  { productId: 24, quantity: 12 }, // Cigarettes
+  { productId: 24, quantity: 15 }, // Cigarettes
 ];
 
 export const OUT_HIGH_FAMILY: BudgetItem[] = [
   { productId: 13, quantity: 12 }, // Domestic beer (store)
   { productId: 48, quantity: 12 }, // Imported beer (store)
-  { productId: 4, quantity: 26 }, // Domestic beer (restaurant)
-  { productId: 5, quantity: 18 }, // Imported beer (restaurant)
+  { productId: 4, quantity: 30 }, // Domestic beer (restaurant)
+  { productId: 5, quantity: 30 }, // Imported beer (restaurant)
   { productId: 23, quantity: 5 }, // Wine
   { productId: 24, quantity: 10 }, // Cigarettes
 ];
@@ -312,18 +322,18 @@ export const OUT_LOW_FAMILY: BudgetItem[] = [
 
 export const TRANSPORT_HIGH_SOLO: BudgetItem[] = [
   { productId: 36, quantity: 1 }, // Monthly pass (public transport)
-  { productId: 49, quantity: 12 }, // Taxi start
-  { productId: 50, quantity: 50 }, // Taxi 1 km (4 km * 12 rides)
+  { productId: 49, quantity: 15 }, // Taxi start
+  { productId: 50, quantity: 65 }, // Taxi 1 km (4 km * 12 rides)
 ];
 export const TRANSPORT_HIGH_PAIR: BudgetItem[] = [
   { productId: 36, quantity: 2 }, // Monthly pass (2 adults)
-  { productId: 49, quantity: 18 }, // Taxi start
-  { productId: 50, quantity: 72 }, // Taxi 1km (5km * 18 rides)
+  { productId: 49, quantity: 20 }, // Taxi start
+  { productId: 50, quantity: 80 }, // Taxi 1km (5km * 18 rides)
 ];
 export const TRANSPORT_HIGH_FAMILY: BudgetItem[] = [
   { productId: 36, quantity: 2 }, // Monthly pass (2 adults)
-  { productId: 49, quantity: 18 }, // Taxi start
-  { productId: 50, quantity: 72 }, // Taxi 1km (5km * 18 rides)
+  { productId: 49, quantity: 20 }, // Taxi start
+  { productId: 50, quantity: 80 }, // Taxi 1km (5km * 18 rides)
 ];
 
 export const TRANSPORT_MEDIUM_SOLO: BudgetItem[] = [

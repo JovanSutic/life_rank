@@ -40,9 +40,14 @@ import {
   TRANSPORT_MEDIUM_SOLO,
 } from '../components/Budget/budgetMaps';
 import { SocialType, type Price } from '../types/api.types';
-import type { BudgetItem } from '../types/budget.types';
+import type { BudgetItem, ConsumptionLevel } from '../types/budget.types';
 
-type ConsumptionLevel = 'Low' | 'Medium' | 'High';
+export function findKeyByValue<T extends Record<string, unknown>>(
+  obj: T,
+  value: unknown
+): keyof T | undefined {
+  return (Object.keys(obj) as Array<keyof T>).find((key) => obj[key] === value);
+}
 
 function pickBudgetPart(type: SocialType, level: ConsumptionLevel, section: string) {
   if (type === SocialType.FAMILY) {
@@ -181,6 +186,24 @@ function pickBudgetPart(type: SocialType, level: ConsumptionLevel, section: stri
   }
 
   return FOOD_MEDIUM_FAMILY;
+}
+
+export function isFullyPriced(prices: Price[]) {
+  let result = true;
+  prices.forEach((item) => {
+    if (
+      item.productId === 27 ||
+      item.productId === 28 ||
+      item.productId === 29 ||
+      item.productId === 30
+    ) {
+      if (!item.bottom || !item.top) {
+        result = false;
+      }
+    }
+  });
+
+  return result;
 }
 
 export const getBudgetMap = (type: SocialType) => {

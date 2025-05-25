@@ -7,10 +7,16 @@ import axios from 'axios';
 import { SocialType, type Budget, type Price } from '../types/api.types';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { BudgetItem } from '../types/budget.types';
-import { SOLO_BUDGET } from '../components/Budget/budgetMaps';
-import { calculateBudget, getBudgetMap, updateBudgetStructure } from '../utils/budget';
+import { apartmentControlMap, SOLO_BUDGET } from '../components/Budget/budgetMaps';
+import {
+  calculateBudget,
+  findKeyByValue,
+  getBudgetMap,
+  isFullyPriced,
+  updateBudgetStructure,
+} from '../utils/budget';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 
 interface BudgetControls {
@@ -19,7 +25,7 @@ interface BudgetControls {
   apartmentPrice: string;
   food: string;
   transport: string;
-  goingOut: string;
+  out: string;
   clothes: string;
 }
 
@@ -29,7 +35,7 @@ const budgetControlsDefault: BudgetControls = {
   apartmentPrice: 'Average',
   food: 'Medium',
   transport: 'Medium',
-  goingOut: 'Medium',
+  out: 'Medium',
   clothes: 'Medium',
 };
 
@@ -114,6 +120,57 @@ function BudgetPlay() {
     return currentStructure.map((i) => `${i.productId}:${i.quantity}:${i.type || ''}`).join('|');
   }, [currentStructure]);
 
+  const isFullPrice = useMemo(() => {
+    if (prices?.length) {
+      return isFullyPriced(prices);
+    }
+    return false;
+  }, [prices?.length]);
+
+  const handleControlChange = useCallback(
+    (value: string, position: string) => {
+      let structure = null;
+      if (
+        position === 'apartmentLocation' ||
+        position === 'apartmentSize' ||
+        position === 'apartmentPrice'
+      ) {
+        const change = findKeyByValue(apartmentControlMap, value)!;
+        structure = updateBudgetStructure(budgetType, change, currentStructure);
+      } else {
+        const change = `${position}_${value.toLowerCase()}`;
+        structure = updateBudgetStructure(budgetType, change, currentStructure);
+      }
+      setBudgetControls({
+        ...budgetControls,
+        [position]: value,
+      });
+
+      if (structure) {
+        setCurrentStructure(structure);
+      }
+    },
+    [budgetType, structureHash]
+  );
+
+  const handleTypeChange = useCallback(
+    (type: SocialType) => {
+      setBudgetType(type);
+      setCurrentStructure(getBudgetMap(type)!);
+      setCurrentBudget({
+        SOLO: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
+        PAIR: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
+        FAMILY: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
+      });
+      if (type === SocialType.FAMILY) {
+        setBudgetControls({ ...budgetControlsDefault, apartmentSize: 'Bigger apartment' });
+      } else {
+        setBudgetControls(budgetControlsDefault);
+      }
+    },
+    [budgets?.length]
+  );
+
   useEffect(() => {
     if (
       prices &&
@@ -130,7 +187,7 @@ function BudgetPlay() {
   }, [structureHash, currentBudget.FAMILY]);
 
   return (
-    <div className="flex flex-col min-h-screen w-full px-2">
+    <div className="flex flex-col min-h-screen w-full px-2 pb-6">
       <AsyncStateWrapper
         isLoading={isLoading || isFetching || pricesIsLoading || pricesIsFetching}
         isError={isError || pricesIsError}
@@ -148,12 +205,13 @@ function BudgetPlay() {
           </div>
 
           <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-6 lg:mt-0">
-            Budget Overview for {name}
+            Explore Your Monthly Budget in {name}
           </h1>
 
-          <p className="text-sm text-gray-600 mb-4">
-            Explore how much life in <strong>{name}</strong> might cost. Choose your household type
-            and customize your lifestyle using the controls below.
+          <p className="text-sm lg:text-md text-gray-600 mb-6">
+            This tool lets you experiment with your lifestyle choices to see how they affect your
+            overall monthly budget. Adjust your spending on housing, food, transport, entertainment,
+            and more — shift priorities based on what matters most to you.
           </p>
 
           <BudgetSelector
@@ -162,278 +220,105 @@ function BudgetPlay() {
               PAIR: currentBudget.PAIR,
               FAMILY: currentBudget.FAMILY,
             }}
-            onChange={(type) => {
-              setBudgetType(type);
-              setCurrentStructure(getBudgetMap(type)!);
-              setCurrentBudget({
-                SOLO: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
-                PAIR: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
-                FAMILY: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
-              });
-              if (type === SocialType.FAMILY) {
-                setBudgetControls({ ...budgetControlsDefault, apartmentSize: 'Bigger apartment' });
-              } else {
-                setBudgetControls(budgetControlsDefault);
-              }
-            }}
+            onChange={handleTypeChange}
           />
         </div>
 
         <div className="flex flex-col w-full lg:w-[860px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
             name="Apartment Budget"
-            description="Select your preferred living area to update your rent estimate"
+            description="Choose your preferred apartment size and location to tailor your housing estimate. Whether you want something central or more affordable on the outskirts, this helps shape your monthly rent expectations."
           >
             <Switch
               options={['Central location', 'Outer areas']}
-              onChange={(value) => {
-                setBudgetControls({ ...budgetControls, apartmentLocation: value });
-                if (value === 'Outer areas') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_outer',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-                if (value === 'Central location') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_central',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-              }}
+              name="apartmentLocation"
+              onChange={handleControlChange}
               value={budgetControls.apartmentLocation}
             />
             <Switch
               options={['Smaller apartment', 'Bigger apartment']}
-              onChange={(value) => {
-                setBudgetControls({ ...budgetControls, apartmentSize: value });
-                if (value === 'Smaller apartment') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_small',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-                if (value === 'Bigger apartment') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_big',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-              }}
+              name="apartmentSize"
+              onChange={handleControlChange}
               value={budgetControls.apartmentSize}
             />
-            <p className="text-sm text-center text-gray-500 mt-2">
-              Something here to make an introduction to that is down.
-            </p>
-            <Slider
-              options={['Low price', 'Average', 'High price']}
-              value={budgetControls.apartmentPrice}
-              color="blue"
-              onChange={(value) => {
-                setBudgetControls({
-                  ...budgetControls,
-                  apartmentPrice: value,
-                });
-                if (value === 'High price') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_high',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-                if (value === 'Average') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_avg',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-                if (value === 'Low price') {
-                  const structure = updateBudgetStructure(
-                    budgetType,
-                    'apartment_low',
-                    currentStructure
-                  );
-                  setCurrentStructure(structure);
-                }
-              }}
-            />
+            {isFullPrice && (
+              <>
+                <p className="text-sm text-center text-gray-500 mt-2">
+                  Adjust for apartment quality and cost — from more affordable, modest options to
+                  higher-end places within your chosen size and location.
+                </p>
+                <Slider
+                  options={['Low price', 'Average', 'High price']}
+                  name="apartmentPrice"
+                  value={budgetControls.apartmentPrice}
+                  color="blue"
+                  onChange={handleControlChange}
+                />
+              </>
+            )}
           </InputSection>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <InputSection
               name="Food Budget"
-              description="Adjust how often you eat out or order food instead of cooking at home"
+              description="Tweak your budget based on how much you eat out vs. cook — think everyday meals, not high-end dining."
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
+                name="food"
                 value={budgetControls.food}
                 color="gray"
-                onChange={(value) => {
-                  setBudgetControls({
-                    ...budgetControls,
-                    food: value,
-                  });
-                  if (value === 'Low') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'food_low',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'Medium') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'food_medium',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'High') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'food_high',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                }}
+                onChange={handleControlChange}
               />
             </InputSection>
 
             <InputSection
-              name="Transport Budget"
-              description="Set your preferred way of getting around — like using ride-hailing or public transport."
+              name="Commute Budget"
+              description="Adjust your budget for regular transport needs — public transit, ride-hailing, or occasional driving."
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
+                name="transport"
                 value={budgetControls.transport}
                 color="gray"
-                onChange={(value) => {
-                  setBudgetControls({
-                    ...budgetControls,
-                    transport: value,
-                  });
-                  if (value === 'Low') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'transport_low',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'Medium') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'transport_medium',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'High') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'transport_high',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                }}
+                onChange={handleControlChange}
               />
             </InputSection>
 
             <InputSection
-              name="Going Out Budget"
-              description="Choose how frequently you go out for drinks, entertainment, or nightlife."
+              name="Budget for Fun"
+              description="Set your budget for regular nights out — not including big splurges or buying rounds for the whole bar."
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
-                value={budgetControls.goingOut}
+                name="out"
+                value={budgetControls.out}
                 color="gray"
-                onChange={(value) => {
-                  setBudgetControls({
-                    ...budgetControls,
-                    goingOut: value,
-                  });
-                  if (value === 'Low') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'out_low',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'Medium') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'out_medium',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'High') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'out_high',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                }}
+                onChange={handleControlChange}
               />
             </InputSection>
 
             <InputSection
               name="Clothing Budget"
-              description="Control how much you plan to spend on new clothes and fashion each month."
+              description="Adjust how much you plan to spend on standard clothing and fashion — excluding high-end or luxury items."
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
+                name="clothes"
                 value={budgetControls.clothes}
                 color="gray"
-                onChange={(value) => {
-                  setBudgetControls({
-                    ...budgetControls,
-                    clothes: value,
-                  });
-                  if (value === 'Low') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'clothes_low',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'Medium') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'clothes_medium',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                  if (value === 'High') {
-                    const structure = updateBudgetStructure(
-                      budgetType,
-                      'clothes_high',
-                      currentStructure
-                    );
-                    setCurrentStructure(structure);
-                  }
-                }}
+                onChange={handleControlChange}
               />
             </InputSection>
+          </div>
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
+            <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>
+            <p>
+              The figures provided are estimates based on publicly available price data and general
+              spending patterns. Your actual costs may vary significantly depending on your personal
+              habits, lifestyle choices, and local market conditions. This tool is meant to guide
+              and inform — not to deliver exact predictions.
+            </p>
           </div>
         </div>
       </AsyncStateWrapper>
