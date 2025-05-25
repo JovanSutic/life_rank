@@ -1,12 +1,12 @@
-import type { SliderProps } from '../../types/budget.types';
+import type { ControlProps } from '../../types/budget.types';
 import { colorMap } from './budgetMaps';
 
-function Slider({ options, value, onChange, color = 'blue', className = '' }: SliderProps) {
+function Slider({ options, value, onChange, color = 'blue', className = '', name }: ControlProps) {
   const styles = colorMap[color];
   const activeIndex = options.findIndex((opt) => opt === value);
 
   const handleClick = (value: string) => {
-    onChange(value);
+    onChange(value, name);
   };
 
   return (

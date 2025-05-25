@@ -1,19 +1,12 @@
 export type Theme = 'blue' | 'gray' | 'black';
 
-export interface SwitchProps {
-  options: [string, string];
-  value: string;
-  onChange: (value: string) => void;
-  color?: Theme;
-  className?: string;
-}
-
-export interface SliderProps {
+export interface ControlProps {
   options: string[];
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, name: string) => void;
   color?: Theme;
   className?: string;
+  name: string;
 }
 
 export interface BudgetItem {
@@ -21,3 +14,6 @@ export interface BudgetItem {
   quantity: number;
   type?: 'bottom' | 'top';
 }
+
+export type ConsumptionLevel = 'Low' | 'Medium' | 'High';
+export type BudgetControl = 'apartment' | 'food' | 'transport' | 'out' | 'clothes';

@@ -1,11 +1,11 @@
-import type { SwitchProps } from '../../types/budget.types';
+import type { ControlProps } from '../../types/budget.types';
 import { colorMap } from './budgetMaps';
 
-function Switch({ options, value, onChange, color = 'blue', className = '' }: SwitchProps) {
+function Switch({ options, value, onChange, color = 'blue', className = '', name }: ControlProps) {
   const styles = colorMap[color];
 
   const handleClick = (value: string) => {
-    onChange(value);
+    onChange(value, name);
   };
 
   return (
