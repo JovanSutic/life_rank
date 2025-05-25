@@ -12,6 +12,7 @@ import type { BudgetItem } from '../types/budget.types';
 import { apartmentControlMap, SOLO_BUDGET } from '../components/Budget/budgetMaps';
 import {
   calculateBudget,
+  calculateBudgetPart,
   findKeyByValue,
   getBudgetMap,
   isFullyPriced,
@@ -186,6 +187,26 @@ function BudgetPlay() {
     }
   }, [structureHash, currentBudget.FAMILY]);
 
+  const partsAmount = useMemo(() => {
+    if (prices) {
+      return {
+        apartment: calculateBudgetPart('apartment', currentStructure, prices),
+        food: calculateBudgetPart('food', currentStructure, prices),
+        transport: calculateBudgetPart('transport', currentStructure, prices),
+        out: calculateBudgetPart('out', currentStructure, prices),
+        clothes: calculateBudgetPart('clothes', currentStructure, prices),
+      };
+    }
+
+    return {
+      apartment: 0,
+      food: 0,
+      transport: 0,
+      out: 0,
+      clothes: 0,
+    };
+  }, [structureHash, prices?.length]);
+
   return (
     <div className="flex flex-col min-h-screen w-full px-2 pb-6">
       <AsyncStateWrapper
@@ -209,9 +230,8 @@ function BudgetPlay() {
           </h1>
 
           <p className="text-sm lg:text-md text-gray-600 mb-6">
-            This tool lets you experiment with your lifestyle choices to see how they affect your
-            overall monthly budget. Adjust your spending on housing, food, transport, entertainment,
-            and more — shift priorities based on what matters most to you.
+            Adjust your spending on housing, food, transport, entertainment, and more — shift
+            priorities based on what matters most to you.
           </p>
 
           <BudgetSelector
@@ -226,32 +246,35 @@ function BudgetPlay() {
 
         <div className="flex flex-col w-full lg:w-[860px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
-            name="Apartment Budget"
-            description="Choose your preferred apartment size and location to tailor your housing estimate. Whether you want something central or more affordable on the outskirts, this helps shape your monthly rent expectations."
+            name="Housing Budget"
+            amount={partsAmount.apartment}
+            description="Choose your preferred apartment size and location to tailor your housing estimate."
           >
             <Switch
               options={['Central location', 'Outer areas']}
               name="apartmentLocation"
               onChange={handleControlChange}
               value={budgetControls.apartmentLocation}
+              color="gray"
             />
             <Switch
               options={['Smaller apartment', 'Bigger apartment']}
               name="apartmentSize"
               onChange={handleControlChange}
               value={budgetControls.apartmentSize}
+              color="gray"
             />
             {isFullPrice && (
               <>
                 <p className="text-sm text-center text-gray-500 mt-2">
-                  Adjust for apartment quality and cost — from more affordable, modest options to
-                  higher-end places within your chosen size and location.
+                  Adjust for apartment quality and cost — from more affordable to higher-end places
+                  within your chosen size and location.
                 </p>
                 <Slider
                   options={['Low price', 'Average', 'High price']}
                   name="apartmentPrice"
                   value={budgetControls.apartmentPrice}
-                  color="blue"
+                  color="gray"
                   onChange={handleControlChange}
                 />
               </>
@@ -262,6 +285,7 @@ function BudgetPlay() {
             <InputSection
               name="Food Budget"
               description="Tweak your budget based on how much you eat out vs. cook — think everyday meals, not high-end dining."
+              amount={partsAmount.food}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -275,6 +299,7 @@ function BudgetPlay() {
             <InputSection
               name="Commute Budget"
               description="Adjust your budget for regular transport needs — public transit, ride-hailing, or occasional driving."
+              amount={partsAmount.transport}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -288,6 +313,7 @@ function BudgetPlay() {
             <InputSection
               name="Budget for Fun"
               description="Set your budget for regular nights out — not including big splurges or buying rounds for the whole bar."
+              amount={partsAmount.out}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -301,6 +327,7 @@ function BudgetPlay() {
             <InputSection
               name="Clothing Budget"
               description="Adjust how much you plan to spend on standard clothing and fashion — excluding high-end or luxury items."
+              amount={partsAmount.clothes}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}

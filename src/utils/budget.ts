@@ -352,6 +352,52 @@ export function roundToTwoDecimals(value: number): number {
   return value;
 }
 
+function getProductList(part: string) {
+  const apartmentArray = [27, 28, 29, 30, 38, 39, 40];
+  const foodArray = [1, 2, 3, 8, 9, 10, 11, 12, 18, 25, 26, 14, 20, 15, 19, 16, 21, 17, 22];
+  const transportArray = [36, 49, 50];
+  const outArray = [4, 5, 13, 24, 25, 48];
+  const clothesArray = [44, 45, 46, 47];
+
+  if (part === 'apartment') return apartmentArray;
+  if (part === 'food') return foodArray;
+  if (part === 'transport') return transportArray;
+  if (part === 'out') return outArray;
+
+  return clothesArray;
+}
+
+export function calculateBudgetPart(
+  part: string,
+  budgetItems: BudgetItem[],
+  prices: Price[]
+): number {
+  const productArr = getProductList(part);
+
+  let total = 0;
+
+  for (const item of budgetItems) {
+    const isPresent = productArr.includes(item.productId);
+    if (!isPresent) {
+      continue;
+    }
+    const priceObj = prices.find((p) => p.productId === item.productId);
+    if (!priceObj) {
+      console.warn(`Missing price for productId ${item.productId}`);
+      continue;
+    }
+
+    let price: number = priceObj.price;
+
+    if (item.type === 'top') price = priceObj.top || 0;
+    if (item.type === 'bottom') price = priceObj.bottom || 0;
+
+    total += item.quantity * price;
+  }
+
+  return roundToTwoDecimals(total);
+}
+
 export function calculateBudget(budgetItems: BudgetItem[], prices: Price[]): number {
   let total = 0;
 
