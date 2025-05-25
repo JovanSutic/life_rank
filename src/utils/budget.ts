@@ -356,7 +356,7 @@ function getProductList(part: string) {
   const apartmentArray = [27, 28, 29, 30, 38, 39, 40];
   const foodArray = [1, 2, 3, 8, 9, 10, 11, 12, 18, 25, 26, 14, 20, 15, 19, 16, 21, 17, 22];
   const transportArray = [36, 49, 50];
-  const outArray = [4, 5, 13, 24, 25, 48];
+  const outArray = [4, 5, 13, 24, 23, 48];
   const clothesArray = [44, 45, 46, 47];
 
   if (part === 'apartment') return apartmentArray;
@@ -381,6 +381,7 @@ export function calculateBudgetPart(
     if (!isPresent) {
       continue;
     }
+
     const priceObj = prices.find((p) => p.productId === item.productId);
     if (!priceObj) {
       console.warn(`Missing price for productId ${item.productId}`);
