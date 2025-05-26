@@ -6,8 +6,9 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from './AsyncWrapper';
 import type { MapData } from '../types/map.types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMapStore } from '../stores/mapStore';
+import OnboardingOverlay from './OnboardingOverlay';
 
 async function fetchCities(bounds?: {
   north: number;
@@ -40,6 +41,16 @@ export default function MainContent() {
     west: number;
   } | null>(null);
 
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  useEffect(() => {
+    const seen = localStorage.getItem('seenMapOnboarding');
+    if (!seen) {
+      setShowOverlay(true);
+      localStorage.setItem('seenMapOnboarding', 'true');
+    }
+  }, []);
+
   const { toggleLeft, setRightOpen, setFocusCity } = useMapStore();
   const device = useDeviceType();
 
@@ -66,6 +77,8 @@ export default function MainContent() {
 
   return (
     <div className="relative space-x-2 h-full">
+      {showOverlay && <OnboardingOverlay onClose={() => setShowOverlay(false)} />}
+
       <AsyncStateWrapper isLoading={isLoading || isFetching} isError={isError} error={error}>
         <>
           <MapScreen
