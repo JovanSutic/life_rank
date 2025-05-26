@@ -24,7 +24,7 @@ const Left: FC<MapLayoutProps> = ({ children }) => {
         bg-gray-100 ${leftOpen ? 'w-full lg:w-[250px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full lg:w-[250px] m-0">{leftOpen && children}</div>
+      <div className="h-full bg-gray-100 w-full lg:w-[250px] m-0">{children}</div>
     </div>
   );
 };
@@ -40,7 +40,7 @@ const Right: FC<MapLayoutProps> = ({ children }) => {
         ${rightOpen ? 'w-full lg:w-[400px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full lg:w-[400px]">{rightOpen && children}</div>
+      <div className="h-full bg-gray-100 w-full lg:w-[400px]">{children}</div>
     </div>
   );
 };
