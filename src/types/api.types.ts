@@ -54,3 +54,9 @@ export interface PaginatedReturn<T> {
   limit: number;
   offset: number;
 }
+
+export interface CrimesSummary {
+  overallCrimeConcernIndex: number;
+  personalSafetyScore: number;
+  crimeEscalationIndicator: number;
+}

@@ -1,4 +1,4 @@
-import type { Budget, City, PaginatedReturn, Price } from '../types/api.types';
+import type { Budget, City, CrimesSummary, PaginatedReturn, Price } from '../types/api.types';
 
 export const cities: City[] = [
   {
@@ -859,4 +859,10 @@ export const prices: PaginatedReturn<Price> = {
   total: 55,
   limit: 60,
   offset: 0,
+};
+
+export const crimesSummary: CrimesSummary = {
+  overallCrimeConcernIndex: 65.13,
+  personalSafetyScore: 55.35,
+  crimeEscalationIndicator: 30.42,
 };

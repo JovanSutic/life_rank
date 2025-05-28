@@ -1,27 +1,14 @@
-import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useMapStore } from '../stores/mapStore';
-import { climateTags } from '../utils/map';
-import type { CityPanelData } from '../types/map.types';
-import Tooltip from './Tooltip';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { SocialType, type Budget } from '../types/api.types';
-import AsyncStateWrapper from './AsyncWrapper';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { climateTags } from '../../utils/map';
+import type { CityPanelData } from '../../types/map.types';
+import Tooltip from '../Tooltip';
 import { Link } from 'react-router-dom';
+import { getSafetyLabel } from '../../utils/crime';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   if (!cityData) return null;
 
-  const {
-    cityId,
-    cityName,
-    countryName,
-    inhabitants,
-    climate,
-    budgetSolo,
-    budgetPair,
-    budgetFamily,
-  } = cityData;
+  const { cityId, cityName, countryName, inhabitants, climate, budgets, safety } = cityData;
 
   return (
     <div className="p-1 overflow-y-auto h-full">
@@ -67,20 +54,20 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
               <span className="text-gray-600">🧍 Solo:</span>
             </Tooltip>
 
-            <span className="font-semibold text-blue-600">{budgetSolo.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgets.solo.toLocaleString()} €</span>
           </li>
           <li className="flex items-center gap-2">
             <Tooltip text={'Monthly cost for two adults living together'}>
               <span className="text-gray-600">🧑‍🤝‍🧑 Pair:</span>
             </Tooltip>
 
-            <span className="font-semibold text-blue-600">{budgetPair.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgets.pair.toLocaleString()} €</span>
           </li>
           <li className="flex items-center gap-2">
             <Tooltip text={'Monthly cost for a family of 4'}>
               <span className="text-gray-600">👨‍👩‍👧‍👦 Family:</span>
             </Tooltip>
-            <span className="font-semibold text-blue-600">{budgetFamily.toLocaleString()} €</span>
+            <span className="font-semibold text-blue-600">{budgets.family.toLocaleString()} €</span>
           </li>
         </ul>
         <div className="flex items-center justify-between mt-2">
@@ -93,64 +80,40 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
           </Link>
         </div>
       </div>
+
+      <div className="bg-gray-50 rounded-md p-3 mb-6 shadow-sm">
+        <h3 className="text-lg font-medium mb-2">Safety Overview</h3>
+        <ul className="space-y-1 text-gray-700">
+          <li className="flex items-center gap-2">
+            <Tooltip text={'Reflects general concern about crime in the city.'}>
+              <span className="text-gray-600">Crime Concern:</span>
+            </Tooltip>
+
+            <span className="text-blue-700">
+              {getSafetyLabel(safety.overallCrimeConcernIndex, 'crimeConcern')}
+            </span>
+          </li>
+          <li className="flex items-center gap-2">
+            <Tooltip text={'Measures how safe people feel walking around, especially at night.'}>
+              <span className="text-gray-600">Personal Safety:</span>
+            </Tooltip>
+
+            <span className="text-blue-700">
+              {getSafetyLabel(safety.personalSafetyScore, 'personalSafety')}
+            </span>
+          </li>
+          <li className="flex items-center gap-2">
+            <Tooltip text={'Indicates whether crime has been increasing recently.'}>
+              <span className="text-gray-600">Crime Escalation:</span>
+            </Tooltip>
+            <span className="text-blue-700">
+              {getSafetyLabel(safety.crimeEscalationIndicator, 'crimeEscalation')}
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-async function fetchBudgets(cityId: number): Promise<Budget[]> {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/social_lifestyle?cityId=${cityId}`
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error('Failed to fetch budgets:', error);
-    throw error;
-  }
-}
-
-export default function CitySide() {
-  const { setRightOpen, focusCity } = useMapStore();
-
-  const {
-    data: budgets,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['GET_BUDGETS', focusCity?.id],
-    queryFn: () => fetchBudgets(focusCity!.id),
-    enabled: !!focusCity?.id,
-    retry: 2,
-    staleTime: 60 * 60 * 1000,
-  });
-
-  return (
-    <div className="w-full h-full bg-white flex flex-col p-4">
-      <div className="flex justify-end">
-        <button
-          onClick={() => setRightOpen(false)}
-          aria-label="Close filters"
-          className="text-2xl text-gray-500 hover:text-black cursor-pointer"
-        >
-          <XMarkIcon className="h-6 w-6" />
-        </button>
-      </div>
-      <AsyncStateWrapper isLoading={isLoading || isFetching} isError={isError} error={error}>
-        <CityInfoPanel
-          cityData={{
-            cityId: focusCity?.id || 0,
-            cityName: focusCity?.name || '',
-            countryName: focusCity?.country || '',
-            inhabitants: focusCity?.size || 0,
-            climate: 'hot and rainy',
-            budgetSolo: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
-            budgetPair: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
-            budgetFamily: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
-          }}
-        />
-      </AsyncStateWrapper>
-    </div>
-  );
-}
+export default CityInfoPanel;
