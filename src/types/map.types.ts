@@ -14,7 +14,14 @@ export interface CityPanelData {
   countryName: string;
   inhabitants: number;
   climate: string;
-  budgetSolo: number;
-  budgetPair: number;
-  budgetFamily: number;
+  budgets: {
+    solo: number;
+    pair: number;
+    family: number;
+  };
+  safety: {
+    overallCrimeConcernIndex: number;
+    personalSafetyScore: number;
+    crimeEscalationIndicator: number;
+  };
 }
