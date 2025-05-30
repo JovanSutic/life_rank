@@ -2,9 +2,9 @@ import type { Device } from '../types/map.types';
 
 export const getZoomSize = (device: Device): number => {
   if (device === 'desktop') return 5;
-  if (device === 'tablet') return 4;
+  if (device === 'tablet') return 5;
 
-  return 4;
+  return 5;
 };
 
 export const climateTags = (climateText: string) => {

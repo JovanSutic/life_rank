@@ -1,5 +1,5 @@
 import type { ControlProps } from '../../types/budget.types';
-import { colorMap } from './budgetMaps';
+import { colorMap } from '../../utils/budgetMaps';
 
 function Switch({ options, value, onChange, color = 'blue', className = '', name }: ControlProps) {
   const styles = colorMap[color];

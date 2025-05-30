@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { BudgetItem } from '../types/budget.types';
-import { apartmentControlMap, SOLO_BUDGET } from '../components/Budget/budgetMaps';
+import { apartmentControlMap, SOLO_BUDGET } from '../utils/budgetMaps';
 import {
   calculateBudget,
   calculateBudgetPart,
@@ -225,11 +225,11 @@ function BudgetPlay() {
             </button>
           </div>
 
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2 mt-6 lg:mt-0">
+          <h1 className="text-md lg:text-2xl font-semibold text-gray-800 mb-2 mt-6 lg:mt-0">
             Explore Your Monthly Budget in {name}
           </h1>
 
-          <p className="text-sm lg:text-md text-gray-600 mb-6">
+          <p className="text-xs lg:text-md text-gray-600 mb-4 lg:mb-6">
             Adjust your spending on housing, food, transport, entertainment, and more — shift
             priorities based on what matters most to you.
           </p>
@@ -266,7 +266,7 @@ function BudgetPlay() {
             />
             {isFullPrice && (
               <>
-                <p className="text-sm text-center text-gray-500 mt-2">
+                <p className="text-xs lg:text-sm text-center text-gray-500 mt-2">
                   Adjust for apartment quality and cost — from more affordable to higher-end places
                   within your chosen size and location.
                 </p>
@@ -340,11 +340,10 @@ function BudgetPlay() {
           </div>
           <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
             <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>
-            <p>
+            <p className="text-xs lg:text-sm">
               The figures provided are estimates based on publicly available price data and general
               spending patterns. Your actual costs may vary significantly depending on your personal
-              habits, lifestyle choices, and local market conditions. This tool is meant to guide
-              and inform — not to deliver exact predictions.
+              spending habits.
             </p>
           </div>
         </div>
