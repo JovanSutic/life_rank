@@ -38,7 +38,7 @@ import {
   TRANSPORT_MEDIUM_FAMILY,
   TRANSPORT_MEDIUM_PAIR,
   TRANSPORT_MEDIUM_SOLO,
-} from '../components/Budget/budgetMaps';
+} from './budgetMaps';
 import { SocialType, type Price } from '../types/api.types';
 import type { BudgetItem, ConsumptionLevel } from '../types/budget.types';
 
