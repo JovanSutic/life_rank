@@ -1,4 +1,4 @@
-import type { BudgetItem, Theme } from '../../types/budget.types';
+import type { BudgetItem, Theme } from '../types/budget.types';
 
 export const colorMap: Record<
   Theme,

@@ -14,7 +14,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
     <div className="p-1 overflow-y-auto h-full">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-xl lg:text-2xl font-semibold">
             {cityName}, {countryName}
           </h2>
           <p className="text-gray-600">Population: {inhabitants.toLocaleString()}</p>

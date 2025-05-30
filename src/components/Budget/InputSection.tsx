@@ -18,7 +18,9 @@ function InputSection({ name, description, amount, children, className = '' }: I
       )}
 
       <p className="text-md font-semibold text-center text-gray-800 mb-4">{name}</p>
-      {description && <p className="text-sm text-center text-gray-500 mb-4">{description}</p>}
+      {description && (
+        <p className="text-xs lg:text-sm text-center text-gray-500 mb-4">{description}</p>
+      )}
       <div className="flex flex-wrap justify-center lg:justify-around gap-4">{children}</div>
     </div>
   );

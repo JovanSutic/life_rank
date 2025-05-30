@@ -13,12 +13,14 @@ function MapScreen({
   pins,
   onBoundsChange,
   onPinClick,
+  isMobile = false,
 }: {
   position: LatLngExpression;
   zoom: number;
   pins: City[];
   onBoundsChange?: (data: MapData) => void;
   onPinClick?: (city: City) => void;
+  isMobile?: boolean;
 }) {
   return (
     <div className="w-full h-full">
@@ -27,7 +29,8 @@ function MapScreen({
         center={position}
         zoom={zoom}
         attributionControl={false}
-        scrollWheelZoom={false}
+        doubleClickZoom={false}
+        scrollWheelZoom={true}
         zoomControl={false}
       >
         <MapResizer />
@@ -38,7 +41,8 @@ function MapScreen({
             url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           }}
         />
-        <ZoomControl position="bottomright" />
+        {!isMobile && <ZoomControl position="bottomright" />}
+
         <BoundsListener onBoundsChange={onBoundsChange} />
 
         {pins?.map((pin) => (

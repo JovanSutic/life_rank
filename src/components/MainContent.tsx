@@ -1,9 +1,8 @@
 import MapScreen from './Map/MapScreen';
 import useDeviceType from '../hooks/useDeviceType';
-import { getZoomSize } from '../utils/map';
 import type { City } from '../types/api.types';
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import AsyncStateWrapper from './AsyncWrapper';
 import type { MapData } from '../types/map.types';
 import { useEffect, useState } from 'react';
@@ -56,14 +55,13 @@ export default function MainContent() {
 
   const {
     data: cities,
-    isLoading,
-    isFetching,
     isError,
     error,
   } = useQuery({
     queryKey: ['GET_CITIES', bounds],
     queryFn: () => fetchCities(bounds ?? undefined),
     retry: 2,
+    placeholderData: keepPreviousData,
   });
 
   if (!device) {
@@ -79,12 +77,13 @@ export default function MainContent() {
     <div className="relative space-x-2 h-full">
       {showOverlay && <OnboardingOverlay onClose={() => setShowOverlay(false)} />}
 
-      <AsyncStateWrapper isLoading={isLoading || isFetching} isError={isError} error={error}>
+      <AsyncStateWrapper isLoading={false} isError={isError} error={error}>
         <>
           <MapScreen
             position={[48.076498, 16.327318]}
-            zoom={getZoomSize(device)}
+            zoom={5}
             pins={cities || []}
+            isMobile={device === 'mobile'}
             onBoundsChange={handleBoundsChange}
             onPinClick={(city: City) => {
               setRightOpen(true);
