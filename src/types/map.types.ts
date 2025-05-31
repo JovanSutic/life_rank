@@ -1,3 +1,5 @@
+import type { CrimesSummary, Weather } from './api.types';
+
 export type Device = 'mobile' | 'tablet' | 'desktop';
 
 export interface MapData {
@@ -19,9 +21,6 @@ export interface CityPanelData {
     pair: number;
     family: number;
   };
-  safety: {
-    overallCrimeConcernIndex: number;
-    personalSafetyScore: number;
-    crimeEscalationIndicator: number;
-  };
+  safety: CrimesSummary;
+  weather?: Weather;
 }

@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useMapStore } from '../../stores/mapStore';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { SocialType, type Budget, type CrimesSummary } from '../../types/api.types';
+import { SocialType, type Budget, type CrimesSummary, type Weather } from '../../types/api.types';
 import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
 
@@ -26,6 +26,16 @@ async function fetchSummary(cityId: number): Promise<CrimesSummary> {
     return res.data;
   } catch (error) {
     console.error('Failed to fetch summary:', error);
+    throw error;
+  }
+}
+
+async function fetchWeather(cityId: number): Promise<Weather> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/weathers/city/${cityId}`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch weather:', error);
     throw error;
   }
 }
@@ -61,6 +71,20 @@ export default function CitySide() {
     staleTime: 60 * 60 * 1000,
   });
 
+  const {
+    data: weather,
+    isLoading: weatherIsLoading,
+    isFetching: weatherIsFetching,
+    isError: weatherIsError,
+    error: weatherError,
+  } = useQuery({
+    queryKey: ['GET_WEATHER', focusCity?.id],
+    queryFn: () => fetchWeather(focusCity!.id),
+    enabled: !!focusCity?.id,
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
+  });
+
   return (
     <div className="w-full h-full bg-white flex flex-col p-4">
       <div className="flex justify-end">
@@ -73,9 +97,16 @@ export default function CitySide() {
         </button>
       </div>
       <AsyncStateWrapper
-        isLoading={isLoading || isFetching || summaryIsLoading || summaryIsFetching}
-        isError={isError || summaryIsError}
-        error={error || summaryError}
+        isLoading={
+          isLoading ||
+          isFetching ||
+          summaryIsLoading ||
+          summaryIsFetching ||
+          weatherIsLoading ||
+          weatherIsFetching
+        }
+        isError={isError || summaryIsError || weatherIsError}
+        error={error || summaryError || weatherError}
       >
         <CityInfoPanel
           cityData={{
@@ -94,6 +125,7 @@ export default function CitySide() {
               personalSafetyScore: summary?.personalSafetyScore || 0,
               crimeEscalationIndicator: summary?.crimeEscalationIndicator || 0,
             },
+            weather: weather,
           }}
         />
       </AsyncStateWrapper>
