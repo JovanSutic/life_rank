@@ -60,3 +60,19 @@ export interface CrimesSummary {
   personalSafetyScore: number;
   crimeEscalationIndicator: number;
 }
+
+export interface Weather {
+  id: number;
+  cityId: number;
+  sunshine: number;
+  rain: number;
+  cold: number;
+  heat: number;
+  cold_extremes: number;
+  heat_extremes: number;
+  humidity: number;
+  severe: string;
+  lowest: number;
+  highest: number;
+  created_at: string;
+}

@@ -1,4 +1,11 @@
-import type { Budget, City, CrimesSummary, PaginatedReturn, Price } from '../types/api.types';
+import type {
+  Budget,
+  City,
+  CrimesSummary,
+  PaginatedReturn,
+  Price,
+  Weather,
+} from '../types/api.types';
 
 export const cities: City[] = [
   {
@@ -865,4 +872,20 @@ export const crimesSummary: CrimesSummary = {
   overallCrimeConcernIndex: 65.13,
   personalSafetyScore: 55.35,
   crimeEscalationIndicator: 30.42,
+};
+
+export const weatherData: Weather = {
+  id: 1,
+  cityId: 1,
+  sunshine: 2031,
+  rain: 136,
+  cold: 91,
+  heat: 96,
+  cold_extremes: 14,
+  heat_extremes: 17,
+  humidity: 68,
+  severe: 'rain: 708/total:no',
+  lowest: -8,
+  highest: 42,
+  created_at: '2025-05-31T17:48:43.011Z',
 };
