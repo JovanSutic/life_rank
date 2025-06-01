@@ -32,6 +32,13 @@ function MapScreen({
         doubleClickZoom={false}
         scrollWheelZoom={true}
         zoomControl={false}
+        maxBounds={[
+          [25.0, -25.0],
+          [70.0, 54.0],
+        ]}
+        maxBoundsViscosity={1.0}
+        minZoom={5}
+        maxZoom={9}
       >
         <MapResizer />
         <TileLayer
