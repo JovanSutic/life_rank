@@ -1,4 +1,4 @@
-import { ArrowTopRightOnSquareIcon, MapPinIcon } from '@heroicons/react/24/solid';
+import { MapPinIcon } from '@heroicons/react/24/solid';
 import { budgetTags, climateTags, safetyTags } from '../../utils/map';
 import type { CityPanelData } from '../../types/map.types';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
               </span>
             ))}
           </div>
-          <div className="mt-3">
+          {/* <div className="mt-3">
             <a
               href="https://www.accuweather.com/en/rs/belgrade/298198/weather-forecast/298198"
               target="_blank"
@@ -42,7 +42,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
               Current weather info
               <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" />
             </a>
-          </div>
+          </div> */}
         </section>
       )}
 
@@ -60,10 +60,10 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
             </span>
           ))}
         </div>
-        <div className="mt-3">
+        <div className="mt-4 flex justify-end">
           <Link
             to={`/budget/${cityName}?id=${cityId}`}
-            className="inline-flex items-center text-sm text-blue-600 hover:underline"
+            className="inline-flex font-semibold text-md text-black underline"
           >
             Customize your budget
           </Link>
