@@ -19,6 +19,7 @@ import {
   updateBudgetStructure,
 } from '../utils/budget';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import Modal from '../components/Modal';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -72,6 +73,7 @@ function BudgetPlay() {
   const navigate = useNavigate();
 
   const [budgetControls, setBudgetControls] = useState<BudgetControls>(budgetControlsDefault);
+  const [isModal, setIsModal] = useState<boolean>(false);
 
   const [budgetType, setBudgetType] = useState<SocialType>(SocialType.SOLO);
   const [currentBudget, setCurrentBudget] = useState<Record<SocialType, number>>({
@@ -208,31 +210,72 @@ function BudgetPlay() {
   }, [structureHash, prices?.length]);
 
   return (
-    <div className="flex flex-col min-h-screen w-full px-2 pb-6">
+    <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">
+      <Modal show={isModal}>
+        <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>
+        <ul className="text-sm text-gray-700 space-y-2">
+          <li>
+            <strong>🏠 Housing:</strong> Rent, utilities, internet, mobile plans.
+          </li>
+          <li>
+            <strong>🍽️ Food & Essentials:</strong> Groceries, dining out, basic home & personal
+            items.
+          </li>
+          <li>
+            <strong>🎭 Leisure:</strong> Bars, restaurants, events, activities, local experiences.
+          </li>
+          <li>
+            <strong>🚕 Transport:</strong> Public transit, taxis, gas, parking, ride-hailing.
+          </li>
+          <li>
+            <strong>👕 Clothing:</strong> Apparel, shoes, seasonal wear.
+          </li>
+        </ul>
+        <div className="my-6">
+          <p className="text-xs text-gray-600 mb-2">
+            The budgets presented here are intended as **general guidance** based on average
+            spending patterns. They do not include luxury goods, high-end services, or large
+            one-time purchases.
+          </p>
+
+          <p className="text-xs text-gray-600">
+            You can customize budgets for different lifestyles: solo travelers, couples, or
+            families. Adjust the settings to see how expenses might change depending on your
+            situation.
+          </p>
+        </div>
+        <div className="flex justify-end">
+          <button
+            onClick={() => setIsModal(false)}
+            className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-2 px-4 bg-gray-200 rounded-lg"
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
       <AsyncStateWrapper
         isLoading={isLoading || isFetching || pricesIsLoading || pricesIsFetching}
         isError={isError || pricesIsError}
         error={error || pricesError}
       >
         <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[860px] mx-auto text-center">
-          <div className="absolute left-1 top-4 lg:top-3">
+          <div className="absolute left-2 top-4 lg:top-3">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-blue-600 hover:text-blue-800 transition cursor-pointer"
+              className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-1 px-2 bg-gray-200 rounded-lg"
             >
-              <ArrowLeftIcon className="h-5 w-5 mr-1" />
+              <ArrowLeftIcon className="h-4 w-4 mr-1" />
               Back
             </button>
           </div>
 
-          <h1 className="text-md lg:text-2xl font-semibold text-gray-800 mb-2 mt-6 lg:mt-0">
+          <h1 className="text-lg lg:text-2xl font-semibold text-gray-800 mb-2 mt-8 lg:mt-0">
             Explore Your Monthly Budget in {name}
           </h1>
 
-          <p className="text-xs lg:text-md text-gray-600 mb-4 lg:mb-6">
-            Adjust your spending on housing, food, transport, entertainment, and more — shift
-            priorities based on what matters most to you.
-          </p>
+          <button onClick={() => setIsModal(true)} className="text-md text-blue-600 underline mb-6">
+            get more info about the budget
+          </button>
 
           <BudgetSelector
             budgets={{
@@ -246,9 +289,9 @@ function BudgetPlay() {
 
         <div className="flex flex-col w-full lg:w-[860px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
-            name="Housing Budget"
+            name="Housing"
             amount={partsAmount.apartment}
-            description="Choose your preferred apartment size and location to tailor your housing estimate."
+            onClick={() => setIsModal(!isModal)}
           >
             <Switch
               options={['Central location', 'Outer areas']}
@@ -266,10 +309,7 @@ function BudgetPlay() {
             />
             {isFullPrice && (
               <>
-                <p className="text-xs lg:text-sm text-center text-gray-500 mt-2">
-                  Adjust for apartment quality and cost — from more affordable to higher-end places
-                  within your chosen size and location.
-                </p>
+                <p className="text-xs lg:text-sm text-center text-gray-500">Housing price level</p>
                 <Slider
                   options={['Low price', 'Average', 'High price']}
                   name="apartmentPrice"
@@ -283,9 +323,9 @@ function BudgetPlay() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <InputSection
-              name="Food Budget"
-              description="Tweak your budget based on how much you eat out vs. cook — think everyday meals, not high-end dining."
+              name="Food & Essentials"
               amount={partsAmount.food}
+              onClick={() => setIsModal(!isModal)}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -297,9 +337,9 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Commute Budget"
-              description="Adjust your budget for regular transport needs — public transit, ride-hailing, or occasional driving."
+              name="Transport"
               amount={partsAmount.transport}
+              onClick={() => setIsModal(!isModal)}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -311,9 +351,9 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Budget for Fun"
-              description="Set your budget for regular nights out — not including big splurges or buying rounds for the whole bar."
+              name="Leisure"
               amount={partsAmount.out}
+              onClick={() => setIsModal(!isModal)}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
@@ -325,9 +365,9 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Clothing Budget"
-              description="Adjust how much you plan to spend on standard clothing and fashion — excluding high-end or luxury items."
+              name="Clothing"
               amount={partsAmount.clothes}
+              onClick={() => setIsModal(!isModal)}
             >
               <Slider
                 options={['Low', 'Medium', 'High']}
