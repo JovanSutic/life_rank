@@ -1,5 +1,5 @@
 import { delay, http, HttpResponse } from 'msw';
-import { cities, budgets, prices, crimesSummary, weatherData } from './data';
+import { cities, budgets, prices, crimesSummary, weatherData, contextData } from './data';
 
 export const handlers = [
   http.get(`${import.meta.env.VITE_API_URL}/cities`, async () => {
@@ -42,6 +42,15 @@ export const handlers = [
     try {
       await delay(700);
       return HttpResponse.json(weatherData);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/city-context/city/:id`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(contextData);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });

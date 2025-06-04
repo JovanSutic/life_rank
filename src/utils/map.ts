@@ -1,4 +1,4 @@
-import type { CrimesSummary, Weather } from '../types/api.types';
+import type { CityContext, CrimesSummary, Weather } from '../types/api.types';
 import type { Device } from '../types/map.types';
 
 export const getZoomSize = (device: Device): number => {
@@ -55,24 +55,24 @@ export const budgetTags = (budgets: { solo: number; pair: number; family: number
 
   if (budgets.solo) {
     tags.push({
-      label: `${budgets.solo.toLocaleString()}€`,
-      text: ' for a single person / month',
+      text: `${budgets.solo.toLocaleString()}€`,
+      label: 'for a single person',
       icon: '🧍',
     });
   }
 
   if (budgets.pair) {
     tags.push({
-      label: `$${budgets.pair.toLocaleString()}€`,
-      text: ' for a couple / month',
+      text: `${budgets.pair.toLocaleString()}€`,
+      label: ' for a couple',
       icon: '🧑‍🤝‍🧑',
     });
   }
 
   if (budgets.family) {
     tags.push({
-      label: `${budgets.family.toLocaleString()}€`,
-      text: ' for family of 3 / month',
+      text: `${budgets.family.toLocaleString()}€`,
+      label: 'for family of 3',
       icon: '👨‍👩‍👧',
     });
   }
@@ -181,3 +181,82 @@ export const safetyTags = (safety: CrimesSummary) => {
 
   return tags;
 };
+
+const tagKeywords = {
+  '🧘 Laid-back Vibe': [
+    'laid-back',
+    'relaxed pace',
+    'slow life',
+    'easygoing',
+    'calm rhythm',
+    'peaceful',
+    'manageable pace',
+  ],
+  '🏞️ Nature Nearby': [
+    'hiking',
+    'trails',
+    'mountain',
+    'nature',
+    'green space',
+    'forest',
+    'beach',
+    'outdoor',
+  ],
+  '🎷 Cultural Pulse': [
+    'museum',
+    'festival',
+    'art',
+    'culture',
+    'historic',
+    'music scene',
+    'tradition',
+    'Nišville',
+  ],
+  '🤝 Easy to Connect': [
+    'expat',
+    'welcoming',
+    'community',
+    'friendly',
+    'social',
+    'connections',
+    'language exchange',
+    'coworking',
+  ],
+  '💶 Affordable Living': ['affordable', 'cheap', 'low cost', 'budget-friendly', 'reasonable'],
+};
+
+const exclusionPhrases = [
+  'not great for',
+  'lacks',
+  'hard to find',
+  'not easy to',
+  'poor',
+  'difficult to',
+  'doesn’t offer',
+  'no real',
+];
+
+export function extractTagsFromContextData(contextData?: CityContext) {
+  if (!contextData) return [];
+  const allText = Object.values(contextData).join(' ');
+  const sentences = allText
+    .split(/(?<=[.?!])\s+/)
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+
+  const tags = new Set<string>();
+
+  for (const sentence of sentences) {
+    const hasExclusion = exclusionPhrases.some((phrase) => sentence.includes(phrase));
+    if (hasExclusion) continue;
+
+    for (const [tag, keywords] of Object.entries(tagKeywords)) {
+      const hasKeyword = keywords.some((word) => sentence.includes(word));
+      if (hasKeyword) {
+        tags.add(tag);
+      }
+    }
+  }
+
+  return tags.size > 3 ? [...tags].slice(0, 3) : [...tags];
+}

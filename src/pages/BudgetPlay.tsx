@@ -215,14 +215,14 @@ function BudgetPlay() {
         <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>
         <ul className="text-sm text-gray-700 space-y-2">
           <li>
-            <strong>🏠 Housing:</strong> Rent, utilities, internet, mobile plans.
+            <strong>🏠 Housing & Utilities:</strong> Rent, utilities, internet, mobile plans.
           </li>
           <li>
-            <strong>🍽️ Food & Essentials:</strong> Groceries, dining out, basic home & personal
-            items.
+            <strong>🍽️ Food & Essentials:</strong> Groceries, restaurants, food orders, basic home &
+            personal items.
           </li>
           <li>
-            <strong>🎭 Leisure:</strong> Bars, restaurants, events, activities, local experiences.
+            <strong>🎭 Leisure & Fun:</strong> Bars, events, activities, local experiences.
           </li>
           <li>
             <strong>🚕 Transport:</strong> Public transit, taxis, gas, parking, ride-hailing.
@@ -273,7 +273,7 @@ function BudgetPlay() {
             Explore Your Monthly Budget in {name}
           </h1>
 
-          <button onClick={() => setIsModal(true)} className="text-md text-blue-600 underline mb-6">
+          <button onClick={() => setIsModal(true)} className="text-sm text-blue-600 underline mb-6">
             get more info about the budget
           </button>
 
@@ -289,7 +289,7 @@ function BudgetPlay() {
 
         <div className="flex flex-col w-full lg:w-[860px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
-            name="Housing"
+            name="Housing & Utilities"
             amount={partsAmount.apartment}
             onClick={() => setIsModal(!isModal)}
           >
@@ -309,7 +309,7 @@ function BudgetPlay() {
             />
             {isFullPrice && (
               <>
-                <p className="text-xs lg:text-sm text-center text-gray-500">Housing price level</p>
+                <p className=" w-full text-sm text-center text-gray-500">Housing price level</p>
                 <Slider
                   options={['Low price', 'Average', 'High price']}
                   name="apartmentPrice"
@@ -351,7 +351,7 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Leisure"
+              name="Leisure & Fun"
               amount={partsAmount.out}
               onClick={() => setIsModal(!isModal)}
             >

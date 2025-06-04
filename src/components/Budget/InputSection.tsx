@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
 type InputSectionProps = {
   name: string;
@@ -27,14 +27,14 @@ function InputSection({
         </div>
       )}
 
-      <p className="flex self-center text-md font-semibold text-center text-gray-800 mb-4">
+      <p className="flex self-start lg:self-center text-[18px] lg:text-lg lg:text-center font-semibold text-gray-800 mb-2 lg:mb-4">
         {name}
         <button
           onClick={onClick}
           className="ml-2 w-6 h-6 flex items-center justify-center rounded-full transition text-xs font-bold cursor-pointer"
           aria-label="Open budget info"
         >
-          <InformationCircleIcon className="h-7 w-7 stroke-blue-700" />
+          <InformationCircleIcon className="h-7 w-7 stroke-white" />
         </button>
       </p>
       {description && (
