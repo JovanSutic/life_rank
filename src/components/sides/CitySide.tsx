@@ -2,7 +2,12 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useMapStore } from '../../stores/mapStore';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { SocialType, type Budget, type CrimesSummary, type Weather } from '../../types/api.types';
+import {
+  SocialType,
+  type Budget,
+  type CityContext,
+  type CrimesSummary,
+} from '../../types/api.types';
 import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
 
@@ -30,12 +35,12 @@ async function fetchSummary(cityId: number): Promise<CrimesSummary> {
   }
 }
 
-async function fetchWeather(cityId: number): Promise<Weather> {
+async function fetchCityContext(cityId: number): Promise<CityContext> {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/weathers/city/${cityId}`);
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-context/city/${cityId}`);
     return res.data;
   } catch (error) {
-    console.error('Failed to fetch weather:', error);
+    console.error('Failed to fetch city context:', error);
     throw error;
   }
 }
@@ -72,14 +77,14 @@ export default function CitySide() {
   });
 
   const {
-    data: weather,
-    isLoading: weatherIsLoading,
-    isFetching: weatherIsFetching,
-    isError: weatherIsError,
-    error: weatherError,
+    data: contextData,
+    isLoading: contextIsLoading,
+    isFetching: contextIsFetching,
+    isError: contextIsError,
+    error: contextError,
   } = useQuery({
-    queryKey: ['GET_WEATHER', focusCity?.id],
-    queryFn: () => fetchWeather(focusCity!.id),
+    queryKey: ['GET_CITY_CONTEXT', focusCity?.id],
+    queryFn: () => fetchCityContext(focusCity!.id),
     enabled: !!focusCity?.id,
     retry: 2,
     staleTime: 60 * 60 * 1000,
@@ -102,11 +107,11 @@ export default function CitySide() {
           isFetching ||
           summaryIsLoading ||
           summaryIsFetching ||
-          weatherIsLoading ||
-          weatherIsFetching
+          contextIsLoading ||
+          contextIsFetching
         }
-        isError={isError || summaryIsError || weatherIsError}
-        error={error || summaryError || weatherError}
+        isError={isError || summaryIsError || contextIsError}
+        error={error || summaryError || contextError}
       >
         <CityInfoPanel
           cityData={{
@@ -125,7 +130,7 @@ export default function CitySide() {
               personalSafetyScore: summary?.personalSafetyScore || 0,
               crimeEscalationIndicator: summary?.crimeEscalationIndicator || 0,
             },
-            weather: weather,
+            contextualData: contextData,
           }}
         />
       </AsyncStateWrapper>

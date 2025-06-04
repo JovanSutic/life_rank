@@ -76,3 +76,19 @@ export interface Weather {
   highest: number;
   created_at: string;
 }
+
+export interface CityContext {
+  id: number;
+  cityId: number;
+  climate: string;
+  tourismLevel: string;
+  expatCommunity: string;
+  natureAccess: string;
+  localLifestyle: string;
+  seasonality: string;
+  cultureHighlights: string;
+  sportsAndActivities: string;
+  detailedStory: string;
+  created_at?: string;
+  updated_at?: string;
+}

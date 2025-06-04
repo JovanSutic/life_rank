@@ -1,6 +1,7 @@
 import type {
   Budget,
   City,
+  CityContext,
   CrimesSummary,
   PaginatedReturn,
   Price,
@@ -887,5 +888,29 @@ export const weatherData: Weather = {
   severe: 'rain: 708/total:no',
   lowest: -8,
   highest: 42,
+  created_at: '2025-05-31T17:48:43.011Z',
+};
+
+export const contextData: CityContext = {
+  id: 2,
+  cityId: 1,
+  climate:
+    'Niš has a continental climate with hot summers and cold winters. Spring and early fall offer the most pleasant weather for daily life.',
+  tourismLevel:
+    'Tourism is modest. Summer draws visitors for festivals, but it rarely feels overcrowded. Off-season, the city is calm and lived-in.',
+  expatCommunity:
+    "The expat scene is small but slowly growing. It's not plug-and-play, but connections can form through coworking spaces and language exchanges.",
+  natureAccess:
+    'Suva Planina offers real hiking within 30 minutes. Niška Banja is close for forested walks and thermal spas. Nature is low-key but reachable.',
+  localLifestyle:
+    'Life moves at a manageable pace. Cafés are busy, locals are friendly if reserved. It’s a functional, down-to-earth city with real Balkan charm.',
+  seasonality:
+    'Spring and autumn are golden. July and August can be uncomfortably hot. Winter is cold and gray but rarely harsh. May–June is ideal.',
+  cultureHighlights:
+    'Rich Roman and Ottoman history, fortress ruins, local museums, and the Nišville Jazz Festival add authentic cultural flavor year-round.',
+  sportsAndActivities:
+    'Hiking and biking are accessible; locals also enjoy football and basketball. Gyms are decent. Outdoor swimming available in summer.',
+  detailedStory:
+    'Niš offers a blend of gritty realism and unpretentious charm. It’s one of Serbia’s oldest cities, with layers of history you’ll stumble into just walking around — Ottoman relics, socialist-era blocks, and Roman ruins coexist with smoky kafanas and techno-blaring bars. It’s affordable and livable, though it lacks the polish or expat scaffolding of more popular hubs. That said, its rawness is part of its appeal. If you value a strong sense of place, enjoy a bit of post-industrial edge, and don’t mind figuring some things out on your own, Niš could quietly grow on you. Digital nomads will need to be proactive to find community, but the city rewards curiosity. It’s a place where you can carve out a thoughtful, grounded routine — with cheap burek, wide skies, and mountain air just within reach.',
   created_at: '2025-05-31T17:48:43.011Z',
 };
