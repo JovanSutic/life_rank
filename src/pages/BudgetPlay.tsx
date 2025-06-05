@@ -258,7 +258,7 @@ function BudgetPlay() {
         isError={isError || pricesIsError}
         error={error || pricesError}
       >
-        <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[860px] mx-auto text-center">
+        <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
           <div className="absolute left-2 top-4 lg:top-3">
             <button
               onClick={() => navigate(-1)}
@@ -287,7 +287,7 @@ function BudgetPlay() {
           />
         </div>
 
-        <div className="flex flex-col w-full lg:w-[860px] mx-auto text-center px-2 pt-1 gap-6">
+        <div className="flex flex-col w-full lg:w-[764px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
             name="Housing & Utilities"
             amount={partsAmount.apartment}

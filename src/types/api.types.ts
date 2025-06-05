@@ -9,6 +9,15 @@ export interface City {
   size: number;
 }
 
+export interface CityFeel {
+  id: number;
+  cityId: number;
+  budget: number;
+  tag?: string;
+  rank: number;
+  city: City;
+}
+
 export const PriceType = {
   CURRENT: 'CURRENT',
   HISTORICAL: 'HISTORICAL',
