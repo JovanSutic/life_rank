@@ -1,6 +1,6 @@
 import MapScreen from './Map/MapScreen';
 import useDeviceType from '../hooks/useDeviceType';
-import type { City } from '../types/api.types';
+import type { City, CityFeel } from '../types/api.types';
 import axios from 'axios';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import AsyncStateWrapper from './AsyncWrapper';
@@ -14,17 +14,17 @@ async function fetchCities(bounds?: {
   south: number;
   east: number;
   west: number;
-}): Promise<City[]> {
+}): Promise<CityFeel[]> {
   const north = 58.401711667608;
   const south = 35.137879119634185;
   const east = 40.73730468750001;
   const west = -8.041992187500002;
   try {
     const queryParams = bounds
-      ? `?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&take=50&sortBy=size&order=desc`
-      : `?north=${north}&south=${south}&east=${east}&west=${west}&take=50&sortBy=size&order=desc`;
+      ? `?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&take=34&sortBy=rank&order=desc`
+      : `?north=${north}&south=${south}&east=${east}&west=${west}&take=34&sortBy=rank&order=desc`;
 
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/cities${queryParams}`);
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel${queryParams}`);
     return res.data.data;
   } catch (error) {
     console.error('Failed to fetch cities:', error);
