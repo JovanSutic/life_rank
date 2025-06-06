@@ -11,7 +11,7 @@ function Switch({ options, value, onChange, color = 'blue', className = '', name
   return (
     <div
       className={`
-        relative flex w-full md:w-[280px] h-10 rounded-full p-1
+        relative flex w-full h-10 rounded-full
         ${styles.bg} ${className}
       `}
     >
