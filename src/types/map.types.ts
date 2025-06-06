@@ -1,3 +1,4 @@
+import type { LatLng } from 'leaflet';
 import type { CityContext, CrimesSummary, Weather } from './api.types';
 
 export type Device = 'mobile' | 'tablet' | 'desktop';
@@ -8,6 +9,7 @@ export interface MapData {
   east: number;
   west: number;
   zoom: number;
+  center: LatLng;
 }
 
 export interface CityPanelData {

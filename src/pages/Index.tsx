@@ -10,15 +10,15 @@ function Index() {
       </div>
       {/* Hero Section */}
       <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-20 bg-blue-100">
-        <h1 className="text-4xl font-semibold leading-tight max-w-4xl text-black">
+        <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black">
           🌞 Look for a places where life can give you more
         </h1>
-        <p className="mt-6 text-lg md:text-xl text-gray-700 max-w-xl">
+        <p className="mt-6 text-md md:text-lg md:text-xl text-gray-700 max-w-xl">
           Start exploring towns in Europe where people live better, connect deeper, and feel more at
           ease. It’s about being at places where you can be yourself.
         </p>
         <Link
-          to="/europe"
+          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=true"
           className="mt-10 px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Explore the Map
@@ -30,7 +30,7 @@ function Index() {
       <section className="py-24 px-6 bg-white text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-medium mb-6">🗺️ Discover places you may like</h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-md md:text-lg">
             Use the interactive map to explore peaceful European towns worth visiting — or maybe
             even calling home. Each pin opens up local insights to help you decide where to go next.
           </p>
@@ -81,7 +81,6 @@ function Index() {
         </div>
       </section>
 
-      {/* CTA Footer */}
       <section className="py-24 px-6 bg-white text-center">
         <h2 className="text-2xl md:text-3xl font-medium mb-6">
           Dreaming of a better life with more meaning?
@@ -91,7 +90,7 @@ function Index() {
           chapter starts here.
         </p>
         <Link
-          to="/europe"
+          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=true"
           className="px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Begin your journey

@@ -10,6 +10,7 @@ import {
 } from '../../types/api.types';
 import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
+import { useSearchParams } from 'react-router-dom';
 
 async function fetchBudgets(cityId: number): Promise<Budget[]> {
   try {
@@ -47,6 +48,15 @@ async function fetchCityContext(cityId: number): Promise<CityContext> {
 
 export default function CitySide() {
   const { setRightOpen, focusCity } = useMapStore();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const removeParam = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('city');
+    params.delete('cityId');
+    setSearchParams(params);
+    setRightOpen(false);
+  };
 
   const {
     data: budgets,
@@ -94,7 +104,9 @@ export default function CitySide() {
     <div className="w-full h-full bg-white flex flex-col p-4">
       <div className="flex justify-end">
         <button
-          onClick={() => setRightOpen(false)}
+          onClick={() => {
+            removeParam();
+          }}
           aria-label="Close filters"
           className="text-2xl text-gray-500 hover:text-black cursor-pointer"
         >

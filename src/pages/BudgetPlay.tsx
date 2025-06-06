@@ -293,20 +293,24 @@ function BudgetPlay() {
             amount={partsAmount.apartment}
             onClick={() => setIsModal(!isModal)}
           >
-            <Switch
-              options={['Central location', 'Outer areas']}
-              name="apartmentLocation"
-              onChange={handleControlChange}
-              value={budgetControls.apartmentLocation}
-              color="gray"
-            />
-            <Switch
-              options={['Smaller apartment', 'Bigger apartment']}
-              name="apartmentSize"
-              onChange={handleControlChange}
-              value={budgetControls.apartmentSize}
-              color="gray"
-            />
+            <div className="w-full lg:w-[328px]">
+              <Switch
+                options={['Central location', 'Outer areas']}
+                name="apartmentLocation"
+                onChange={handleControlChange}
+                value={budgetControls.apartmentLocation}
+                color="gray"
+              />
+            </div>
+            <div className="w-full lg:w-[328px]">
+              <Switch
+                options={['Smaller apartment', 'Bigger apartment']}
+                name="apartmentSize"
+                onChange={handleControlChange}
+                value={budgetControls.apartmentSize}
+                color="gray"
+              />
+            </div>
             {isFullPrice && (
               <>
                 <p className=" w-full text-sm text-center text-gray-500">Housing price level</p>

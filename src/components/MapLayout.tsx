@@ -21,10 +21,10 @@ const Left: FC<MapLayoutProps> = ({ children }) => {
       className={`
         h-full overflow-hidden transition-[width] duration-[500ms] ease-in-out
         fixed md:relative top-0 left-0 z-1001
-        bg-gray-100 ${leftOpen ? 'w-full lg:w-[250px]' : 'w-[0px]'}
+        bg-gray-100 ${leftOpen ? 'w-full lg:w-[286px]' : 'w-[0px]'}
       `}
     >
-      <div className="h-full bg-gray-100 w-full lg:w-[250px] m-0">{children}</div>
+      <div className="h-full bg-gray-100 w-full lg:w-[286px] m-0">{children}</div>
     </div>
   );
 };
