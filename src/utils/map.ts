@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CityContext, CrimesSummary, Weather } from '../types/api.types';
 import type { Device } from '../types/map.types';
 
@@ -147,19 +148,19 @@ export const safetyTags = (safety: CrimesSummary) => {
     });
   }
 
-  if (safety.crimeEscalationIndicator >= 85) {
+  if (safety.crimeEscalationIndicator >= 90) {
     tags.push({
       label: 'Crime Trend',
       description: 'Rising Rapidly',
       icon: '📈',
     });
-  } else if (safety.crimeEscalationIndicator >= 65) {
+  } else if (safety.crimeEscalationIndicator >= 75) {
     tags.push({
       label: 'Crime Trend',
       description: 'Increasing',
       icon: '📈',
     });
-  } else if (safety.crimeEscalationIndicator >= 45) {
+  } else if (safety.crimeEscalationIndicator >= 35) {
     tags.push({
       label: 'Crime Trend',
       description: 'Slight Increase',
@@ -259,4 +260,31 @@ export function extractTagsFromContextData(contextData?: CityContext) {
   }
 
   return tags.size > 3 ? [...tags].slice(0, 3) : [...tags];
+}
+
+export function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  return function (...args: Parameters<T>) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      if (window.location.href.includes('west')) {
+        func(...args);
+      }
+    }, wait);
+  };
+}
+
+export function isEqualOrEmpty(a: any, b: any): boolean {
+  const isEmpty = (val: any) => val === undefined || val === null || val === '';
+
+  if (isEmpty(a) && isEmpty(b)) return true;
+
+  return a === b;
 }

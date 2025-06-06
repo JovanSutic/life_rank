@@ -78,7 +78,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
         <div className="mt-2 flex justify-end">
           <Link
             to={`/budget/${cityName}?id=${cityId}`}
-            className="inline-block px-4 py-1.5 rounded bg-black text-white font-semibold text-sm hover:bg-gray-800"
+            className="inline-block px-4 py-1.5 rounded-lg bg-gray-700 text-white font-semibold text-sm hover:bg-gray-800"
           >
             🔧 Customize Your Budget
           </Link>

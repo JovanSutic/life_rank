@@ -12,6 +12,7 @@ const getBoundsData = (map: LeafletMap): MapData => {
     east: bounds.getEast(),
     west: bounds.getWest(),
     zoom: map.getZoom(),
+    center: map.getCenter(),
   };
 };
 

@@ -1,11 +1,11 @@
 import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
-import type { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { City, CityFeel } from '../../types/api.types';
 import type { MapData } from '../../types/map.types';
 import BoundsListener from './BoundsListener';
 import { MapResizer } from './MapResizer';
 import createCustomIcon from './MapIcon';
+import MapViewUpdater from './MapUpdater';
 
 function MapScreen({
   position,
@@ -15,7 +15,7 @@ function MapScreen({
   onPinClick,
   isMobile = false,
 }: {
-  position: LatLngExpression;
+  position: [number, number];
   zoom: number;
   pins: CityFeel[];
   onBoundsChange?: (data: MapData) => void;
@@ -40,6 +40,7 @@ function MapScreen({
         minZoom={5}
         maxZoom={9}
       >
+        <MapViewUpdater center={position} zoom={zoom} />
         <MapResizer />
         <TileLayer
           {...{
