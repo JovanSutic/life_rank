@@ -102,7 +102,7 @@ export default function MainContent() {
         updateUrlWithMapState(mapData);
       }, 200),
     [
-      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}`,
+      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}-${searchParams.get('cityId')}`,
     ]
   );
 
