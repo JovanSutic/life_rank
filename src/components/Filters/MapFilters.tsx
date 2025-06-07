@@ -1,4 +1,4 @@
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { useMapStore } from '../../stores/mapStore';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Switch from '../Budget/Switch';
@@ -23,13 +23,13 @@ const countries = [
 const defaultFilters = {
   rank: 'Ranked cities',
   sea: 'All',
-  size: Number.MAX_SAFE_INTEGER,
+  size: 1000000,
   budget: 7000,
   country: '',
 };
 
 export default function MapFilters() {
-  const { setLeftOpen } = useMapStore();
+  const { setLeftOpen, leftOpen } = useMapStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filters, setFilters] = useState(defaultFilters);
@@ -73,7 +73,7 @@ export default function MapFilters() {
   }, [filters]);
 
   useEffect(() => {
-    if (!setLeftOpen) {
+    if (leftOpen) {
       setFilters({
         size: Number(searchParams.get('size')),
         country: searchParams.get('country') || '',
@@ -82,11 +82,11 @@ export default function MapFilters() {
         rank: searchParams.get('rank') === 'true' ? 'Ranked cities' : 'All cities',
       });
     }
-  }, [setLeftOpen]);
+  }, [leftOpen]);
 
   return (
     <div className="w-full h-full flex flex-col bg-white">
-      <div className="p-4 pb-1 flex justify-end">
+      <div className="p-4 pb-0 flex justify-end">
         <button
           onClick={() => setLeftOpen(false)}
           aria-label="Close filters"
@@ -96,28 +96,43 @@ export default function MapFilters() {
         </button>
       </div>
 
-      <h2 className="px-4 text-xl font-bold text-gray-900">Filters</h2>
+      <div className="px-4">
+        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <AdjustmentsHorizontalIcon className="w-5 h-5 text-blue-500" /> Filters
+        </h2>
+      </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-10 pt-6 space-y-6">
-        <ComboBox
-          options={countries}
-          name="country"
-          label="Country"
-          onChange={handleControlChange}
-        />
+      <div className="flex-1 overflow-y-auto px-4 pb-10 pt-6 space-y-4">
+        <div className="pb-4 border-b border-gray-200">
+          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+            🌍 country
+          </h3>
+          <ComboBox
+            options={countries}
+            name="country"
+            value={filters.country}
+            onChange={handleControlChange}
+          />
+        </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">City population</label>
+        <div className="pb-4 border-b border-gray-200">
+          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+            🧑‍🤝‍🧑 city population
+          </h3>
           <CitySize value={filters.size} onClick={handleControlChange} name="size" />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Monthly budget</label>
+        <div className="pb-4 border-b border-gray-200">
+          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+            💰 Monthly budget
+          </h3>
           <BudgetSlider name="budget" value={filters.budget} onChange={handleControlChange} />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Sea exposure</label>
+        <div className="pb-4 border-b border-gray-200">
+          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+            🌊 Sea exposure
+          </h3>
           <Switch
             options={['Seaside', 'All']}
             name="sea"
@@ -128,7 +143,9 @@ export default function MapFilters() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Our ranking</label>
+          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+            🏅 Our ranking
+          </h3>
           <Switch
             options={['Ranked cities', 'All cities']}
             name="rank"
