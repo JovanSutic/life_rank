@@ -1533,3 +1533,14 @@ export const cityFeelList = {
   total: 308,
   limit: 34,
 };
+
+export const city = {
+  id: 1,
+  name: 'Belgrade',
+  country: 'Serbia',
+  search: 'Belgrade',
+  lat: 44.787197,
+  lng: 20.457273,
+  seaside: false,
+  size: 1700000,
+};

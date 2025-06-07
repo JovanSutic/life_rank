@@ -18,7 +18,7 @@ function Index() {
           ease. It’s about being at places where you can be yourself.
         </p>
         <Link
-          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=true"
+          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=1000000&sea=false&rank=true"
           className="mt-10 px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Explore the Map
@@ -90,7 +90,7 @@ function Index() {
           chapter starts here.
         </p>
         <Link
-          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=true"
+          to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=1000000&sea=false&rank=true"
           className="px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Begin your journey

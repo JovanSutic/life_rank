@@ -5,12 +5,24 @@ import axios from 'axios';
 import {
   SocialType,
   type Budget,
+  type City,
   type CityContext,
   type CrimesSummary,
 } from '../../types/api.types';
 import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
 import { useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+
+async function fetchCity(cityId: number): Promise<City> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/cities/${cityId}`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch city:', error);
+    throw error;
+  }
+}
 
 async function fetchBudgets(cityId: number): Promise<Budget[]> {
   try {
@@ -47,8 +59,20 @@ async function fetchCityContext(cityId: number): Promise<CityContext> {
 }
 
 export default function CitySide() {
-  const { setRightOpen, focusCity } = useMapStore();
+  const { setRightOpen, setFocusCity, focusCity } = useMapStore();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const city = searchParams.get('city');
+  const cityId = searchParams.get('cityId');
+
+  useEffect(() => {
+    if (cityId && city) {
+      setRightOpen(true);
+    } else {
+      setRightOpen(false);
+      setFocusCity(null);
+    }
+  }, [city, cityId]);
 
   const removeParam = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -100,6 +124,26 @@ export default function CitySide() {
     staleTime: 60 * 60 * 1000,
   });
 
+  const {
+    data: exactData,
+    isLoading: exactIsLoading,
+    isFetching: exactIsFetching,
+    isError: exactIsError,
+    error: exactError,
+  } = useQuery({
+    queryKey: ['GET_CITY_EXACT', cityId],
+    queryFn: () => fetchCity(Number(cityId)),
+    enabled: !!cityId && !focusCity?.id,
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (exactData?.id && !focusCity?.id) {
+      setFocusCity(exactData);
+    }
+  }, [exactData?.id]);
+
   return (
     <div className="w-full h-full bg-white flex flex-col p-4">
       <div className="flex justify-end">
@@ -120,10 +164,12 @@ export default function CitySide() {
           summaryIsLoading ||
           summaryIsFetching ||
           contextIsLoading ||
-          contextIsFetching
+          contextIsFetching ||
+          exactIsLoading ||
+          exactIsFetching
         }
-        isError={isError || summaryIsError || contextIsError}
-        error={error || summaryError || contextError}
+        isError={isError || summaryIsError || contextIsError || exactIsError}
+        error={error || summaryError || contextError || exactError}
       >
         <CityInfoPanel
           cityData={{
