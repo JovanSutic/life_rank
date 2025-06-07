@@ -13,7 +13,23 @@ import { useSearchParams } from 'react-router-dom';
 
 async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
   try {
-    const queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=34&sortBy=rank&order=desc`;
+    let queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=20&sortBy=rank&order=desc`;
+
+    if (params.get('size')) {
+      queryParams = `${queryParams}&size=${params.get('size')}`;
+    }
+    if (params.get('country')) {
+      queryParams = `${queryParams}&country=${params.get('country')}`;
+    }
+    if (params.get('sea')) {
+      queryParams = `${queryParams}&seaside=${params.get('sea')}`;
+    }
+    if (params.get('budget')) {
+      queryParams = `${queryParams}&budget=${params.get('budget')}`;
+    }
+    if (params.get('rank') === 'true') {
+      queryParams = `${queryParams}&rank=8`;
+    }
 
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel${queryParams}`);
     return res.data.data;
@@ -46,7 +62,10 @@ export default function MainContent() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['GET_CITIES', `${searchParams.get('north')}`],
+    queryKey: [
+      'GET_CITIES',
+      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}`,
+    ],
     queryFn: () => fetchCities(searchParams ?? undefined),
     retry: 2,
     placeholderData: keepPreviousData,
@@ -82,7 +101,9 @@ export default function MainContent() {
       debounce((mapData: MapData) => {
         updateUrlWithMapState(mapData);
       }, 200),
-    []
+    [
+      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}`,
+    ]
   );
 
   if (!device) {

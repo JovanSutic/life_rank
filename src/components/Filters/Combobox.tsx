@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface ComboBoxProps {
   options: string[];
-  label: string;
   onChange: (value: string, position: string) => void;
   name: string;
+  value: string;
 }
 
-const ComboBox: React.FC<ComboBoxProps> = ({ options, label, onChange, name }) => {
-  const [inputValue, setInputValue] = useState('');
+const ComboBox: React.FC<ComboBoxProps> = ({ options, onChange, name, value }) => {
+  const [inputValue, setInputValue] = useState(value || '');
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
 
@@ -50,7 +50,6 @@ const ComboBox: React.FC<ComboBoxProps> = ({ options, label, onChange, name }) =
     }
   };
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -62,9 +61,16 @@ const ComboBox: React.FC<ComboBoxProps> = ({ options, label, onChange, name }) =
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {}, [inputValue]);
+
+  useEffect(() => {
+    if (inputValue !== value) {
+      setInputValue(value);
+    }
+  }, [value]);
+
   return (
     <div className="w-full" ref={containerRef}>
-      <label className="block text-sm font-medium mb-2">{label}</label>
       <div className="relative">
         <input
           type="text"
