@@ -5,11 +5,21 @@ import axios from 'axios';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import AsyncStateWrapper from './AsyncWrapper';
 import type { MapData } from '../types/map.types';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMapStore } from '../stores/mapStore';
 import OnboardingOverlay from './OnboardingOverlay';
 import { debounce } from '../utils/map';
 import { useSearchParams } from 'react-router-dom';
+
+const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
+  return (
+    <div className="absolute top-16 md:top-5 max-w-[320px] right-2 z-1000 flex items-center justify-center pointer-events-none">
+      <div className="bg-red-400 text-white rounded-lg px-3 py-2 shadow-lg text-center text-sm sm:text-base">
+        {message}
+      </div>
+    </div>
+  );
+};
 
 async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
   try {
@@ -41,7 +51,9 @@ async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
 
 export default function MainContent() {
   const [showOverlay, setShowOverlay] = useState(false);
+
   const [searchParams, setSearchParams] = useSearchParams();
+  const isProgrammaticUpdate = useRef(false);
 
   useEffect(() => {
     const seen = localStorage.getItem('seenMapOnboarding');
@@ -55,10 +67,12 @@ export default function MainContent() {
   const device = useDeviceType();
   const lat = parseFloat(searchParams.get('centerLat') || '48.076498');
   const lng = parseFloat(searchParams.get('centerLng') || '16.327318');
-  const zoom = parseFloat(searchParams.get('zoom') || '16.327318');
+  const zoom = parseFloat(searchParams.get('zoom') || '5');
 
   const {
     data: cities,
+    isLoading,
+    isFetching,
     isError,
     error,
   } = useQuery({
@@ -99,6 +113,7 @@ export default function MainContent() {
   const handleBoundsChange = useMemo(
     () =>
       debounce((mapData: MapData) => {
+        if (isProgrammaticUpdate.current) return;
         updateUrlWithMapState(mapData);
       }, 200),
     [
@@ -113,8 +128,14 @@ export default function MainContent() {
   return (
     <div className="relative space-x-2 h-full">
       {showOverlay && <OnboardingOverlay onClose={() => setShowOverlay(false)} />}
+      {cities && cities.length === 0 && <NoResultsOverlay />}
 
-      <AsyncStateWrapper isLoading={false} isError={isError} error={error}>
+      <AsyncStateWrapper
+        isLoading={isLoading || isFetching}
+        isError={isError}
+        error={error}
+        transparent={true}
+      >
         <>
           <MapScreen
             position={[lat, lng]}
@@ -125,6 +146,7 @@ export default function MainContent() {
             onPinClick={(city: City) => {
               updateUrlWithCity(city);
             }}
+            isProgrammaticUpdate={isProgrammaticUpdate}
           />
           <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
             <span className="text-blue-800 text-shadow-lg">Life</span>

@@ -332,6 +332,26 @@ export const updateBudgetStructure = (
     });
   }
 
+  if (change === 'preschool_on') {
+    return budget.map((item) => {
+      if (item.productId === 54) {
+        return { ...item, quantity: 1 };
+      }
+
+      return item;
+    });
+  }
+
+  if (change === 'preschool_off') {
+    return budget.map((item) => {
+      if (item.productId === 54) {
+        return { ...item, quantity: 0 };
+      }
+
+      return item;
+    });
+  }
+
   if (section === 'food' || section === 'transport' || section === 'out' || section === 'clothes') {
     const consumptionLevel = level.charAt(0).toUpperCase() + level.slice(1);
     const replacement = pickBudgetPart(type, consumptionLevel as ConsumptionLevel, section);
@@ -358,11 +378,13 @@ function getProductList(part: string) {
   const transportArray = [36, 49, 50];
   const outArray = [4, 5, 13, 24, 23, 48];
   const clothesArray = [44, 45, 46, 47];
+  const preschoolArray = [54];
 
   if (part === 'apartment') return apartmentArray;
   if (part === 'food') return foodArray;
   if (part === 'transport') return transportArray;
   if (part === 'out') return outArray;
+  if (part === 'preschool') return preschoolArray;
 
   return clothesArray;
 }

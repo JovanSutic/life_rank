@@ -14,7 +14,7 @@ type BudgetSelectorProps = {
 const labels = {
   SOLO: { emoji: '🧍', name: 'Solo' },
   PAIR: { emoji: '🧑‍🤝‍🧑', name: 'Pair' },
-  FAMILY: { emoji: '👨‍👩‍👧‍👦', name: 'Family' },
+  FAMILY: { emoji: '👨‍👩‍👧', name: 'Family' },
 };
 
 const BudgetSelector: React.FC<BudgetSelectorProps> = ({

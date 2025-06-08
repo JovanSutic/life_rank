@@ -2,7 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
 import { lazy, Suspense } from 'react';
-import LoadingOverlay from './components/LoadingOverlay';
+import LoadingOverlay from './components/Basic/LoadingOverlay';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
