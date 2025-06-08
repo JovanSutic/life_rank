@@ -19,7 +19,7 @@ import {
   updateBudgetStructure,
 } from '../utils/budget';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
-import Modal from '../components/Modal';
+import Modal from '../components/Basic/Modal';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -29,6 +29,7 @@ interface BudgetControls {
   transport: string;
   out: string;
   clothes: string;
+  preschool?: string;
 }
 
 const budgetControlsDefault: BudgetControls = {
@@ -39,6 +40,7 @@ const budgetControlsDefault: BudgetControls = {
   transport: 'Medium',
   out: 'Medium',
   clothes: 'Medium',
+  preschool: 'Off',
 };
 
 async function fetchBudgets(cityId: number): Promise<Budget[]> {
@@ -166,7 +168,11 @@ function BudgetPlay() {
         FAMILY: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
       });
       if (type === SocialType.FAMILY) {
-        setBudgetControls({ ...budgetControlsDefault, apartmentSize: 'Bigger apartment' });
+        setBudgetControls({
+          ...budgetControlsDefault,
+          apartmentSize: 'Bigger apartment',
+          preschool: 'On',
+        });
       } else {
         setBudgetControls(budgetControlsDefault);
       }
@@ -197,6 +203,7 @@ function BudgetPlay() {
         transport: calculateBudgetPart('transport', currentStructure, prices),
         out: calculateBudgetPart('out', currentStructure, prices),
         clothes: calculateBudgetPart('clothes', currentStructure, prices),
+        preschool: calculateBudgetPart('preschool', currentStructure, prices),
       };
     }
 
@@ -222,13 +229,16 @@ function BudgetPlay() {
             personal items.
           </li>
           <li>
-            <strong>🎭 Leisure & Fun:</strong> Bars, events, activities, local experiences.
-          </li>
-          <li>
             <strong>🚕 Transport:</strong> Public transit, taxis, gas, parking, ride-hailing.
           </li>
           <li>
+            <strong>🎭 Leisure & Fun:</strong> Bars, events, activities, local experiences.
+          </li>
+          <li>
             <strong>👕 Clothing:</strong> Apparel, shoes, seasonal wear.
+          </li>
+          <li>
+            <strong>🏫 Preschool:</strong> Only for families, preschool expenses.
           </li>
         </ul>
         <div className="my-6">
@@ -289,7 +299,7 @@ function BudgetPlay() {
 
         <div className="flex flex-col w-full lg:w-[764px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
-            name="Housing & Utilities"
+            name="🏠 Housing & Utilities"
             amount={partsAmount.apartment}
             onClick={() => setIsModal(!isModal)}
           >
@@ -327,7 +337,7 @@ function BudgetPlay() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <InputSection
-              name="Food & Essentials"
+              name="🍽️ Food & Essentials"
               amount={partsAmount.food}
               onClick={() => setIsModal(!isModal)}
             >
@@ -341,7 +351,7 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Transport"
+              name="🚕 Transport"
               amount={partsAmount.transport}
               onClick={() => setIsModal(!isModal)}
             >
@@ -355,7 +365,7 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Leisure & Fun"
+              name="🎭 Leisure & Fun"
               amount={partsAmount.out}
               onClick={() => setIsModal(!isModal)}
             >
@@ -369,7 +379,7 @@ function BudgetPlay() {
             </InputSection>
 
             <InputSection
-              name="Clothing"
+              name="👕 Clothing"
               amount={partsAmount.clothes}
               onClick={() => setIsModal(!isModal)}
             >
@@ -381,6 +391,22 @@ function BudgetPlay() {
                 onChange={handleControlChange}
               />
             </InputSection>
+
+            {budgetType === 'FAMILY' && (
+              <InputSection
+                name="🏫 Preschool"
+                amount={partsAmount.preschool}
+                onClick={() => setIsModal(!isModal)}
+              >
+                <Switch
+                  options={['On', 'Off']}
+                  name="preschool"
+                  value={budgetControls.preschool!}
+                  color="gray"
+                  onChange={handleControlChange}
+                />
+              </InputSection>
+            )}
           </div>
           <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
             <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>

@@ -1,7 +1,7 @@
-import CitySide from '../components/sides/CitySide';
+import CitySide from '../components/Sides/CitySide';
 import MainContent from '../components/MainContent';
 import MapFilters from '../components/Filters/MapFilters';
-import MapLayout from '../components/MapLayout';
+import MapLayout from '../components/Basic/MapLayout';
 
 function EuropeMap() {
   return (

@@ -14,6 +14,7 @@ function MapScreen({
   onBoundsChange,
   onPinClick,
   isMobile = false,
+  isProgrammaticUpdate,
 }: {
   position: [number, number];
   zoom: number;
@@ -21,6 +22,7 @@ function MapScreen({
   onBoundsChange?: (data: MapData) => void;
   onPinClick?: (city: City) => void;
   isMobile?: boolean;
+  isProgrammaticUpdate: React.RefObject<boolean>;
 }) {
   return (
     <div className="w-full h-full">
@@ -40,7 +42,7 @@ function MapScreen({
         minZoom={5}
         maxZoom={9}
       >
-        <MapViewUpdater center={position} zoom={zoom} />
+        <MapViewUpdater center={position} zoom={zoom} isProgrammaticUpdate={isProgrammaticUpdate} />
         <MapResizer />
         <TileLayer
           {...{

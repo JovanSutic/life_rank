@@ -1,5 +1,5 @@
 import type { ReactNode, FC } from 'react';
-import { useMapStore } from '../stores/mapStore'; // Adjust path
+import { useMapStore } from '../../stores/mapStore'; // Adjust path
 
 interface MapLayoutProps {
   children: ReactNode;
