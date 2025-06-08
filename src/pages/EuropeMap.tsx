@@ -1,4 +1,4 @@
-import CitySide from '../components/Sides/CitySide';
+import CitySide from '../components/Side/CitySide';
 import MainContent from '../components/MainContent';
 import MapFilters from '../components/Filters/MapFilters';
 import MapLayout from '../components/Basic/MapLayout';
