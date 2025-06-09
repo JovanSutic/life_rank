@@ -12,7 +12,7 @@ interface CitySizeFilterProps {
 }
 
 const citySizes: CitySizeOption[] = [
-  { label: '< 100K', value: 100000 },
+  { label: '< 200K', value: 200000 },
   { label: '< 500K', value: 500000 },
   { label: '< 1M', value: 1000000 },
   { label: '1M+', value: Number.MAX_SAFE_INTEGER },
