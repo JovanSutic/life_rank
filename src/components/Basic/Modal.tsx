@@ -1,5 +1,3 @@
-// import { ArrowPathIcon } from '@heroicons/react/24/outline';
-
 import type { ReactNode } from 'react';
 
 function Modal({ show, children }: { show: boolean; children: ReactNode[] }) {

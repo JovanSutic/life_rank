@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
+import Newsletter from '../components/Basic/Newsletter';
 
 function Index() {
   return (
@@ -9,7 +10,7 @@ function Index() {
         <span className="text-2xl font-bold text-gray-800 text-shadow-lg">Rank</span>
       </div>
       {/* Hero Section */}
-      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-20 bg-blue-100">
+      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-20 bg-blue-50">
         <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black">
           🌞 Look for a places where life can give you more
         </h1>
@@ -24,6 +25,10 @@ function Index() {
           Explore the Map
           <ArrowRightIcon className="w-5 h-5" />
         </Link>
+      </section>
+
+      <section className="py-8 px-6 text-center bg-gray-50">
+        <Newsletter />
       </section>
 
       {/* Why Map Section */}
