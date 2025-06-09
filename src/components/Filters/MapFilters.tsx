@@ -135,7 +135,7 @@ export default function MapFilters() {
 
       <div className="flex-1 overflow-y-auto px-4 pb-10 pt-6 space-y-4">
         <div className="pb-4 border-b border-gray-200">
-          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
             🌍 country
           </h3>
           <ComboBox
@@ -147,21 +147,21 @@ export default function MapFilters() {
         </div>
 
         <div className="pb-4 border-b border-gray-200">
-          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
             🧑‍🤝‍🧑 city population
           </h3>
           <CitySize value={filters.size} onClick={handleControlChange} name="size" />
         </div>
 
         <div className="pb-4 border-b border-gray-200">
-          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
             💰 Monthly budget
           </h3>
           <BudgetSlider name="budget" value={filters.budget} onChange={handleControlChange} />
         </div>
 
         <div className="pb-4 border-b border-gray-200">
-          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
             🌊 Sea exposure
           </h3>
           <Switch
@@ -174,7 +174,7 @@ export default function MapFilters() {
         </div>
 
         <div>
-          <h3 className="text-md font-semibold uppercase tracking-wide text-slate-700 mb-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
             🏅 Our ranking
           </h3>
           <Switch
