@@ -10,6 +10,7 @@ import { useMapStore } from '../stores/mapStore';
 import OnboardingOverlay from './OnboardingOverlay';
 import { debounce } from '../utils/map';
 import { useSearchParams } from 'react-router-dom';
+import NewsletterModal from './Basic/NewsletterModal';
 
 const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
   return (
@@ -50,7 +51,7 @@ async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
 }
 
 export default function MainContent() {
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [showOverlay, setShowOverlay] = useState<boolean>(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const isProgrammaticUpdate = useRef(false);
@@ -63,7 +64,8 @@ export default function MainContent() {
     }
   }, []);
 
-  const { toggleLeft, setRightOpen, setFocusCity } = useMapStore();
+  const { toggleLeft, setRightOpen, setFocusCity, newsLetterShow, toggleNewsletterShow } =
+    useMapStore();
   const device = useDeviceType();
   const lat = parseFloat(searchParams.get('centerLat') || '48.076498');
   const lng = parseFloat(searchParams.get('centerLng') || '16.327318');
@@ -128,7 +130,10 @@ export default function MainContent() {
   return (
     <div className="relative space-x-2 h-full">
       {showOverlay && <OnboardingOverlay onClose={() => setShowOverlay(false)} />}
+
       {cities && cities.length === 0 && <NoResultsOverlay />}
+
+      <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
 
       <AsyncStateWrapper
         isLoading={isLoading || isFetching}

@@ -31,7 +31,7 @@ function InputSection({
         {name}
         <button
           onClick={onClick}
-          className="ml-2 w-6 h-6 flex items-center justify-center rounded-full transition text-xs font-bold cursor-pointer"
+          className="w-6 h-6 flex items-center justify-center rounded-full transition text-xs font-bold cursor-pointer"
           aria-label="Open budget info"
         >
           <InformationCircleIcon className="h-7 w-7 stroke-white" />
