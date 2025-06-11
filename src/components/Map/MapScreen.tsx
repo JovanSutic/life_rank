@@ -6,6 +6,7 @@ import BoundsListener from './BoundsListener';
 import { MapResizer } from './MapResizer';
 import createCustomIcon from './MapIcon';
 import MapViewUpdater from './MapUpdater';
+import { trackEvent } from '../../utils/analytics';
 
 function MapScreen({
   position,
@@ -64,6 +65,10 @@ function MapScreen({
               click: () => {
                 if (onPinClick) {
                   onPinClick(pin.city);
+                  trackEvent('map-city-click', {
+                    name: pin.city.name,
+                    id: pin.cityId,
+                  });
                 }
               },
             }}

@@ -1,13 +1,18 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import LoadingOverlay from './components/Basic/LoadingOverlay';
+import { initGA } from './utils/analytics';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
 
 function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Index />} />
