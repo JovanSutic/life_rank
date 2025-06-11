@@ -1,15 +1,16 @@
 import ReactGA from 'react-ga4';
 
-const GA_MEASUREMENT_ID = import.meta.env.GA_MEASUREMENT_ID;
+const isDev = import.meta.env.DEV;
 
 export const initGA = () => {
-  if (GA_MEASUREMENT_ID) {
-    ReactGA.initialize(GA_MEASUREMENT_ID);
+  if (!isDev) {
+    console.log('ga initialized');
+    ReactGA.initialize('G-TRFLXG80MY');
   }
 };
 
 export const trackPageview = (path: string) => {
-  if (GA_MEASUREMENT_ID) {
+  if (!isDev) {
     ReactGA.send({ hitType: 'pageview', page: path });
   }
 };
@@ -18,7 +19,7 @@ export const trackEvent = (
   eventName: string,
   params?: Record<string, string | number | boolean>
 ) => {
-  if (GA_MEASUREMENT_ID) {
+  if (!isDev) {
     ReactGA.event(eventName, params);
   }
 };
