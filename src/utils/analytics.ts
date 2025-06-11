@@ -20,7 +20,6 @@ export const trackEvent = (
   params?: Record<string, string | number | boolean>
 ) => {
   if (!isDev && VITE_GA_MEASUREMENT_ID) {
-    console.log('event', params);
     ReactGA.event(eventName, params);
   }
 };
