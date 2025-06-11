@@ -10,7 +10,7 @@ export default function Newsletter() {
 
   const mutation = useMutation({
     mutationFn: (email: string) => {
-      return axios.post(`${import.meta.env.VITE_API_URL}/specials/subscribers`, { email });
+      return axios.post(`${import.meta.env.VITE_API_URL}/specials/subscriber`, { email });
     },
     onSuccess: () => {
       setEmail('');
