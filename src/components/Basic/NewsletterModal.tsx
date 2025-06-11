@@ -7,7 +7,7 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean | null>(null);
+  const [success, setSuccess] = useState<boolean | null>(false);
 
   const mutation = useMutation({
     mutationFn: (email: string) => {
@@ -56,11 +56,12 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
 
   return (
     <Modal show={show}>
-      <h3 className="text-xl font-semibold mb-4 text-center">📧 Newsletter</h3>
-      <p className="text-sm text-gray-600 mb-4">
-        Hey, each week we want to send you reports and valuable information about nice European
-        cities where you can find a calmer and more relaxed life. If you're interested, please leave
-        us your email below.
+      <h3 className="text-xl font-semibold mb-3 text-center">📧 Newsletter</h3>
+      <p className="text-sm text-gray-600 text-center mb-6">
+        Hey each week, we share handpicked insights on <strong>European towns and cities</strong>{' '}
+        where life moves slower, costs less, and feels more meaningful.
+        <br />
+        Drop your email to start receiving our weekly newsletter.
       </p>
       {apiError && (
         <div className="w-full mb-6">
@@ -70,8 +71,7 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
       {success && (
         <div className="w-full mb-6">
           <p className="py-4 text-gray-800 text-md text-center font-semibold">
-            🎉 You're all set! Thanks for subscribing to our newsletter. We’ll send you weekly
-            updates with peaceful European destinations and tips for a more relaxed life.
+            🎉 You're all set! Thanks for subscribing to our newsletter.
           </p>
         </div>
       )}

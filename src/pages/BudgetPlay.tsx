@@ -20,6 +20,8 @@ import {
 } from '../utils/budget';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import Modal from '../components/Basic/Modal';
+import NewsletterModal from '../components/Basic/NewsletterModal';
+import { useMapStore } from '../stores/mapStore';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -73,6 +75,7 @@ function BudgetPlay() {
   const idParam = searchParams.get('id');
   const id = idParam ? parseInt(idParam, 10) : null;
   const navigate = useNavigate();
+  const { newsLetterShow, toggleNewsletterShow } = useMapStore();
 
   const [budgetControls, setBudgetControls] = useState<BudgetControls>(budgetControlsDefault);
   const [isModal, setIsModal] = useState<boolean>(false);
@@ -263,6 +266,7 @@ function BudgetPlay() {
           </button>
         </div>
       </Modal>
+      <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
       <AsyncStateWrapper
         isLoading={isLoading || isFetching || pricesIsLoading || pricesIsFetching}
         isError={isError || pricesIsError}
@@ -408,12 +412,28 @@ function BudgetPlay() {
               </InputSection>
             )}
           </div>
+          <div className="bg-blue-50 border-l-4 border-blue-400 text-blue-800 p-4 rounded-md shadow-sm text-sm">
+            <p className="font-semibold mb-1">Newsletter</p>
+            <p className="text-xs lg:text-sm mb-2">
+              If you find this interesting you should definitely subscribe to out newsletter and
+              enjoy our weekly insights.
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={toggleNewsletterShow}
+                className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+              >
+                📧 Subscribe to our newsletter
+              </button>
+            </div>
+          </div>
           <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
             <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>
             <p className="text-xs lg:text-sm">
-              The figures provided are estimates based on publicly available price data and general
-              spending patterns. Your actual costs may vary significantly depending on your personal
-              spending habits.
+              The figures provided here are based on publicly available data and common spending
+              patterns. Our average/medium budgets reflects a relaxed, comfortable lifestyle — not
+              the lowest possible cost. Your actual expenses may vary depending on your personal
+              habits, priorities, and pace of life.
             </p>
           </div>
         </div>

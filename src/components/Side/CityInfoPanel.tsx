@@ -28,7 +28,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
         <div className="flex justify-end">
           <button
             onClick={toggleNewsletterShow}
-            className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-800 text-white font-semibold text-sm hover:bg-blue-700"
+            className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
           >
             📧 Subscribe to our newsletter
           </button>
