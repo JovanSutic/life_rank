@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
 function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void }) {
+  const [honeypot, setHoneypot] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -35,10 +36,16 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
   };
 
   const handleSubmit = () => {
+    if (honeypot !== '') {
+      console.warn('Bot detected - honeypot filled.');
+      return;
+    }
+
     if (!validateEmail(email)) {
       setError('Please enter a valid email address.');
       return;
     }
+
     setError(null);
     mutation.mutate(email);
   };
@@ -77,6 +84,15 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
       )}
       {success === null && apiError === null && (
         <div className="w-full mb-6">
+          <input
+            type="text"
+            name="honeypot"
+            style={{ display: 'none' }}
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(event) => setHoneypot(event.target.value)}
+          />
           <input
             aria-label="email"
             aria-required="true"
