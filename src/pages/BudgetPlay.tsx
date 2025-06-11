@@ -22,6 +22,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import Modal from '../components/Basic/Modal';
 import NewsletterModal from '../components/Basic/NewsletterModal';
 import { useMapStore } from '../stores/mapStore';
+import { trackPageview } from '../utils/analytics';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -218,6 +219,10 @@ function BudgetPlay() {
       clothes: 0,
     };
   }, [structureHash, prices?.length]);
+
+  useEffect(() => {
+    trackPageview(`/budget/${name}`);
+  }, []);
 
   return (
     <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">

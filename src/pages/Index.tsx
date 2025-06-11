@@ -1,8 +1,14 @@
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import Newsletter from '../components/Basic/Newsletter';
+import { trackPageview } from '../utils/analytics';
+import { useEffect } from 'react';
 
 function Index() {
+  useEffect(() => {
+    trackPageview('/');
+  }, []);
+
   return (
     <main className="bg-white text-gray-900 font-sans">
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
