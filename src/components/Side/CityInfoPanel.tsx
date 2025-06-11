@@ -4,9 +4,11 @@ import type { CityPanelData } from '../../types/map.types';
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import TagList from './TagList';
+import { useMapStore } from '../../stores/mapStore';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const [showStory, setShowStory] = useState(false);
+  const { toggleNewsletterShow } = useMapStore();
   const { cityId, cityName, countryName, inhabitants, budgets, safety, contextualData } = cityData;
   const tags = useMemo(() => extractTagsFromContextData(contextualData), [contextualData?.id]);
 
@@ -22,6 +24,16 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
       </div>
 
       <TagList tags={tags} />
+      <div className="flex justify-end pb-4">
+        <div className="flex justify-end">
+          <button
+            onClick={toggleNewsletterShow}
+            className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+          >
+            📧 Subscribe to our newsletter
+          </button>
+        </div>
+      </div>
 
       {/* {weather && (
         <section className="p-3 rounded-lg bg-blue-50 border border-blue-100 shadow-sm mb-3">
