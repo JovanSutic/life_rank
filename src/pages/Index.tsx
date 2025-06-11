@@ -16,21 +16,25 @@ function Index() {
         <span className="text-2xl font-bold text-gray-800 text-shadow-lg">Rank</span>
       </div>
       {/* Hero Section */}
-      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-20 bg-blue-50">
-        <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black">
-          🌞 Look for a places where life can give you more
+      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-26 bg-blue-50">
+        <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black lg:mt-16">
+          🌞 Find a place in Europe where your life can feel Calmer and more Meaningful
         </h1>
-        <p className="mt-6 text-md md:text-lg md:text-xl text-gray-700 max-w-xl">
-          Start exploring towns in Europe where people live better, connect deeper, and feel more at
-          ease. It’s about being at places where you can be yourself.
+        <p className="mt-6 lg:mt-12 text-md md:text-lg md:text-xl text-gray-700 max-w-2xl">
+          Start exploring vibrant and quiet places alike where families flourish, prices stay
+          reasonable, and everyday stress takes a backseat to a life well lived.
         </p>
         <Link
           to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=1000000&sea=false&rank=true"
-          className="mt-10 px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
+          className="mt-10 lg:mt-20 px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Explore the Map
           <ArrowRightIcon className="w-5 h-5" />
         </Link>
+        <p className="text-gray-500 text-sm mt-8 text-center">
+          (Click on any town or city pin to get instant access to budget details and lifestyle
+          highlights, making your search simple and rewarding.)
+        </p>
       </section>
 
       <section className="py-8 px-6 text-center bg-gray-50">
