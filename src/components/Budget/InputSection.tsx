@@ -27,11 +27,11 @@ function InputSection({
         </div>
       )}
 
-      <p className="flex self-start lg:self-center text-[18px] lg:text-lg lg:text-center font-semibold text-gray-800 mb-2 lg:mb-4">
+      <p className="flex self-start lg:self-center text-[18px] ml-0 lg:ml-[-14px] lg:text-lg lg:text-center font-semibold text-gray-800 mb-2 lg:mb-4">
         {name}
         <button
           onClick={onClick}
-          className="w-6 h-6 flex items-center justify-center rounded-full transition text-xs font-bold cursor-pointer"
+          className="w-6 h-6 flex items-center ml-1 justify-center rounded-full transition text-xs font-bold cursor-pointer"
           aria-label="Open budget info"
         >
           <InformationCircleIcon className="h-7 w-7 stroke-white" />
