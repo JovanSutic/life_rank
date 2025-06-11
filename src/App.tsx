@@ -10,6 +10,7 @@ const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
 
 function App() {
   useEffect(() => {
+    console.log(import.meta.env.GA_MEASUREMENT_ID);
     initGA();
   }, []);
 
