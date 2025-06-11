@@ -7,7 +7,7 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean | null>(false);
+  const [success, setSuccess] = useState<boolean | null>(null);
 
   const mutation = useMutation({
     mutationFn: (email: string) => {
