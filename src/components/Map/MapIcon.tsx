@@ -7,7 +7,7 @@ const createCustomIcon = (budget: number, name: string, mobile = false) => {
     <div className="relative w-18 md:w-20 h-auto">
       <div className="bg-blue-500 text-white p-1 rounded-md flex flex-col items-center justify-center shadow-lg">
         <p className="text-[9px] md:text-[10px] font-semibold leading-tight">{name}</p>
-        <p className="text-[9px] md:text-[10px]  leading-tight">{`from ${budget.toLocaleString(
+        <p className="text-[8px] md:text-[10px]  leading-tight">{`from ${budget.toLocaleString(
           undefined,
           {
             minimumFractionDigits: 0,
