@@ -13,7 +13,7 @@ const createCustomIcon = (budget: number, name: string, mobile = false) => {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
           }
-        )}€`}</p>
+        )}€/mo`}</p>
       </div>
       <div className="absolute bottom-[-5px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-blue-500"></div>
     </div>
