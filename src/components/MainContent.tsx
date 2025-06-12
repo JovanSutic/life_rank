@@ -11,6 +11,7 @@ import OnboardingOverlay from './OnboardingOverlay';
 import { debounce } from '../utils/map';
 import { useSearchParams } from 'react-router-dom';
 import NewsletterModal from './Basic/NewsletterModal';
+import { ArrowUpIcon } from '@heroicons/react/24/solid';
 
 const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
   return (
@@ -24,7 +25,7 @@ const NoResultsOverlay = ({ message = 'No results. Change the filters or move on
 
 async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
   try {
-    let queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=20&sortBy=rank&order=desc`;
+    let queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=36&sortBy=rank&order=desc`;
 
     if (params.get('size')) {
       queryParams = `${queryParams}&size=${params.get('size')}`;
@@ -52,6 +53,7 @@ async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
 
 export default function MainContent() {
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
+  const [filterChange, setFilterChange] = useState<boolean>(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const isProgrammaticUpdate = useRef(false);
@@ -123,6 +125,20 @@ export default function MainContent() {
     ]
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      setFilterChange(true);
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    if (filterChange) {
+      setTimeout(() => {
+        setFilterChange(false);
+      }, 4500);
+    }
+  }, [filterChange]);
+
   if (!device) {
     return null;
   }
@@ -159,10 +175,18 @@ export default function MainContent() {
           </div>
           <button
             onClick={() => toggleLeft()}
-            className="absolute cursor-pointer top-4 left-4 bg-white hover:bg-gray-100 text-black px-4 py-2 rounded shadow-md z-[1000]"
+            className="absolute cursor-pointer text-md lg:text-lg top-4 left-4 bg-white hover:bg-gray-100 text-black px-4 py-2 rounded shadow-md z-[1000]"
           >
             Filters
           </button>
+
+          <div
+            className={`absolute flex cursor-pointer top-18 left-4 bg-green-500 text-xs lg:text-sm text-white px-2 py-2 rounded shadow-md z-[1000] transition-opacity duration-500 ${
+              filterChange ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <ArrowUpIcon className="w-4 h-4 mr-2" /> Change filters to get results you want
+          </div>
         </>
       </AsyncStateWrapper>
     </div>
