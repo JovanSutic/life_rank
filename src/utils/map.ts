@@ -184,58 +184,100 @@ export const safetyTags = (safety: CrimesSummary) => {
 };
 
 const tagKeywords = {
-  '🧘 Laid-back Vibe': [
-    'laid-back',
-    'relaxed pace',
-    'slow life',
-    'easygoing',
-    'calm rhythm',
-    'peaceful',
-    'manageable pace',
+  '🏖️ Coastal Lifestyle': [
+    'near the sea',
+    'close to beaches',
+    'seaside town',
+    'coastal area',
+    'ocean views',
+    'waterfront living',
+    'maritime atmosphere',
+    'coastal walks',
+    'sea views',
+    'waterfront',
+    'nearby beaches',
+    'access to beaches',
+    'coastal city',
+    'beach walks',
   ],
-  '🏞️ Nature Nearby': [
-    'hiking',
-    'trails',
-    'mountain',
-    'nature',
-    'green space',
-    'forest',
-    'beach',
-    'outdoor',
+  '🌿 Green & Natural Spaces': [
+    'green spaces',
+    'parks and gardens',
+    'natural surroundings',
+    'close to nature',
+    'tree-lined streets',
+    'urban parks',
+    'quiet natural escapes',
+    'access to countryside',
+    'green parks',
   ],
-  '🎷 Cultural Pulse': [
-    'museum',
+  '🚲 Active Lifestyle': [
+    'bike friendly',
+    'cycling routes',
+    'fitness clubs',
+    'outdoor activities',
+    'sports facilities',
+    'running paths',
+    'gyms and studios',
+    'active social life',
+  ],
+  '🏔️ Outdoor Adventure': [
+    'great for hiking',
+    'mountain trails',
+    'skiing opportunities',
+    'abundant outdoor sports',
+    'nature exploration',
+    'rugged landscapes',
+    'winter sports available',
+    'hiking trails',
+    'great hiking',
+  ],
+  '🎭 Rich Culture & History': [
+    'vibrant cultural scene',
+    'historic architecture',
+    'annual festivals',
+    'artistic venues',
+    'museums and galleries',
+    'traditional events',
+    'deep local heritage',
+    'local festivals',
+    'film festivals',
+    'rich history',
+    'historic churches',
     'festival',
-    'art',
-    'culture',
-    'historic',
-    'music scene',
-    'tradition',
-    'Nišville',
   ],
-  '🤝 Easy to Connect': [
-    'expat',
-    'welcoming',
-    'community',
-    'friendly',
-    'social',
-    'connections',
-    'language exchange',
-    'coworking',
+  '🤝 Welcoming Expat Community': [
+    'friendly expat scene',
+    'welcoming locals',
+    'good english skills',
+    'easy integration',
+    'active social groups',
+    'coworking spaces',
+    'easy to meet people',
+    'growing expat scene',
   ],
-  '💶 Affordable Living': ['affordable', 'cheap', 'low cost', 'budget-friendly', 'reasonable'],
+  '🌇 Charming Atmosphere': [
+    'old town',
+    'historic center',
+    'cobblestone streets',
+    'ancient architecture',
+    'medieval buildings',
+    'historic squares',
+    'heritage sites',
+    'traditional neighborhoods',
+    'baroque architecture',
+  ],
+  '🧑‍🎓 Student Town Energy': [
+    'university town',
+    'student population',
+    'campus life',
+    'university students',
+    'academic atmosphere',
+    'college culture',
+    'student-friendly',
+    'student events',
+  ],
 };
-
-const exclusionPhrases = [
-  'not great for',
-  'lacks',
-  'hard to find',
-  'not easy to',
-  'poor',
-  'difficult to',
-  'doesn’t offer',
-  'no real',
-];
 
 export function extractTagsFromContextData(contextData?: CityContext) {
   if (!contextData) return [];
@@ -248,9 +290,6 @@ export function extractTagsFromContextData(contextData?: CityContext) {
   const tags = new Set<string>();
 
   for (const sentence of sentences) {
-    const hasExclusion = exclusionPhrases.some((phrase) => sentence.includes(phrase));
-    if (hasExclusion) continue;
-
     for (const [tag, keywords] of Object.entries(tagKeywords)) {
       const hasKeyword = keywords.some((word) => sentence.includes(word));
       if (hasKeyword) {

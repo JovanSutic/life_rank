@@ -2,20 +2,30 @@ import { MapPinIcon } from '@heroicons/react/24/solid';
 import { budgetTags, extractTagsFromContextData, safetyTags } from '../../utils/map';
 import type { CityPanelData } from '../../types/map.types';
 import { Link } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import TagList from './TagList';
 import { useMapStore } from '../../stores/mapStore';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const [showStory, setShowStory] = useState(false);
   const { toggleNewsletterShow } = useMapStore();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { cityId, cityName, countryName, inhabitants, budgets, safety, contextualData } = cityData;
   const tags = useMemo(() => extractTagsFromContextData(contextualData), [contextualData?.id]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+  }, [cityData?.cityId]);
 
   if (!cityData) return null;
 
   return (
-    <div className="overflow-y-auto h-full pr-4 lg:pr-2 bg-white text-sm text-gray-800">
+    <div
+      ref={containerRef}
+      className="overflow-y-auto h-full pr-4 lg:pr-2 bg-white text-sm text-gray-800"
+    >
       <div className="sticky top-0 z-10 bg-white pb-3 border-b border-gray-200 mb-3">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
           <MapPinIcon className="w-5 h-5 text-blue-500" /> {cityName}, {countryName}
