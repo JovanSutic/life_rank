@@ -16,9 +16,9 @@ function Index() {
         <span className="text-2xl font-bold text-gray-800 text-shadow-lg">Rank</span>
       </div>
       {/* Hero Section */}
-      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-26 bg-blue-50">
+      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-18 md:py-26 bg-blue-50">
         <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black lg:mt-16">
-          🌞 Find a place in Europe where your life can feel Calmer and more Meaningful
+          🌞 Find a place in Europe where your life can feel calmer and more meaningful
         </h1>
         <p className="mt-6 lg:mt-12 text-md md:text-lg md:text-xl text-gray-700 max-w-2xl">
           Start exploring vibrant and quiet places alike where families flourish, prices stay
@@ -31,7 +31,7 @@ function Index() {
           Explore the Map
           <ArrowRightIcon className="w-5 h-5" />
         </Link>
-        <p className="text-gray-500 text-sm mt-8 text-center">
+        <p className="text-gray-500 text-xs md:text-sm mt-8 text-center">
           (Click on any town or city pin to get instant access to budget details and lifestyle
           highlights, making your search simple and rewarding.)
         </p>
