@@ -35,6 +35,8 @@ export const apartmentControlMap = {
   apartment_low: 'Low price',
   apartment_avg: 'Average',
   apartment_high: 'High price',
+  apartment_long: 'Long term',
+  apartment_short: 'Short term',
 };
 
 export const SOLO_BUDGET: BudgetItem[] = [

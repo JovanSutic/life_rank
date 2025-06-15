@@ -7,12 +7,13 @@ export interface ControlProps {
   color?: Theme;
   className?: string;
   name: string;
+  disabled?: boolean;
 }
 
 export interface BudgetItem {
   productId: number;
   quantity: number;
-  type?: 'bottom' | 'top';
+  type?: 'bottom' | 'top' | 'short';
 }
 
 export type ConsumptionLevel = 'Low' | 'Medium' | 'High';
