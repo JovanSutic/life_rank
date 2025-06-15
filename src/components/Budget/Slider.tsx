@@ -1,7 +1,15 @@
 import type { ControlProps } from '../../types/budget.types';
 import { colorMap } from '../../utils/budgetMaps';
 
-function Slider({ options, value, onChange, color = 'blue', className = '', name }: ControlProps) {
+function Slider({
+  options,
+  value,
+  onChange,
+  color = 'blue',
+  className = '',
+  name,
+  disabled = false,
+}: ControlProps) {
   const styles = colorMap[color];
   const activeIndex = options.findIndex((opt) => opt === value);
 
@@ -17,8 +25,9 @@ function Slider({ options, value, onChange, color = 'blue', className = '', name
           return (
             <button
               key={option}
+              disabled={disabled}
               onClick={() => handleClick(option)}
-              className={`flex-1 cursor-pointer text-sm font-medium py-2 rounded-full transition-colors duration-200
+              className={`flex-1 cursor-pointer text-sm font-medium py-2 rounded-full transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-30
                 ${isActive ? styles.text : styles.textInactive}`}
             >
               {option}

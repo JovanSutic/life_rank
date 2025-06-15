@@ -13,7 +13,7 @@ export interface CityFeel {
   id: number;
   cityId: number;
   budget: number;
-  tag?: string;
+  tags?: string;
   rank: number;
   city: City;
 }

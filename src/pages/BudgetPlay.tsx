@@ -4,7 +4,7 @@ import Slider from '../components/Budget/Slider';
 import BudgetSelector from '../components/Budget/BudgetSelector';
 import InputSection from '../components/Budget/InputSection';
 import axios from 'axios';
-import { SocialType, type Budget, type Price } from '../types/api.types';
+import { SocialType, type Budget, type CityFeel, type Price } from '../types/api.types';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -15,7 +15,9 @@ import {
   calculateBudgetPart,
   findKeyByValue,
   getBudgetMap,
+  getTagIndicator,
   isFullyPriced,
+  roundToTwoDecimals,
   updateBudgetStructure,
 } from '../utils/budget';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
@@ -28,6 +30,7 @@ interface BudgetControls {
   apartmentLocation: string;
   apartmentSize: string;
   apartmentPrice: string;
+  apartmentTerm: string;
   food: string;
   transport: string;
   out: string;
@@ -39,12 +42,23 @@ const budgetControlsDefault: BudgetControls = {
   apartmentLocation: 'Central location',
   apartmentSize: 'Smaller apartment',
   apartmentPrice: 'Average',
+  apartmentTerm: 'Long term',
   food: 'Medium',
   transport: 'Medium',
   out: 'Medium',
   clothes: 'Medium',
   preschool: 'Off',
 };
+
+async function fetchFeel(cityId: number): Promise<CityFeel> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel/${cityId}`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch budgets:', error);
+    throw error;
+  }
+}
 
 async function fetchBudgets(cityId: number): Promise<Budget[]> {
   try {
@@ -115,6 +129,23 @@ function BudgetPlay() {
     retry: 2,
   });
 
+  const {
+    data: feel,
+    isLoading: feelIsLoading,
+    isFetching: feelIsFetching,
+    isError: feelIsError,
+    error: feelError,
+  } = useQuery({
+    queryKey: ['GET_BUDGET_CITY_FEEL', id],
+    queryFn: () => fetchFeel(id as number),
+    enabled: !!id,
+    retry: 2,
+  });
+
+  const shortIncrease: null | number = useMemo(() => {
+    return feel ? getTagIndicator(feel.tags!, 'shortIncrease') : null;
+  }, [feel?.id]);
+
   useEffect(() => {
     if (budgets) {
       setCurrentBudget({
@@ -139,21 +170,32 @@ function BudgetPlay() {
   const handleControlChange = useCallback(
     (value: string, position: string) => {
       let structure = null;
+      let change = '';
       if (
         position === 'apartmentLocation' ||
         position === 'apartmentSize' ||
-        position === 'apartmentPrice'
+        position === 'apartmentPrice' ||
+        position === 'apartmentTerm'
       ) {
-        const change = findKeyByValue(apartmentControlMap, value)!;
-        structure = updateBudgetStructure(budgetType, change, currentStructure);
+        change = findKeyByValue(apartmentControlMap, value)!;
       } else {
-        const change = `${position}_${value.toLowerCase()}`;
-        structure = updateBudgetStructure(budgetType, change, currentStructure);
+        change = `${position}_${value.toLowerCase()}`;
       }
-      setBudgetControls({
-        ...budgetControls,
-        [position]: value,
-      });
+
+      structure = updateBudgetStructure(budgetType, change, currentStructure);
+
+      if (position === 'apartmentTerm') {
+        setBudgetControls({
+          ...budgetControls,
+          apartmentPrice: 'Average',
+          [position]: value,
+        });
+      } else {
+        setBudgetControls({
+          ...budgetControls,
+          [position]: value,
+        });
+      }
 
       if (structure) {
         setCurrentStructure(structure);
@@ -191,7 +233,12 @@ function BudgetPlay() {
       currentBudget.PAIR !== 0 &&
       currentBudget.SOLO !== 0
     ) {
-      const newBudget = calculateBudget(currentStructure, prices);
+      const addition: number =
+        budgetControls.apartmentTerm === 'Short term' && shortIncrease
+          ? shortIncrease * calculateBudgetPart('apartment', currentStructure, prices) -
+            calculateBudgetPart('apartment', currentStructure, prices)
+          : 0;
+      const newBudget = roundToTwoDecimals(calculateBudget(currentStructure, prices) + addition);
       setCurrentBudget({
         ...currentBudget,
         [budgetType]: newBudget,
@@ -202,7 +249,12 @@ function BudgetPlay() {
   const partsAmount = useMemo(() => {
     if (prices) {
       return {
-        apartment: calculateBudgetPart('apartment', currentStructure, prices),
+        apartment:
+          budgetControls.apartmentTerm === 'Short term' && shortIncrease
+            ? roundToTwoDecimals(
+                shortIncrease * calculateBudgetPart('apartment', currentStructure, prices)
+              )
+            : calculateBudgetPart('apartment', currentStructure, prices),
         food: calculateBudgetPart('food', currentStructure, prices),
         transport: calculateBudgetPart('transport', currentStructure, prices),
         out: calculateBudgetPart('out', currentStructure, prices),
@@ -273,9 +325,16 @@ function BudgetPlay() {
       </Modal>
       <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
       <AsyncStateWrapper
-        isLoading={isLoading || isFetching || pricesIsLoading || pricesIsFetching}
-        isError={isError || pricesIsError}
-        error={error || pricesError}
+        isLoading={
+          isLoading ||
+          isFetching ||
+          pricesIsLoading ||
+          pricesIsFetching ||
+          feelIsLoading ||
+          feelIsFetching
+        }
+        isError={isError || pricesIsError || feelIsError}
+        error={error || pricesError || feelError}
       >
         <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
           <div className="absolute left-2 top-4 lg:top-3">
@@ -330,6 +389,19 @@ function BudgetPlay() {
                 color="gray"
               />
             </div>
+
+            {shortIncrease && (
+              <div className="w-full lg:w-[328px]">
+                <Switch
+                  options={['Long term', 'Short term']}
+                  name="apartmentTerm"
+                  onChange={handleControlChange}
+                  value={budgetControls.apartmentTerm}
+                  color="gray"
+                />
+              </div>
+            )}
+
             {isFullPrice && (
               <>
                 <p className=" w-full text-sm text-center text-gray-500">Housing price level</p>
@@ -338,6 +410,7 @@ function BudgetPlay() {
                   name="apartmentPrice"
                   value={budgetControls.apartmentPrice}
                   color="gray"
+                  disabled={budgetControls.apartmentTerm === 'Short term'}
                   onChange={handleControlChange}
                 />
               </>
