@@ -915,6 +915,24 @@ export const contextData: CityContext = {
   created_at: '2025-05-31T17:48:43.011Z',
 };
 
+export const cityFeel = {
+  id: 57,
+  cityId: 267,
+  rank: 8,
+  tags: 'init/shortIncrease:1.4',
+  budget: 1681.2,
+  created_at: '2025-06-05T14:27:29.419Z',
+  city: {
+    id: 267,
+    name: 'Taranto',
+    country: 'Italy',
+    search: 'Taranto',
+    lat: 40.41639,
+    lng: 17.25478,
+    seaside: true,
+    size: 189005,
+  },
+};
 export const cityFeelList = {
   data: [
     {

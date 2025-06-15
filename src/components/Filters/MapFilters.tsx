@@ -52,7 +52,7 @@ const countries = [
 ];
 
 const defaultFilters = {
-  rank: 'Ranked cities',
+  rank: 'Our picks',
   sea: 'All',
   size: 1000000,
   budget: 7000,
@@ -110,7 +110,7 @@ export default function MapFilters() {
         country: searchParams.get('country') || '',
         budget: Number(searchParams.get('budget')),
         sea: searchParams.get('sea') === 'true' ? 'Seaside' : 'All',
-        rank: searchParams.get('rank') === 'true' ? 'Ranked cities' : 'All cities',
+        rank: searchParams.get('rank') === 'true' ? 'Our picks' : 'All cities',
       });
     }
   }, [leftOpen]);
@@ -175,10 +175,10 @@ export default function MapFilters() {
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 mb-3">
-            🏅 Our ranking
+            🌐 Scope
           </h3>
           <Switch
-            options={['Ranked cities', 'All cities']}
+            options={['Our picks', 'All cities']}
             name="rank"
             onChange={handleControlChange}
             value={filters.rank}

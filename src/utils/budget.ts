@@ -317,6 +317,34 @@ export const updateBudgetStructure = (
       return item;
     });
   }
+  if (change === 'apartment_short') {
+    return budget.map((item) => {
+      if (
+        item.productId === 27 ||
+        item.productId === 28 ||
+        item.productId === 29 ||
+        item.productId === 30
+      ) {
+        return { productId: item.productId, quantity: item.quantity, type: 'short' };
+      }
+
+      return item;
+    });
+  }
+  if (change === 'apartment_long') {
+    return budget.map((item) => {
+      if (
+        item.productId === 27 ||
+        item.productId === 28 ||
+        item.productId === 29 ||
+        item.productId === 30
+      ) {
+        return { productId: item.productId, quantity: item.quantity, type: undefined };
+      }
+
+      return item;
+    });
+  }
 
   if (change === 'apartment_small') {
     return budget.map((item) => {
@@ -442,3 +470,20 @@ export function calculateBudget(budgetItems: BudgetItem[], prices: Price[]): num
   const buffer = total * 0.1;
   return roundToTwoDecimals(total + buffer);
 }
+
+export const getTagIndicator = (tag: string, indicator: string): number | null => {
+  if (!tag || !indicator) return null;
+
+  const parts = tag.split('/');
+
+  const matchedPart = parts.find((part) => part.trim().startsWith(`${indicator}:`));
+
+  if (!matchedPart) return null;
+
+  const [, valueStr] = matchedPart.split(':');
+  if (!valueStr) return null;
+
+  const value = Number(valueStr.trim());
+
+  return Number.isNaN(value) ? null : value;
+};
