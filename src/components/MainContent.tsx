@@ -127,7 +127,11 @@ export default function MainContent() {
 
   useEffect(() => {
     setTimeout(() => {
-      setFilterChange(true);
+      const urlCity = searchParams.get('cityId');
+
+      if (!urlCity) {
+        setFilterChange(true);
+      }
     }, 3000);
   }, []);
 
