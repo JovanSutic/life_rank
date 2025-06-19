@@ -7,6 +7,8 @@ import { MapResizer } from './MapResizer';
 import createCustomIcon from './MapIcon';
 import MapViewUpdater from './MapUpdater';
 import { trackEvent } from '../../utils/analytics';
+import { useMapStore } from '../../stores/mapStore';
+import { getBudgetLabel } from '../../utils/map';
 
 function MapScreen({
   position,
@@ -25,6 +27,7 @@ function MapScreen({
   isMobile?: boolean;
   isProgrammaticUpdate: React.RefObject<boolean>;
 }) {
+  const { currency, currencyIndex } = useMapStore();
   return (
     <div className="w-full h-full">
       <MapContainer
@@ -60,7 +63,11 @@ function MapScreen({
           <Marker
             key={pin.id}
             position={[pin.city.lat, pin.city.lng]}
-            icon={createCustomIcon(pin.budget, pin.city.name, isMobile)}
+            icon={createCustomIcon(
+              getBudgetLabel(currency, currencyIndex, pin.budget, true),
+              pin.city.name,
+              isMobile
+            )}
             eventHandlers={{
               click: () => {
                 if (onPinClick) {

@@ -3,7 +3,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/solid';
 type InputSectionProps = {
   name: string;
   description?: string;
-  amount?: number;
+  amount?: string;
   onClick?: () => void;
   children: React.ReactNode;
   className?: string;
@@ -21,9 +21,9 @@ function InputSection({
     <div
       className={`relative flex flex-col w-full border border-gray-200 rounded-lg p-4 ${className}`}
     >
-      {typeof amount === 'number' && (
+      {amount && (
         <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-2 rounded-full shadow-sm">
-          {amount.toFixed(2)}€
+          {amount}
         </div>
       )}
 
