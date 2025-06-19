@@ -8,6 +8,7 @@ export interface ControlProps {
   className?: string;
   name: string;
   disabled?: boolean;
+  type?: 'medium' | 'small';
 }
 
 export interface BudgetItem {
@@ -18,3 +19,5 @@ export interface BudgetItem {
 
 export type ConsumptionLevel = 'Low' | 'Medium' | 'High';
 export type BudgetControl = 'apartment' | 'food' | 'transport' | 'out' | 'clothes';
+
+export type CurrencyOptions = 'EUR' | 'USD';

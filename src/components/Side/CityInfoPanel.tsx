@@ -1,5 +1,10 @@
 import { MapPinIcon } from '@heroicons/react/24/solid';
-import { budgetTags, extractTagsFromContextData, safetyTags } from '../../utils/map';
+import {
+  budgetTags,
+  extractTagsFromContextData,
+  getBudgetLabel,
+  safetyTags,
+} from '../../utils/map';
 import type { CityPanelData } from '../../types/map.types';
 import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -8,7 +13,8 @@ import { useMapStore } from '../../stores/mapStore';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const [showStory, setShowStory] = useState(false);
-  const { toggleNewsletterShow } = useMapStore();
+  const { toggleNewsletterShow, currency, currencyIndex } = useMapStore();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { cityId, cityName, countryName, inhabitants, budgets, safety, contextualData } = cityData;
   const tags = useMemo(() => extractTagsFromContextData(contextualData), [contextualData?.id]);
@@ -87,7 +93,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
               <span className="font-semibold">
                 {tag.icon} {tag.label}:
               </span>
-              <span>{tag.text}</span>
+              <span>{getBudgetLabel(currency, currencyIndex, tag.text, false)}</span>
             </div>
           ))}
         </div>

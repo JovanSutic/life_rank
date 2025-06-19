@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CityContext, CrimesSummary, Weather } from '../types/api.types';
+import type { CurrencyOptions } from '../types/budget.types';
 import type { Device } from '../types/map.types';
 
 export const getZoomSize = (device: Device): number => {
@@ -56,7 +57,7 @@ export const budgetTags = (budgets: { solo: number; pair: number; family: number
 
   if (budgets.solo) {
     tags.push({
-      text: `${budgets.solo.toLocaleString()}€`,
+      text: budgets.solo,
       label: 'for a single person',
       icon: '🧍',
     });
@@ -64,7 +65,7 @@ export const budgetTags = (budgets: { solo: number; pair: number; family: number
 
   if (budgets.pair) {
     tags.push({
-      text: `${budgets.pair.toLocaleString()}€`,
+      text: budgets.pair,
       label: ' for a couple',
       icon: '🧑‍🤝‍🧑',
     });
@@ -72,7 +73,7 @@ export const budgetTags = (budgets: { solo: number; pair: number; family: number
 
   if (budgets.family) {
     tags.push({
-      text: `${budgets.family.toLocaleString()}€`,
+      text: budgets.family,
       label: 'for family of 3',
       icon: '👨‍👩‍👧',
     });
@@ -327,3 +328,25 @@ export function isEqualOrEmpty(a: any, b: any): boolean {
 
   return a === b;
 }
+
+export const getBudgetLabel = (
+  currency: CurrencyOptions,
+  index: number,
+  budget: number,
+  isMap: boolean
+): string => {
+  const num = budget * index;
+  const map: Record<CurrencyOptions, string> = {
+    EUR: '€',
+    USD: '$',
+  };
+  return isMap
+    ? `from ${num.toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })}${map[currency]}/mo`
+    : `${num.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}${map[currency]}`;
+};
