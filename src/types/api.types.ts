@@ -101,3 +101,8 @@ export interface CityContext {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface Currency {
+  date: string;
+  eur: Record<string, number>;
+}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { SocialType } from '../../types/api.types';
+import type { CurrencyOptions } from '../../types/budget.types';
+import { getBudgetLabel } from '../../utils/map';
 
 type BudgetSelectorProps = {
   budgets: {
@@ -9,6 +11,8 @@ type BudgetSelectorProps = {
   };
   onChange: (value: SocialType) => void;
   defaultValue?: SocialType;
+  currency: CurrencyOptions;
+  index: number;
 };
 
 const labels = {
@@ -21,6 +25,8 @@ const BudgetSelector: React.FC<BudgetSelectorProps> = ({
   budgets,
   onChange,
   defaultValue = SocialType.SOLO,
+  currency,
+  index,
 }) => {
   const [active, setActive] = useState<SocialType>(defaultValue);
 
@@ -44,7 +50,7 @@ const BudgetSelector: React.FC<BudgetSelectorProps> = ({
             <div className="text-2xl mb-1">{labels[key as SocialType].emoji}</div>
             <div className="text-sm font-medium text-gray-800 mb-1">{labels[key].name}</div>
             <div className="text-md lg:text-lg font-semibold text-blue-600">
-              {budgets[key as SocialType].toLocaleString()} €
+              {getBudgetLabel(currency, index, budgets[key as SocialType], false)}
             </div>
           </button>
         );

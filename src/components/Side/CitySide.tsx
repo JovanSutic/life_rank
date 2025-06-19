@@ -1,62 +1,12 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useMapStore } from '../../stores/mapStore';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import {
-  SocialType,
-  type Budget,
-  type City,
-  type CityContext,
-  type CrimesSummary,
-} from '../../types/api.types';
+import { SocialType } from '../../types/api.types';
 import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
-
-async function fetchCity(cityId: number): Promise<City> {
-  try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/cities/${cityId}`);
-    return res.data;
-  } catch (error) {
-    console.error('Failed to fetch city:', error);
-    throw error;
-  }
-}
-
-async function fetchBudgets(cityId: number): Promise<Budget[]> {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/social_lifestyle?cityId=${cityId}`
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error('Failed to fetch budgets:', error);
-    throw error;
-  }
-}
-
-async function fetchSummary(cityId: number): Promise<CrimesSummary> {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/crimes/summary?cityId=${cityId}&yearId=16`
-    );
-    return res.data;
-  } catch (error) {
-    console.error('Failed to fetch summary:', error);
-    throw error;
-  }
-}
-
-async function fetchCityContext(cityId: number): Promise<CityContext> {
-  try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-context/city/${cityId}`);
-    return res.data;
-  } catch (error) {
-    console.error('Failed to fetch city context:', error);
-    throw error;
-  }
-}
+import { fetchBudgets, fetchCity, fetchCityContext, fetchSummary } from '../../utils/apiCalls';
 
 export default function CitySide() {
   const { setRightOpen, setFocusCity, focusCity } = useMapStore();

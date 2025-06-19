@@ -3,8 +3,7 @@ import Switch from '../components/Budget/Switch';
 import Slider from '../components/Budget/Slider';
 import BudgetSelector from '../components/Budget/BudgetSelector';
 import InputSection from '../components/Budget/InputSection';
-import axios from 'axios';
-import { SocialType, type Budget, type CityFeel, type Price } from '../types/api.types';
+import { SocialType } from '../types/api.types';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -25,6 +24,9 @@ import Modal from '../components/Basic/Modal';
 import NewsletterModal from '../components/Basic/NewsletterModal';
 import { useMapStore } from '../stores/mapStore';
 import { trackPageview } from '../utils/analytics';
+import SettingsButton from '../components/Basic/SettingsButton';
+import { fetchBudgets, fetchCurrency, fetchFeel, fetchPrices } from '../utils/apiCalls';
+import { getBudgetLabel } from '../utils/map';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -50,47 +52,18 @@ const budgetControlsDefault: BudgetControls = {
   preschool: 'Off',
 };
 
-async function fetchFeel(cityId: number): Promise<CityFeel> {
-  try {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel/${cityId}`);
-    return res.data;
-  } catch (error) {
-    console.error('Failed to fetch budgets:', error);
-    throw error;
-  }
-}
-
-async function fetchBudgets(cityId: number): Promise<Budget[]> {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/social_lifestyle?cityId=${cityId}`
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error('Failed to fetch budgets:', error);
-    throw error;
-  }
-}
-
-async function fetchPrices(cityId: number): Promise<Price[]> {
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/prices?sortBy=productId&order=asc&cityId=${cityId}&limit=60&priceType=CURRENT`
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error('Failed to fetch prices:', error);
-    throw error;
-  }
-}
-
 function BudgetPlay() {
   const { name } = useParams();
   const [searchParams] = useSearchParams();
   const idParam = searchParams.get('id');
   const id = idParam ? parseInt(idParam, 10) : null;
   const navigate = useNavigate();
-  const { newsLetterShow, toggleNewsletterShow } = useMapStore();
+  const {
+    currency: currencyName,
+    currencyIndex,
+    newsLetterShow,
+    toggleNewsletterShow,
+  } = useMapStore();
 
   const [budgetControls, setBudgetControls] = useState<BudgetControls>(budgetControlsDefault);
   const [isModal, setIsModal] = useState<boolean>(false);
@@ -140,6 +113,13 @@ function BudgetPlay() {
     queryFn: () => fetchFeel(id as number),
     enabled: !!id,
     retry: 2,
+  });
+
+  const { data: currency } = useQuery({
+    queryKey: ['GET_CURRENCY'],
+    queryFn: () => fetchCurrency(),
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
   });
 
   const shortIncrease: null | number = useMemo(() => {
@@ -337,6 +317,7 @@ function BudgetPlay() {
         error={error || pricesError || feelError}
       >
         <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
+          {currency && <SettingsButton currency={currency} type="dark" />}
           <div className="absolute left-2 top-4 lg:top-3">
             <button
               onClick={() => navigate(-1)}
@@ -361,6 +342,8 @@ function BudgetPlay() {
               PAIR: currentBudget.PAIR,
               FAMILY: currentBudget.FAMILY,
             }}
+            currency={currencyName}
+            index={currencyIndex}
             onChange={handleTypeChange}
           />
         </div>
@@ -368,7 +351,7 @@ function BudgetPlay() {
         <div className="flex flex-col w-full lg:w-[764px] mx-auto text-center px-2 pt-1 gap-6">
           <InputSection
             name="🏠 Housing & Utilities"
-            amount={partsAmount.apartment}
+            amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.apartment, false)}
             onClick={() => setIsModal(!isModal)}
           >
             <div className="w-full lg:w-[328px]">
@@ -420,7 +403,7 @@ function BudgetPlay() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <InputSection
               name="🍽️ Food & Essentials"
-              amount={partsAmount.food}
+              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.food, false)}
               onClick={() => setIsModal(!isModal)}
             >
               <Slider
@@ -434,7 +417,7 @@ function BudgetPlay() {
 
             <InputSection
               name="🚕 Transport"
-              amount={partsAmount.transport}
+              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.transport, false)}
               onClick={() => setIsModal(!isModal)}
             >
               <Slider
@@ -448,7 +431,7 @@ function BudgetPlay() {
 
             <InputSection
               name="🎭 Leisure & Fun"
-              amount={partsAmount.out}
+              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.out, false)}
               onClick={() => setIsModal(!isModal)}
             >
               <Slider
@@ -462,7 +445,7 @@ function BudgetPlay() {
 
             <InputSection
               name="👕 Clothing"
-              amount={partsAmount.clothes}
+              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.clothes, false)}
               onClick={() => setIsModal(!isModal)}
             >
               <Slider
@@ -477,7 +460,7 @@ function BudgetPlay() {
             {budgetType === 'FAMILY' && (
               <InputSection
                 name="🏫 Preschool"
-                amount={partsAmount.preschool}
+                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.preschool!, false)}
                 onClick={() => setIsModal(!isModal)}
               >
                 <Switch

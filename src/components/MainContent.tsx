@@ -1,7 +1,6 @@
 import MapScreen from './Map/MapScreen';
 import useDeviceType from '../hooks/useDeviceType';
-import type { City, CityFeel } from '../types/api.types';
-import axios from 'axios';
+import type { City } from '../types/api.types';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import AsyncStateWrapper from './AsyncWrapper';
 import type { MapData } from '../types/map.types';
@@ -12,6 +11,8 @@ import { debounce } from '../utils/map';
 import { useSearchParams } from 'react-router-dom';
 import NewsletterModal from './Basic/NewsletterModal';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
+import SettingsButton from './Basic/SettingsButton';
+import { fetchCities, fetchCurrency } from '../utils/apiCalls';
 
 const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
   return (
@@ -22,34 +23,6 @@ const NoResultsOverlay = ({ message = 'No results. Change the filters or move on
     </div>
   );
 };
-
-async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
-  try {
-    let queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=36&sortBy=rank&order=desc`;
-
-    if (params.get('size')) {
-      queryParams = `${queryParams}&size=${params.get('size')}`;
-    }
-    if (params.get('country')) {
-      queryParams = `${queryParams}&country=${params.get('country')}`;
-    }
-    if (params.get('sea')) {
-      queryParams = `${queryParams}&seaside=${params.get('sea')}`;
-    }
-    if (params.get('budget')) {
-      queryParams = `${queryParams}&budget=${params.get('budget')}`;
-    }
-    if (params.get('rank') === 'true') {
-      queryParams = `${queryParams}&rank=8`;
-    }
-
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel${queryParams}`);
-    return res.data.data;
-  } catch (error) {
-    console.error('Failed to fetch cities:', error);
-    throw error;
-  }
-}
 
 export default function MainContent() {
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
@@ -88,6 +61,15 @@ export default function MainContent() {
     retry: 2,
     placeholderData: keepPreviousData,
   });
+
+  const { data: currency } = useQuery({
+    queryKey: ['GET_CURRENCY'],
+    queryFn: () => fetchCurrency(),
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
+  });
+
+  console.log(currency);
 
   const updateUrlWithMapState = (data: MapData) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -154,6 +136,7 @@ export default function MainContent() {
       {cities && cities.length === 0 && <NoResultsOverlay />}
 
       <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
+      {currency && <SettingsButton currency={currency} />}
 
       <AsyncStateWrapper
         isLoading={isLoading || isFetching}
