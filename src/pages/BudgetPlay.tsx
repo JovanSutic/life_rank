@@ -318,10 +318,10 @@ function BudgetPlay() {
       >
         <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
           {currency && <SettingsButton currency={currency} type="dark" />}
-          <div className="absolute left-2 top-4 lg:top-3">
+          <div className="absolute left-2 top-4">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-1 px-2 bg-gray-200 rounded-lg"
+              className="flex items-center text-sm text-white bg-gray-700 hover:bg-gray-600 transition cursor-pointer p-2 rounded-lg"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
               Back
