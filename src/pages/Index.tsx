@@ -18,11 +18,11 @@ function Index() {
       {/* Hero Section */}
       <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-18 md:py-26 bg-blue-50">
         <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black lg:mt-16">
-          🌞 Find a place in Europe where your life can feel calmer and more meaningful
+          Peaceful & Affordable Places to Live in Europe – Find Your New Home
         </h1>
         <p className="mt-6 lg:mt-12 text-md md:text-lg md:text-xl text-gray-700 max-w-2xl">
-          Start exploring vibrant and quiet places alike where families flourish, prices stay
-          reasonable, and everyday stress takes a backseat to a life well lived.
+          🌞 Start exploring vibrant and quiet places in Europe - where life slows down, communities
+          thrive, and your budget stretches further.
         </p>
         <Link
           to="/europe?centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=1000000&sea=false&rank=true"
@@ -92,6 +92,23 @@ function Index() {
           </div>
           <p className="text-gray-500 text-sm mt-8 text-center">
             (More insights and features coming soon!)
+          </p>
+        </div>
+      </section>
+
+      <section className="py-20 px-6 bg-blue-50 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6">
+            Discover Affordable, Peaceful Places to Live in Europe
+          </h2>
+          <p className="text-gray-700 text-md md:text-lg">
+            Whether you’re dreaming of early retirement, pursuing FIRE, or planning a mindful
+            relocation, our interactive map helps you explore small towns and cities across Europe
+            where life is more affordable, calm, and connected.
+          </p>
+          <p className="text-gray-600 mt-4">
+            Browse budget-friendly destinations in Portugal, the Balkans, Spain, Italy, and more —
+            with insights on safety, cost of living, and local lifestyle.
           </p>
         </div>
       </section>

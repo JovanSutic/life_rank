@@ -67,12 +67,11 @@ export default function Newsletter() {
             <div className="ml-form-embedBody ml-form-embedBodyDefault row-form">
               <div className="ml-form-embedContent">
                 <h4 className="text-2xl md:text-3xl font-medium mb-3">📧 Newsletter</h4>
-                <p className="text-gray-600 mb-6 max-w-xl mx-auto">
+                <p className="text-gray-600 mb-6 max-w-2xl mx-auto text-md md:text-lg">
                   Hey each week, we share handpicked insights on{' '}
                   <strong>European towns and cities</strong> where life moves slower, costs less,
-                  and feels more meaningful.
-                  <br />
-                  Drop your email to start receiving our weekly newsletter.
+                  and feels more meaningful. Drop your email to start receiving our weekly
+                  newsletter.
                 </p>
               </div>
               {apiError && (
