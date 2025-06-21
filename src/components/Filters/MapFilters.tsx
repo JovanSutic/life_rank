@@ -80,7 +80,7 @@ export default function MapFilters() {
     const newParams = new URLSearchParams(searchParams.toString());
 
     newParams.set('size', filters.size.toString());
-    newParams.set('sea', filters.sea === 'All' ? 'false' : 'true');
+    newParams.set('sea', filters.sea === "Don't care" ? 'false' : 'true');
     newParams.set('rank', filters.rank === 'All cities' ? 'false' : 'true');
     newParams.set('budget', filters.budget.toString());
     if (filters.country) {
