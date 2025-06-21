@@ -1,4 +1,4 @@
-import { useMapEvent } from 'react-leaflet';
+import { useMap, useMapEvent } from 'react-leaflet';
 import type { Map as LeafletMap } from 'leaflet';
 import { useState, useEffect, useRef } from 'react';
 import type { MapData } from '../../types/map.types';
@@ -20,6 +20,8 @@ function BoundsListener({ onBoundsChange }: { onBoundsChange?: (bounds: MapData)
   const { leftOpen, rightOpen } = useMapStore();
   const [suppressUpdate, setSuppressUpdate] = useState(false);
   const lastBoundsRef = useRef<MapData | null>(null);
+  const isDraggingRef = useRef(false);
+  const map = useMap();
 
   useEffect(() => {
     setSuppressUpdate(true);
@@ -40,8 +42,26 @@ function BoundsListener({ onBoundsChange }: { onBoundsChange?: (bounds: MapData)
     }
   };
 
-  useMapEvent('moveend', (e) => handleUpdate(e.target));
   useMapEvent('zoomend', (e) => handleUpdate(e.target));
+
+  useEffect(() => {
+    const handleDragStart = () => {
+      isDraggingRef.current = true;
+    };
+
+    const handleDragEnd = () => {
+      isDraggingRef.current = false;
+      handleUpdate(map);
+    };
+
+    map.on('dragstart', handleDragStart);
+    map.on('dragend', handleDragEnd);
+
+    return () => {
+      map.off('dragstart', handleDragStart);
+      map.off('dragend', handleDragEnd);
+    };
+  }, [map]);
 
   return null;
 }

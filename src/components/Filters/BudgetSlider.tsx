@@ -1,4 +1,7 @@
 import React from 'react';
+import type { CurrencyOptions } from '../../types/budget.types';
+import { formatThousands, getBudgetLabel } from '../../utils/map';
+import { currencyMap } from '../../utils/budgetMaps';
 
 interface BudgetSliderProps {
   min?: number;
@@ -7,10 +10,8 @@ interface BudgetSliderProps {
   onChange: (value: number, position: string) => void;
   name: string;
   value: number;
-}
-
-function getNumberString(num: number) {
-  return `${num.toString().substring(0, 1)}K €`;
+  currency: CurrencyOptions;
+  currencyIndex: number;
 }
 
 const BudgetSlider: React.FC<BudgetSliderProps> = ({
@@ -20,6 +21,8 @@ const BudgetSlider: React.FC<BudgetSliderProps> = ({
   onChange,
   name,
   value,
+  currency,
+  currencyIndex,
 }) => {
   const percentage = ((value - min) / (max - min)) * 100;
 
@@ -78,13 +81,13 @@ const BudgetSlider: React.FC<BudgetSliderProps> = ({
           const marker = min + index * step;
           return (
             <span key={marker} className="font-semibold">
-              {getNumberString(marker)}
+              {`${formatThousands(marker * currencyIndex)} ${currencyMap[currency]}`}
             </span>
           );
         })}
       </div>
       <div className="text-right text-sm mt-2 text-blue-500 font-medium">
-        Monthly budget up to {value} €
+        {`Monthly budget up to ${getBudgetLabel(currency, currencyIndex, value, false)}`}
       </div>
     </div>
   );

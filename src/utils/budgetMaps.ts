@@ -1,4 +1,4 @@
-import type { BudgetItem, Theme } from '../types/budget.types';
+import type { BudgetItem, CurrencyOptions, Theme } from '../types/budget.types';
 
 export const colorMap: Record<
   Theme,
@@ -25,6 +25,11 @@ export const colorMap: Record<
     textInactive: 'text-black',
     ring: 'ring-gray-700',
   },
+};
+
+export const currencyMap: Record<CurrencyOptions, string> = {
+  EUR: '€',
+  USD: '$',
 };
 
 export const apartmentControlMap = {

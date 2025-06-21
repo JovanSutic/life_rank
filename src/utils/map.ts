@@ -2,6 +2,7 @@
 import type { CityContext, CrimesSummary, Weather } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
 import type { Device } from '../types/map.types';
+import { currencyMap } from './budgetMaps';
 
 export const getZoomSize = (device: Device): number => {
   if (device === 'desktop') return 5;
@@ -336,17 +337,22 @@ export const getBudgetLabel = (
   isMap: boolean
 ): string => {
   const num = budget * index;
-  const map: Record<CurrencyOptions, string> = {
-    EUR: '€',
-    USD: '$',
-  };
   return isMap
     ? `from ${num.toLocaleString(undefined, {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
-      })}${map[currency]}/mo`
+      })}${currencyMap[currency]}/mo`
     : `${num.toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-      })}${map[currency]}`;
+      })}${currencyMap[currency]}`;
 };
+
+export function formatThousands(num: number): string {
+  if (num < 1000) return num.toString();
+
+  const thousands = num / 1000;
+  const decimal = thousands % 1 !== 0;
+
+  return decimal ? thousands.toFixed(1) + 'k' : thousands.toFixed(0) + 'k';
+}

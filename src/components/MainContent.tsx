@@ -13,6 +13,7 @@ import NewsletterModal from './Basic/NewsletterModal';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import SettingsButton from './Basic/SettingsButton';
 import { fetchCities, fetchCurrency } from '../utils/apiCalls';
+import { trackEvent } from '../utils/analytics';
 
 const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
   return (
@@ -30,6 +31,7 @@ export default function MainContent() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const isProgrammaticUpdate = useRef(false);
+  const searchParamsRef = useRef(searchParams.toString());
 
   useEffect(() => {
     const seen = localStorage.getItem('seenMapOnboarding');
@@ -69,10 +71,8 @@ export default function MainContent() {
     staleTime: 60 * 60 * 1000,
   });
 
-  console.log(currency);
-
   const updateUrlWithMapState = (data: MapData) => {
-    const newParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams(searchParamsRef.current);
 
     newParams.set('centerLat', data.center.lat.toFixed(5));
     newParams.set('centerLng', data.center.lng.toFixed(5));
@@ -86,7 +86,7 @@ export default function MainContent() {
   };
 
   const updateUrlWithCity = (city: City) => {
-    const newParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams(searchParamsRef.current);
 
     newParams.set('city', city.name);
     newParams.set('cityId', city.id.toString());
@@ -96,16 +96,19 @@ export default function MainContent() {
     setFocusCity(city);
   };
 
-  const handleBoundsChange = useMemo(
-    () =>
-      debounce((mapData: MapData) => {
-        if (isProgrammaticUpdate.current) return;
-        updateUrlWithMapState(mapData);
-      }, 200),
-    [
-      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}-${searchParams.get('cityId')}`,
-    ]
-  );
+  const handleBoundsChange = useMemo(() => {
+    return debounce((mapData: MapData) => {
+      if (isProgrammaticUpdate.current) return;
+
+      updateUrlWithMapState(mapData);
+    }, 200);
+  }, [
+    `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}-${searchParams.get('cityId')}`,
+  ]);
+
+  useEffect(() => {
+    searchParamsRef.current = searchParams.toString();
+  }, [searchParams]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -161,10 +164,13 @@ export default function MainContent() {
             <span className="text-gray-800 text-shadow-lg">Rank</span>
           </div>
           <button
-            onClick={() => toggleLeft()}
+            onClick={() => {
+              toggleLeft();
+              trackEvent('filter-open');
+            }}
             className="absolute cursor-pointer text-md lg:text-lg top-4 left-4 bg-white hover:bg-gray-100 text-black px-4 py-2 rounded shadow-md z-[1000]"
           >
-            Filters
+            Customize
           </button>
 
           <div
