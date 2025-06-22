@@ -4,6 +4,7 @@ import Switch from '../Budget/Switch';
 import type { Currency } from '../../types/api.types';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
+import { trackEvent } from '../../utils/analytics';
 
 const SettingsButton = ({
   currency,
@@ -53,6 +54,7 @@ const SettingsButton = ({
                 name="currency"
                 onChange={(value) => {
                   const index = value === 'EUR' ? 1 : currency.eur['usd'];
+                  trackEvent('change-currency');
                   setCurrency({ name: value as CurrencyOptions, index });
                 }}
                 value={currencyNam}

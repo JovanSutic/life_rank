@@ -201,6 +201,7 @@ const tagKeywords = {
     'access to beaches',
     'coastal city',
     'beach walks',
+    'excellent beach',
   ],
   '🌿 Green & Natural Spaces': [
     'green spaces',
@@ -245,6 +246,7 @@ const tagKeywords = {
     'local festivals',
     'film festivals',
     'rich history',
+    'living museum',
     'historic churches',
     'festival',
   ],
@@ -257,6 +259,8 @@ const tagKeywords = {
     'coworking spaces',
     'easy to meet people',
     'growing expat scene',
+    'diverse expat',
+    'strong expat',
   ],
   '🌇 Charming Atmosphere': [
     'old town',
@@ -278,12 +282,13 @@ const tagKeywords = {
     'college culture',
     'student-friendly',
     'student events',
+    'thanks to the university',
   ],
 };
 
 export function extractTagsFromContextData(contextData?: CityContext) {
   if (!contextData) return [];
-  const allText = Object.values(contextData).join(' ');
+  const allText = Object.values({ ...contextData, detailedStory: '' }).join(' ');
   const sentences = allText
     .split(/(?<=[.?!])\s+/)
     .map((s) => s.trim().toLowerCase())
