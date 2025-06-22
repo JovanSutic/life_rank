@@ -84,7 +84,9 @@ export default function Newsletter() {
               {success && (
                 <div className="w-full mb-6">
                   <p className="py-4 text-gray-800 text-md lg:text-lg  text-center font-semibold">
-                    🎉 You're all set! Thanks for subscribing to our newsletter.
+                    🎉 You're all set! Thanks for subscribing to our newsletter. Check your
+                    spam/promotions tab if you don’t see the confirmation email in the next 60
+                    seconds!
                   </p>
                 </div>
               )}
