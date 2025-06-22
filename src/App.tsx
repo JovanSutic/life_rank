@@ -4,6 +4,7 @@ import Index from './pages/Index';
 import { lazy, Suspense, useEffect } from 'react';
 import LoadingOverlay from './components/Basic/LoadingOverlay';
 import { initGA } from './utils/analytics';
+import NotFound from './pages/NotFound';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -44,6 +45,7 @@ function App() {
           </Suspense>
         }
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
