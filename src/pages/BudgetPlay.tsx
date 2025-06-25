@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Switch from '../components/Budget/Switch';
 import Slider from '../components/Budget/Slider';
 import BudgetSelector from '../components/Budget/BudgetSelector';
@@ -19,7 +19,6 @@ import {
   roundToTwoDecimals,
   updateBudgetStructure,
 } from '../utils/budget';
-import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import Modal from '../components/Basic/Modal';
 import NewsletterModal from '../components/Basic/NewsletterModal';
 import { useMapStore } from '../stores/mapStore';
@@ -27,6 +26,7 @@ import { trackPageview } from '../utils/analytics';
 import SettingsButton from '../components/Basic/SettingsButton';
 import { fetchBudgets, fetchCurrency, fetchFeel, fetchPrices } from '../utils/apiCalls';
 import { getBudgetLabel } from '../utils/map';
+import BackButton from '../components/Basic/BackButton';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -57,7 +57,6 @@ function BudgetPlay() {
   const [searchParams] = useSearchParams();
   const idParam = searchParams.get('id');
   const id = idParam ? parseInt(idParam, 10) : null;
-  const navigate = useNavigate();
   const {
     currency: currencyName,
     currencyIndex,
@@ -318,15 +317,7 @@ function BudgetPlay() {
       >
         <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
           {currency && <SettingsButton currency={currency} type="dark" />}
-          <div className="absolute left-2 top-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center text-sm text-white bg-gray-700 hover:bg-gray-600 transition cursor-pointer p-2 rounded-lg"
-            >
-              <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back
-            </button>
-          </div>
+          <BackButton />
 
           <h1 className="text-lg lg:text-2xl font-semibold text-gray-800 mb-2 mt-8 lg:mt-0">
             Explore Your Monthly Budget in {name}
