@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import LoadingOverlay from './components/Basic/LoadingOverlay';
 import { initGA } from './utils/analytics';
 import NotFound from './pages/NotFound';
+import CityPage from './pages/CityPage';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -45,6 +46,21 @@ function App() {
           </Suspense>
         }
       />
+      <Route
+        path="/city/:name"
+        element={
+          <Suspense
+            fallback={
+              <div>
+                <LoadingOverlay />
+              </div>
+            }
+          >
+            <CityPage />
+          </Suspense>
+        }
+      />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
