@@ -1,14 +1,13 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { fetchBudgets, fetchCity, fetchCityContext, fetchCurrency } from '../utils/apiCalls';
+import { fetchCity, fetchCityContext, fetchCurrency } from '../utils/apiCalls';
 import { useQuery } from '@tanstack/react-query';
 import NewsletterModal from '../components/Basic/NewsletterModal';
 import AsyncStateWrapper from '../components/AsyncWrapper';
-import BudgetSelector from '../components/Budget/BudgetSelector';
-import { useMemo } from 'react';
-import { SocialType } from '../types/api.types';
+// import BudgetSelector from '../components/Budget/BudgetSelector';
+// import { useMemo } from 'react';
+// import { SocialType } from '../types/api.types';
 import { useMapStore } from '../stores/mapStore';
 import SettingsButton from '../components/Basic/SettingsButton';
-import BackButton from '../components/Basic/BackButton';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import ExpandableText from '../components/Basic/ExpendableText';
 import useDeviceType from '../hooks/useDeviceType';
@@ -17,6 +16,7 @@ import PanelTable from '../components/City/PanelTable';
 import HCTable from '../components/City/HCTable';
 import type { HealthMetricItem, PanelTableItem, TierData } from '../types/city.types';
 import HCTiersList from '../components/City/HCTiersList';
+import HCRating from '../components/City/HCRating';
 
 const healthcareTiers: TierData[] = [
   {
@@ -29,6 +29,7 @@ const healthcareTiers: TierData[] = [
       'Partially reimbursed prescriptions',
       'Basic maternity, pediatric, and chronic disease coverage',
       'Low-income exemptions available via ISEE',
+      'Include dependent family members',
     ],
   },
   {
@@ -59,52 +60,52 @@ const healthcareTiers: TierData[] = [
 const tier1: PanelTableItem[] = [
   {
     title: 'Age 40-50',
-    from: 4000,
-    to: 4800,
-  },
-  {
-    title: 'Age 50-60',
-    from: 4300,
+    from: 4200,
     to: 5000,
   },
   {
-    title: 'Age 60-70',
+    title: 'Age 50-60',
     from: 4500,
-    to: 5700,
+    to: 5300,
+  },
+  {
+    title: 'Age 60-70',
+    from: 4800,
+    to: 5800,
   },
 ];
 const tier2: PanelTableItem[] = [
   {
     title: 'Age 40-50',
-    from: 1800,
-    to: 2500,
+    from: 2500,
+    to: 3200,
   },
   {
     title: 'Age 50-60',
-    from: 2000,
-    to: 2800,
+    from: 2700,
+    to: 3500,
   },
   {
     title: 'Age 60-70',
-    from: 2500,
-    to: 3500,
+    from: 3000,
+    to: 4000,
   },
 ];
 const tier3: PanelTableItem[] = [
   {
     title: 'Age 40-50',
-    from: 387,
-    to: 900,
+    from: 0,
+    to: 2000,
   },
   {
     title: 'Age 50-60',
-    from: 387,
-    to: 900,
+    from: 0,
+    to: 2000,
   },
   {
     title: 'Age 60-70',
-    from: 387,
-    to: 900,
+    from: 0,
+    to: 2000,
   },
 ];
 
@@ -219,58 +220,49 @@ function CityPage() {
     staleTime: 60 * 60 * 1000,
   });
 
-  const {
-    data: budgets,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['GET_BUDGETS', idParam],
-    queryFn: () => fetchBudgets(Number(idParam || 0)),
-    enabled: !!idParam,
-    retry: 2,
-  });
+  //   const {
+  //     data: budgets,
+  //     isLoading,
+  //     isFetching,
+  //     isError,
+  //     error,
+  //   } = useQuery({
+  //     queryKey: ['GET_BUDGETS', idParam],
+  //     queryFn: () => fetchBudgets(Number(idParam || 0)),
+  //     enabled: !!idParam,
+  //     retry: 2,
+  //   });
 
-  const budgetData = useMemo(() => {
-    return {
-      SOLO: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
-      PAIR: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
-      FAMILY: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
-    };
-  }, [budgets]);
-
-  console.log(contextData);
+  //   const budgetData = useMemo(() => {
+  //     return {
+  //       SOLO: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
+  //       PAIR: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,
+  //       FAMILY: budgets?.find((item) => item.type === SocialType.FAMILY)?.avg_price || 0,
+  //     };
+  //   }, [budgets]);
 
   if (Number(idParam) !== 267 || name !== 'Taranto') {
-    return <div>Data is still not available for this city</div>;
+    return <div className="text-center text-2xl">Data is still not available for this city</div>;
   }
   return (
-    <div className="relative flex flex-col min-h-screen w-full px-2 pb-6 pt-2">
+    <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
       <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
       <AsyncStateWrapper
-        isLoading={
-          contextIsLoading ||
-          contextIsFetching ||
-          isLoading ||
-          isFetching ||
-          exactIsLoading ||
-          exactIsFetching
-        }
-        isError={contextIsError || isError || exactIsError}
-        error={contextError || error || exactError}
+        isLoading={contextIsLoading || contextIsFetching || exactIsLoading || exactIsFetching}
+        isError={contextIsError || exactIsError}
+        error={contextError || exactError}
       >
         <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
-          {currency && <SettingsButton currency={currency} type="dark" />}
-          <BackButton />
+          {currency && <SettingsButton currency={currency} type="dark" top={0} />}
+          {/* <BackButton /> */}
           <div className="w-full">
-            <h1 className="text-lg text-center lg:text-2xl font-semibold text-gray-800 mb-2 ">
+            <h1 className="text-lg text-center lg:text-2xl font-bold text-gray-800 mb-2 ">
               {name} insights
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-6 mb-6 md:gap-4 mt-10 lg:mt-8">
-            <div className="md:py-2 px-6 md:px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-6 mb-6 md:gap-4 mt-6 lg:mt-8">
+            <div className="md:py-2 px-4">
               <div className="w-full rounded-xl overflow-hidden border border-gray-300 shadow">
                 <img
                   className="w-max-full"
@@ -296,7 +288,7 @@ function CityPage() {
                 </Link>
               </div>
             </div>
-            <div className="px-4">
+            <div>
               <ExpandableText
                 text={contextData?.detailedStory || ''}
                 limit={device === 'mobile' ? 140 : 400}
@@ -304,14 +296,14 @@ function CityPage() {
             </div>
           </div>
 
-          <div className="bg-white pb-6 mb-6 pt-2 px-4 lg:px-0 flex flex-col">
+          <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
             <div className="mb-8">
               <h4 className="text-gray-800 font-semibold text-xl md:text-2xl mb-4 text-left">
                 Healthcare
               </h4>
               <p className="text-sm md:text-base text-gray-800 mb-4">
                 {
-                  'Italy offers a universal public healthcare system known as the SSN (Servizio Sanitario Nazionale), which provides broad coverage to residents, including EU citizens and many non-EU residents with the right permits. The system is tax-funded, regionally managed, and includes general practitioners, hospitals, emergency care, and basic specialist services. In addition to the SSN, many residents choose to use private healthcare — either paying out of pocket or through private insurance — for faster access, specialist choice, or services not fully covered by the public system (like dental or mental health care).'
+                  'Italy offers a universal public healthcare system known as the SSN (Servizio Sanitario Nazionale), which provides broad coverage to residents, including EU citizens and many non-EU residents with the right permits. In addition to the SSN, many residents choose to use private healthcare — either paying out of pocket or through private insurance — for faster access, specialist choice, or services not fully covered by the public system (like dental or mental health care).'
                 }
               </p>
               <p className="text-sm md:text-base text-gray-800 mb-4">
@@ -321,10 +313,10 @@ function CityPage() {
               </p>
               <div className="flex justify-center mt-2">
                 <Link
-                  to="/"
+                  to="/blog/healthcare-system-italy"
                   className="inline-block px-4 py-1.5 rounded-lg bg-gray-200 text-black font-semibold text-sm hover:bg-gray-300"
                 >
-                  🧾 Italian Healthcare Explained
+                  🧾 Healthcare System in Italy
                 </Link>
               </div>
             </div>
@@ -391,21 +383,12 @@ function CityPage() {
               />
             </div>
 
-            <div className="bg-white p-4 mt-4">
-              <ul className="list-disc list-inside space-y-2 text-sm md:text-base text-gray-700">
-                <li>
-                  Public healthcare in Taranto is low-cost and offers full national coverage, but
-                  suffers from long wait times and limited service availability.
-                </li>
-                <li>
-                  Key quality indicators like emergency care performance and doctor availability are
-                  below national averages, reflecting broader regional disparities.
-                </li>
-              </ul>
+            <div className="bg-white mt-6">
+              <HCRating score={6} />
             </div>
           </div>
 
-          <div className="bg-white pb-6 mb-6 pt-2 px-4 lg:px-0 flex flex-col">
+          {/* <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
             <h4 className="text-gray-800 font-semibold text-lg md:text-xl mb-4 text-left">
               Budget
             </h4>
@@ -427,7 +410,7 @@ function CityPage() {
                 🔧 Customize Your Budget
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </AsyncStateWrapper>
     </div>

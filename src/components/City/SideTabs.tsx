@@ -16,7 +16,7 @@ const SideTabs = ({ tabs = [], children }: { tabs: string[]; children: ReactNode
           <button
             key={index}
             onClick={() => setActiveIndex(index)}
-            className={`text-center md:text-left px-4 py-3 text-sm md:text-base font-medium w-full
+            className={`text-center cursor-pointer md:text-left px-4 py-3 text-sm md:text-base font-medium w-full
               ${
                 index === activeIndex
                   ? `bg-white font-semibold border-l-4 ${colors[index]}`
