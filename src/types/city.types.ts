@@ -5,6 +5,12 @@ export interface HealthMetricItem {
   comment: string;
 }
 
+export interface MissingSpecialtyItem {
+  specialty: string;
+  comment: string;
+  alternative: string;
+}
+
 export interface PanelTableItem {
   from: number;
   to: number;
