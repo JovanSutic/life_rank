@@ -14,9 +14,68 @@ import useDeviceType from '../hooks/useDeviceType';
 import SideTabs from '../components/City/SideTabs';
 import PanelTable from '../components/City/PanelTable';
 import HCTable from '../components/City/HCTable';
-import type { HealthMetricItem, PanelTableItem, TierData } from '../types/city.types';
+import type {
+  HealthMetricItem,
+  MissingSpecialtyItem,
+  PanelTableItem,
+  TierData,
+} from '../types/city.types';
 import HCTiersList from '../components/City/HCTiersList';
 import HCRating from '../components/City/HCRating';
+import HCMissingTable from '../components/City/HCMissingTable';
+
+const missingSpecialties: MissingSpecialtyItem[] = [
+  {
+    specialty: 'Pediatric Oncology',
+    comment: 'No dedicated unit; requires regional referral',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Complex Neurosurgery',
+    comment: 'Stroke care exists, but not advanced neurosurgery',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Organ Transplant Services',
+    comment: 'Not performed locally',
+    alternative: 'Rome',
+  },
+  {
+    specialty: 'Cardiac Surgery (high-risk)',
+    comment: 'Basic interventions done; complex surgeries referred',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Advanced Fertility Treatments (IVF)',
+    comment: 'Limited services, mostly private and basic',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Advanced Oncology Trials',
+    comment: 'Standard oncology available; trials not accessible',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Proton Therapy',
+    comment: 'Not available in Puglia',
+    alternative: 'Rome',
+  },
+  {
+    specialty: 'Pediatric Intensive Care',
+    comment: 'Basic neonatal ICU only',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Complex ENT / Audiology Surgery',
+    comment: 'Diagnostics available, surgery options limited',
+    alternative: 'Bari',
+  },
+  {
+    specialty: 'Advanced Trauma Centers',
+    comment: 'Emergency unit exists, but trauma surgery network limited',
+    alternative: 'Bari',
+  },
+];
 
 const healthcareTiers: TierData[] = [
   {
@@ -381,6 +440,26 @@ function CityPage() {
                 headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
                 data={healthcareList}
               />
+            </div>
+
+            <div className="bg-white mt-6">
+              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                Not available services
+              </p>
+              <p className="text-sm md:text-base text-gray-800 mb-4">
+                {
+                  'Specialty services not available locally and typically require travel to a regional or national hospital.'
+                }
+              </p>
+              <HCMissingTable
+                headers={['Specialty', 'Comment', 'Alternative city']}
+                data={missingSpecialties}
+              />
+              <p className="text-xs md:text-sm italic text-gray-800 mt-4">
+                *Based on available online data of local and regional health service directories.
+                For more accurate information you should verify directly with the local hospitals
+                and clinics.
+              </p>
             </div>
 
             <div className="bg-white mt-6">
