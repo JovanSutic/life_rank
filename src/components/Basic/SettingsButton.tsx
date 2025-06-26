@@ -9,9 +9,11 @@ import { trackEvent } from '../../utils/analytics';
 const SettingsButton = ({
   currency,
   type = 'light',
+  top = 1,
 }: {
   currency: Currency;
   type?: 'light' | 'dark';
+  top?: number;
 }) => {
   const [open, setOpen] = useState(false);
   const { setCurrency, currency: currencyNam } = useMapStore();
@@ -28,7 +30,7 @@ const SettingsButton = ({
   }, []);
 
   return (
-    <div className="absolute top-4 right-2 lg:right-4  z-1000">
+    <div className={`absolute ${top === 1 ? 'top-4' : 'top-1'} right-2 lg:right-4  z-1000`}>
       <button
         onClick={() => setOpen((prev) => !prev)}
         className={`p-2 rounded-full ${type === 'light' ? 'bg-white hover:bg-gray-100' : 'bg-gray-700 hover:bg-gray-600'} shadow cursor-pointer focus:outline-none`}

@@ -36,7 +36,7 @@ const BudgetSelector: React.FC<BudgetSelectorProps> = ({
   };
 
   return (
-    <div className="flex gap-4 mb-2 lg:mb-6">
+    <div className="flex gap-4 mb-2 lg:mb-4">
       {[SocialType.SOLO, SocialType.PAIR, SocialType.FAMILY].map((key) => {
         const isActive = active === key;
         return (
