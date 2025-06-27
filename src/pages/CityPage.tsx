@@ -23,6 +23,8 @@ import type {
 import HCTiersList from '../components/City/HCTiersList';
 import HCRating from '../components/City/HCRating';
 import HCMissingTable from '../components/City/HCMissingTable';
+import { useMemo } from 'react';
+import { getBudgetLabel } from '../utils/map';
 
 const missingSpecialties: MissingSpecialtyItem[] = [
   {
@@ -300,6 +302,21 @@ function CityPage() {
   //     };
   //   }, [budgets]);
 
+  const travelTier = useMemo(() => {
+    const travelTier: TierData = {
+      title: '🟦 Travel Insurance – Short-Term Visitors',
+      items: [
+        'Access to emergency care in public hospitals (ER, ambulance)',
+        'Coverage for acute illness and accidental injuries',
+        `Required for Schengen Visa applicants (min. ${getBudgetLabel(currencyName, currencyIndex, 30000, false)} medical coverage)`,
+        'No access to assigned GP or long-term specialist care via SSN',
+        'Repatriation coverage often included in plans',
+        `Typical cost: ${getBudgetLabel(currencyName, currencyIndex, 1.2, false)}–${getBudgetLabel(currencyName, currencyIndex, 4.5, false)}/day depending on age and coverage level`,
+      ],
+    };
+    return travelTier;
+  }, [currencyIndex]);
+
   if (Number(idParam) !== 267 || name !== 'Taranto') {
     return <div className="text-center text-2xl">Data is still not available for this city</div>;
   }
@@ -387,6 +404,7 @@ function CityPage() {
                 }
               </p>
               <HCTiersList data={healthcareTiers} />
+
               <div className="mt-6">
                 <p className="text-base text-gray-800 font-semibold mb-4">Yearly price estimates</p>
                 <SideTabs
@@ -425,6 +443,13 @@ function CityPage() {
                     />
                   </div>
                 </SideTabs>
+              </div>
+
+              <div className="mt-6">
+                <p className="text-base text-gray-800 font-semibold mb-4">
+                  For tourists (stays up to 90 days)
+                </p>
+                <HCTiersList data={[travelTier]} />
               </div>
             </div>
             <div className="mt-4">
