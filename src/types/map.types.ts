@@ -16,8 +16,8 @@ export interface CityPanelData {
   cityId: number;
   cityName: string;
   countryName: string;
+  countryId?: number;
   inhabitants: number;
-  climate: string;
   budgets: {
     solo: number;
     pair: number;

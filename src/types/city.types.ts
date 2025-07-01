@@ -3,6 +3,7 @@ export interface HealthMetricItem {
   value: string;
   bench: string;
   comment: string;
+  score?: number;
 }
 
 export interface MissingSpecialtyItem {

@@ -6,6 +6,7 @@ import type {
   CityFeel,
   CrimesSummary,
   Currency,
+  FieldData,
   Price,
 } from '../types/api.types';
 
@@ -111,6 +112,21 @@ export async function fetchPrices(cityId: number): Promise<Price[]> {
     return res.data.data;
   } catch (error) {
     console.error('Failed to fetch prices:', error);
+    throw error;
+  }
+}
+
+export async function fetchHealthcare(
+  id: number,
+  type: 'countryId' | 'cityId'
+): Promise<FieldData[]> {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/def_value/by-field?field=healthcare&${type}=${id}`
+    );
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch healthcare values:', error);
     throw error;
   }
 }

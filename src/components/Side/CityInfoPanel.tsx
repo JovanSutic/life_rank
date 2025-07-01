@@ -16,7 +16,8 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const { toggleNewsletterShow, currency, currencyIndex } = useMapStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { cityId, cityName, countryName, inhabitants, budgets, safety, contextualData } = cityData;
+  const { cityId, cityName, countryName, inhabitants, budgets, safety, contextualData, countryId } =
+    cityData;
   const tags = useMemo(() => extractTagsFromContextData(contextualData), [contextualData?.id]);
 
   useEffect(() => {
@@ -112,6 +113,19 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
           </Link>
         </div>
       </section>
+
+      {countryId && (
+        <section>
+          <div className="mt-4 mb-4 flex justify-end">
+            <Link
+              to={`/healthcare/${cityName}?city=${cityId}&country=${countryId}`}
+              className="inline-block px-4 py-1.5 rounded-lg bg-blue-200 text-blue-800 font-semibold text-sm hover:bg-blue-300"
+            >
+              🚑 Check out Healthcare
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="p-3 rounded-lg bg-blue-50 border border-blue-100 shadow-sm mb-3">
         <h3 className="text-md font-semibold uppercase tracking-wide text-blue-800 mb-3">

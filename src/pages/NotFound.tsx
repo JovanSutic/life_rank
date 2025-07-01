@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function NotFound() {
   return (
-    <div className="w-screen h-screen">
+    <div className="w-full h-full">
       <div className="w-[320px] mx-auto">
         <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
           <span className="text-blue-800 text-shadow-lg">Life</span>

@@ -8,6 +8,8 @@ import {
   cityFeelList,
   city,
   cityFeel,
+  healthcareCityData,
+  healthcareCountryData,
 } from './data';
 
 export const handlers = [
@@ -78,6 +80,21 @@ export const handlers = [
     try {
       await delay(700);
       return HttpResponse.json(city);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/def_value/by-field`, async ({ request }) => {
+    try {
+      await delay(700);
+      const url = new URL(request.url);
+      const params = Object.fromEntries(url.searchParams);
+
+      const response = Object.keys(params).find((key) => key === 'cityId')
+        ? healthcareCityData
+        : healthcareCountryData;
+      return HttpResponse.json(response);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
