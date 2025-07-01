@@ -125,9 +125,9 @@ export default function CitySide() {
           cityData={{
             cityId: focusCity?.id || 0,
             cityName: focusCity?.name || '',
+            countryId: focusCity?.countriesId,
             countryName: focusCity?.country || '',
             inhabitants: focusCity?.size || 0,
-            climate: 'hot and rainy',
             budgets: {
               solo: budgets?.find((item) => item.type === SocialType.SOLO)?.avg_price || 0,
               pair: budgets?.find((item) => item.type === SocialType.PAIR)?.avg_price || 0,

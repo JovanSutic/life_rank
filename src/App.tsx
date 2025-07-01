@@ -5,9 +5,9 @@ import { lazy, Suspense, useEffect } from 'react';
 import LoadingOverlay from './components/Basic/LoadingOverlay';
 import { initGA } from './utils/analytics';
 import NotFound from './pages/NotFound';
-import CityPage from './pages/CityPage';
 import BlogPage from './pages/BlogPage';
 import ScrollTop from './components/Basic/ScrollTop';
+import HealthCarePage from './pages/HealthcarePage';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -51,7 +51,7 @@ function App() {
           }
         />
         <Route
-          path="/city/:name"
+          path="/healthcare/:name"
           element={
             <Suspense
               fallback={
@@ -60,7 +60,7 @@ function App() {
                 </div>
               }
             >
-              <CityPage />
+              <HealthCarePage />
             </Suspense>
           }
         />
