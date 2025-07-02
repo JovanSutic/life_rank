@@ -2,6 +2,7 @@ export interface City {
   id: number;
   name: string;
   country: string;
+  countriesId?: number;
   search: string;
   lat: number;
   lng: number;
@@ -105,4 +106,32 @@ export interface CityContext {
 export interface Currency {
   date: string;
   eur: Record<string, number>;
+}
+
+interface Definition {
+  id: number;
+  label: string;
+  type: string;
+  aspectId: number;
+}
+
+interface DefValue {
+  id: number;
+  definitionId: number;
+  cityId: number | null;
+  countryId: number | null;
+  value: string | null;
+  score: number | null;
+  comment?: string | null;
+  note?: string | null;
+  type: string;
+  visible: boolean;
+  created_at: string;
+  updated_at: string;
+  definition: Definition;
+}
+
+export interface FieldData {
+  definition: Definition;
+  values: DefValue[];
 }
