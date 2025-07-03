@@ -40,20 +40,19 @@ const HCTable = ({
             key={rowIndex}
             className={`${rowIndex < data.length - 1 && 'border-b border-gray-200'} py-4 space-y-1 text-sm`}
           >
-            {/* Each data point stacked with its corresponding header */}
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">{headers[0]}</span>
               <span className="text-gray-800 text-right break-words max-w-[70%]">
                 {row.specialty}
               </span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">{headers[1]}</span>
               <span className="text-gray-800 text-right break-words max-w-[70%]">
                 {row.comment}
               </span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">{headers[2]}</span>
               <span className="text-gray-800 text-right break-words max-w-[70%]">
                 {row.alternative}
