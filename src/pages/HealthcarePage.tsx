@@ -10,6 +10,7 @@ import PanelTable from '../components/Healthcare/PanelTable';
 import HCTable from '../components/Healthcare/HCTable';
 import type {
   HealthMetricItem,
+  LanguageService,
   MissingSpecialtyItem,
   PanelTableItem,
   TierData,
@@ -25,6 +26,7 @@ import {
   getHealthPanels,
   getHealthPanelsText,
   getHealthTiers,
+  getLanguageService,
   getMissingSpec,
 } from '../utils/city';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
@@ -115,6 +117,17 @@ function HealthCarePage() {
     return { healthcareList: [], healthcareScore: 0 };
   }, [cityData]);
 
+  const languageService: LanguageService = useMemo(() => {
+    if (cityData) {
+      return getLanguageService(cityData);
+    }
+    return {
+      serviceList: [],
+      places: [],
+      score: 0,
+    };
+  }, [cityData]);
+
   const travelTier = useMemo(() => {
     const travelTier: TierData = {
       title: '🟦 Travel Insurance – Short-Term Visitors',
@@ -153,28 +166,47 @@ function HealthCarePage() {
           </div>
 
           <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
-            <div className="mb-8">
+            <div className="mb-2">
               <p className="text-sm md:text-base text-gray-800 mb-4">
                 {
-                  'Italy offers a universal public healthcare system known as the SSN (Servizio Sanitario Nazionale), which provides broad coverage to residents, including EU citizens and many non-EU residents with the right permits. In addition to the SSN, many residents choose to use private healthcare — either paying out of pocket or through private insurance — for faster access, specialist choice, or services not fully covered by the public system (like dental or mental health care).'
+                  'Here you’ll find how this city ranks for healthcare quality, what services are available, where English-speaking care can be found, and what kind of insurance options you might need. Whether you’re staying short-term or settling in, this is what healthcare here looks like.'
                 }
               </p>
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {
-                  'Italy consistently ranks among the top 10–20 healthcare systems globally in terms of overall outcomes, life expectancy, and access, according to sources like the OECD and World Health Organization (WHO). However, quality and speed can vary by region, and understanding your insurance options is key to navigating care efficiently.'
-                }
-              </p>
-              <div className="flex justify-center mt-2">
-                <Link
-                  to="/blog/healthcare-system-italy"
-                  className="inline-block px-4 py-1.5 rounded-lg bg-gray-200 text-black font-semibold text-sm hover:bg-gray-300"
-                >
-                  🧾 Healthcare System in Italy
-                </Link>
-              </div>
             </div>
             <div className="bg-white mt-2">
-              <HCRating score={healthcareScore} city={name || ''} />
+              <HCRating score={healthcareScore} title={`${name} Healthcare Rating`} />
+            </div>
+
+            <div className="mt-8">
+              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                English speaking experience
+              </p>
+              <p className="text-sm md:text-base text-gray-800 mb-4">
+                {`Here’s what access to English-speaking doctors, clinics, and hospital services looks like in this city.`}
+              </p>
+              <div className="bg-white mt-2 mb-8">
+                <HCRating
+                  score={languageService.score}
+                  title={`${name} Healthcare for English speakers`}
+                />
+              </div>
+
+              <div className="mb-8">
+                {languageService.serviceList.map((item) => (
+                  <p className="text-sm md:text-base text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                    {item}
+                  </p>
+                ))}
+              </div>
+
+              <p className="text-base text-gray-800 font-semibold mb-4">
+                Local English speaking healthcare service providers
+              </p>
+
+              <HCMissingTable
+                headers={['HC Provider', 'Comment', 'Service']}
+                data={languageService.places}
+              />
             </div>
 
             <div className="mt-8">
@@ -208,6 +240,22 @@ function HealthCarePage() {
                 For more accurate information you should verify directly with the local hospitals
                 and clinics.
               </p>
+            </div>
+
+            <div className="mt-8 border border-gray-200 rounded-lg p-4">
+              <p className="text-base md:text-lg text-gray-800 mb-4 text-center">
+                {
+                  'Curious how Italy’s healthcare system works, what’s public vs. private, and what to expect as a foreigner?'
+                }
+              </p>
+              <div className="flex justify-center mt-2">
+                <Link
+                  to="/blog/healthcare-system-italy"
+                  className="inline-block px-4 py-1.5 rounded-lg bg-gray-200 text-black font-semibold text-sm hover:bg-gray-300"
+                >
+                  🧾 Healthcare System in Italy
+                </Link>
+              </div>
             </div>
 
             <div className="mt-8 mb-8">

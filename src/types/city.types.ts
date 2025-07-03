@@ -26,3 +26,9 @@ export type TierData = {
 export type HCTiersListProps = {
   data: TierData[];
 };
+
+export interface LanguageService {
+  serviceList: string[];
+  places: MissingSpecialtyItem[];
+  score: number;
+}

@@ -141,3 +141,30 @@ export function getHealthBenchmarks(data: FieldData[]) {
 
   return result;
 }
+
+export function getLanguageService(data: FieldData[]) {
+  const serviceList: string[] = [];
+  const places: MissingSpecialtyItem[] = [];
+  let score = 0;
+  data
+    .filter((item) => item.definition.aspectId === 5)
+    .forEach((item) => {
+      if (item.definition.type === 'language_metric') {
+        const [service] = item.values;
+        score = score + (service?.score || 0);
+        if (service && service.value !== 'not exist') {
+          serviceList.push(service.comment!);
+        }
+      } else {
+        item.values.forEach((val) => {
+          places.push({ specialty: val.value!, alternative: val.note!, comment: val.comment! });
+        });
+      }
+    });
+
+  return {
+    serviceList,
+    places,
+    score: roundToTwoDecimals((score / 3) * 1.2),
+  };
+}
