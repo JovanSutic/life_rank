@@ -27,7 +27,6 @@ import SettingsButton from '../components/Basic/SettingsButton';
 import { fetchBudgets, fetchCurrency, fetchFeel, fetchPrices } from '../utils/apiCalls';
 import { getBudgetLabel } from '../utils/map';
 import BackButton from '../components/Basic/BackButton';
-import { Helmet } from 'react-helmet-async';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -258,13 +257,17 @@ function BudgetPlay() {
 
   return (
     <>
-      <Helmet>
+      <article>
         <title>{`Budget needed in ${name} | LifeRank`}</title>
         <meta
           name="description"
           content={`Budget needed in ${name} for expats and nomads looking for peaceful & affordable places`}
         />
-      </Helmet>
+        <meta
+          name="keywords"
+          content={`${name}, budget, budgeting, expenses, rent expenses, food expenses, life expenses`}
+        />
+      </article>
       <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">
         <Modal show={isModal}>
           <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>

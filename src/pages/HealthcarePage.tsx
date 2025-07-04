@@ -31,7 +31,6 @@ import {
 } from '../utils/city';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import MoreData from '../components/Basic/MoreData';
-import { Helmet } from 'react-helmet-async';
 
 function HealthCarePage() {
   const { name } = useParams();
@@ -153,13 +152,17 @@ function HealthCarePage() {
   }
   return (
     <>
-      <Helmet>
+      <article>
         <title>{`Healthcare quality in ${name} | LifeRank`}</title>
         <meta
           name="description"
           content={`Healthcare in ${name} for expats and nomads looking for peaceful & affordable places`}
         />
-      </Helmet>
+        <meta
+          name="keywords"
+          content={`${name}, healthcare, public healthcare, private healthcare, expat healthcare, healthcare insurance, healthcare benchmarks`}
+        />
+      </article>
       <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
         <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
         <AsyncStateWrapper
