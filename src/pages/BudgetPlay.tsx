@@ -27,6 +27,7 @@ import SettingsButton from '../components/Basic/SettingsButton';
 import { fetchBudgets, fetchCurrency, fetchFeel, fetchPrices } from '../utils/apiCalls';
 import { getBudgetLabel } from '../utils/map';
 import BackButton from '../components/Basic/BackButton';
+import { Helmet } from 'react-helmet-async';
 
 interface BudgetControls {
   apartmentLocation: string;
@@ -256,241 +257,258 @@ function BudgetPlay() {
   }, []);
 
   return (
-    <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">
-      <Modal show={isModal}>
-        <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>
-        <ul className="text-sm text-gray-700 space-y-2">
-          <li>
-            <strong>🏠 Housing & Utilities:</strong> Rent, utilities, internet, mobile plans.
-          </li>
-          <li>
-            <strong>🍽️ Food & Essentials:</strong> Groceries, restaurants, food orders, basic home &
-            personal items.
-          </li>
-          <li>
-            <strong>🚕 Transport:</strong> Public transit, taxis, gas, parking, ride-hailing.
-          </li>
-          <li>
-            <strong>🎭 Leisure & Fun:</strong> Bars, events, activities, local experiences.
-          </li>
-          <li>
-            <strong>👕 Clothing:</strong> Apparel, shoes, seasonal wear.
-          </li>
-          <li>
-            <strong>🏫 Preschool:</strong> Only for families, preschool expenses.
-          </li>
-        </ul>
-        <div className="my-6">
-          <p className="text-xs text-gray-600 mb-2">
-            The budgets presented here are intended as **general guidance** based on average
-            spending patterns. They do not include luxury goods, high-end services, or large
-            one-time purchases.
-          </p>
+    <>
+      <Helmet>
+        <title>{`Budget needed in ${name} | LifeRank`}</title>
+        <meta
+          name="description"
+          content={`Budget needed in ${name} for expats and nomads looking for peaceful & affordable places`}
+        />
+      </Helmet>
+      <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">
+        <Modal show={isModal}>
+          <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>
+          <ul className="text-sm text-gray-700 space-y-2">
+            <li>
+              <strong>🏠 Housing & Utilities:</strong> Rent, utilities, internet, mobile plans.
+            </li>
+            <li>
+              <strong>🍽️ Food & Essentials:</strong> Groceries, restaurants, food orders, basic home
+              & personal items.
+            </li>
+            <li>
+              <strong>🚕 Transport:</strong> Public transit, taxis, gas, parking, ride-hailing.
+            </li>
+            <li>
+              <strong>🎭 Leisure & Fun:</strong> Bars, events, activities, local experiences.
+            </li>
+            <li>
+              <strong>👕 Clothing:</strong> Apparel, shoes, seasonal wear.
+            </li>
+            <li>
+              <strong>🏫 Preschool:</strong> Only for families, preschool expenses.
+            </li>
+          </ul>
+          <div className="my-6">
+            <p className="text-xs text-gray-600 mb-2">
+              The budgets presented here are intended as **general guidance** based on average
+              spending patterns. They do not include luxury goods, high-end services, or large
+              one-time purchases.
+            </p>
 
-          <p className="text-xs text-gray-600">
-            You can customize budgets for different lifestyles: solo travelers, couples, or
-            families. Adjust the settings to see how expenses might change depending on your
-            situation.
-          </p>
-        </div>
-        <div className="flex justify-end">
-          <button
-            onClick={() => setIsModal(false)}
-            className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-2 px-4 bg-gray-200 rounded-lg"
-          >
-            Close
-          </button>
-        </div>
-      </Modal>
-      <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
-      <AsyncStateWrapper
-        isLoading={
-          isLoading ||
-          isFetching ||
-          pricesIsLoading ||
-          pricesIsFetching ||
-          feelIsLoading ||
-          feelIsFetching
-        }
-        isError={isError || pricesIsError || feelIsError}
-        error={error || pricesError || feelError}
-      >
-        <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
-          {currency && <SettingsButton currency={currency} type="dark" />}
-          <BackButton />
+            <p className="text-xs text-gray-600">
+              You can customize budgets for different lifestyles: solo travelers, couples, or
+              families. Adjust the settings to see how expenses might change depending on your
+              situation.
+            </p>
+          </div>
+          <div className="flex justify-end">
+            <button
+              onClick={() => setIsModal(false)}
+              className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-2 px-4 bg-gray-200 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </Modal>
+        <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
+        <AsyncStateWrapper
+          isLoading={
+            isLoading ||
+            isFetching ||
+            pricesIsLoading ||
+            pricesIsFetching ||
+            feelIsLoading ||
+            feelIsFetching
+          }
+          isError={isError || pricesIsError || feelIsError}
+          error={error || pricesError || feelError}
+        >
+          <div className="sticky top-0 z-20 bg-white pb-4 pt-6 px-4 lg:px-0 flex flex-col w-full lg:w-[764px] mx-auto text-center">
+            {currency && <SettingsButton currency={currency} type="dark" />}
+            <BackButton />
 
-          <h1 className="text-lg lg:text-2xl font-semibold text-gray-800 mb-2 mt-8 lg:mt-0">
-            Explore Your Monthly Budget in {name}
-          </h1>
+            <h1 className="text-lg lg:text-2xl font-semibold text-gray-800 mb-2 mt-8 lg:mt-0">
+              Explore Your Monthly Budget in {name}
+            </h1>
 
-          <button onClick={() => setIsModal(true)} className="text-sm text-blue-600 underline mb-6">
-            get more info about the budget
-          </button>
+            <button
+              onClick={() => setIsModal(true)}
+              className="text-sm text-blue-600 underline mb-6"
+            >
+              get more info about the budget
+            </button>
 
-          <BudgetSelector
-            budgets={{
-              SOLO: currentBudget.SOLO,
-              PAIR: currentBudget.PAIR,
-              FAMILY: currentBudget.FAMILY,
-            }}
-            currency={currencyName}
-            index={currencyIndex}
-            onChange={handleTypeChange}
-          />
-        </div>
+            <BudgetSelector
+              budgets={{
+                SOLO: currentBudget.SOLO,
+                PAIR: currentBudget.PAIR,
+                FAMILY: currentBudget.FAMILY,
+              }}
+              currency={currencyName}
+              index={currencyIndex}
+              onChange={handleTypeChange}
+            />
+          </div>
 
-        <div className="flex flex-col w-full lg:w-[764px] mx-auto text-center px-2 pt-1 gap-6">
-          <InputSection
-            name="🏠 Housing & Utilities"
-            amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.apartment, false)}
-            onClick={() => setIsModal(!isModal)}
-          >
-            <div className="w-full lg:w-[328px]">
-              <Switch
-                options={['Central location', 'Outer areas']}
-                name="apartmentLocation"
-                onChange={handleControlChange}
-                value={budgetControls.apartmentLocation}
-                color="gray"
-              />
-            </div>
-            <div className="w-full lg:w-[328px]">
-              <Switch
-                options={['Smaller apartment', 'Bigger apartment']}
-                name="apartmentSize"
-                onChange={handleControlChange}
-                value={budgetControls.apartmentSize}
-                color="gray"
-              />
-            </div>
-
-            {shortIncrease && (
+          <div className="flex flex-col w-full lg:w-[764px] mx-auto text-center px-2 pt-1 gap-6">
+            <InputSection
+              name="🏠 Housing & Utilities"
+              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.apartment, false)}
+              onClick={() => setIsModal(!isModal)}
+            >
               <div className="w-full lg:w-[328px]">
                 <Switch
-                  options={['Long term', 'Short term']}
-                  name="apartmentTerm"
+                  options={['Central location', 'Outer areas']}
+                  name="apartmentLocation"
                   onChange={handleControlChange}
-                  value={budgetControls.apartmentTerm}
+                  value={budgetControls.apartmentLocation}
                   color="gray"
                 />
               </div>
-            )}
-
-            {isFullPrice && (
-              <>
-                <p className=" w-full text-sm text-center text-gray-500">Housing price level</p>
-                <Slider
-                  options={['Low price', 'Average', 'High price']}
-                  name="apartmentPrice"
-                  value={budgetControls.apartmentPrice}
-                  color="gray"
-                  disabled={budgetControls.apartmentTerm === 'Short term'}
+              <div className="w-full lg:w-[328px]">
+                <Switch
+                  options={['Smaller apartment', 'Bigger apartment']}
+                  name="apartmentSize"
                   onChange={handleControlChange}
+                  value={budgetControls.apartmentSize}
+                  color="gray"
                 />
-              </>
-            )}
-          </InputSection>
+              </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <InputSection
-              name="🍽️ Food & Essentials"
-              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.food, false)}
-              onClick={() => setIsModal(!isModal)}
-            >
-              <Slider
-                options={['Low', 'Medium', 'High']}
-                name="food"
-                value={budgetControls.food}
-                color="gray"
-                onChange={handleControlChange}
-              />
+              {shortIncrease && (
+                <div className="w-full lg:w-[328px]">
+                  <Switch
+                    options={['Long term', 'Short term']}
+                    name="apartmentTerm"
+                    onChange={handleControlChange}
+                    value={budgetControls.apartmentTerm}
+                    color="gray"
+                  />
+                </div>
+              )}
+
+              {isFullPrice && (
+                <>
+                  <p className=" w-full text-sm text-center text-gray-500">Housing price level</p>
+                  <Slider
+                    options={['Low price', 'Average', 'High price']}
+                    name="apartmentPrice"
+                    value={budgetControls.apartmentPrice}
+                    color="gray"
+                    disabled={budgetControls.apartmentTerm === 'Short term'}
+                    onChange={handleControlChange}
+                  />
+                </>
+              )}
             </InputSection>
 
-            <InputSection
-              name="🚕 Transport"
-              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.transport, false)}
-              onClick={() => setIsModal(!isModal)}
-            >
-              <Slider
-                options={['Low', 'Medium', 'High']}
-                name="transport"
-                value={budgetControls.transport}
-                color="gray"
-                onChange={handleControlChange}
-              />
-            </InputSection>
-
-            <InputSection
-              name="🎭 Leisure & Fun"
-              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.out, false)}
-              onClick={() => setIsModal(!isModal)}
-            >
-              <Slider
-                options={['Low', 'Medium', 'High']}
-                name="out"
-                value={budgetControls.out}
-                color="gray"
-                onChange={handleControlChange}
-              />
-            </InputSection>
-
-            <InputSection
-              name="👕 Clothing"
-              amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.clothes, false)}
-              onClick={() => setIsModal(!isModal)}
-            >
-              <Slider
-                options={['Low', 'Medium', 'High']}
-                name="clothes"
-                value={budgetControls.clothes}
-                color="gray"
-                onChange={handleControlChange}
-              />
-            </InputSection>
-
-            {budgetType === 'FAMILY' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <InputSection
-                name="🏫 Preschool"
-                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.preschool!, false)}
+                name="🍽️ Food & Essentials"
+                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.food, false)}
                 onClick={() => setIsModal(!isModal)}
               >
-                <Switch
-                  options={['On', 'Off']}
-                  name="preschool"
-                  value={budgetControls.preschool!}
+                <Slider
+                  options={['Low', 'Medium', 'High']}
+                  name="food"
+                  value={budgetControls.food}
                   color="gray"
                   onChange={handleControlChange}
                 />
               </InputSection>
-            )}
-          </div>
-          <div className="bg-blue-50 border-l-4 border-blue-400 text-blue-800 p-4 rounded-md shadow-sm text-sm">
-            <p className="font-semibold mb-1">Newsletter</p>
-            <p className="text-xs lg:text-sm mb-2">
-              If you find this interesting you should definitely subscribe to out newsletter and
-              enjoy our weekly insights.
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={toggleNewsletterShow}
-                className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+
+              <InputSection
+                name="🚕 Transport"
+                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.transport, false)}
+                onClick={() => setIsModal(!isModal)}
               >
-                📧 Subscribe to our newsletter
-              </button>
+                <Slider
+                  options={['Low', 'Medium', 'High']}
+                  name="transport"
+                  value={budgetControls.transport}
+                  color="gray"
+                  onChange={handleControlChange}
+                />
+              </InputSection>
+
+              <InputSection
+                name="🎭 Leisure & Fun"
+                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.out, false)}
+                onClick={() => setIsModal(!isModal)}
+              >
+                <Slider
+                  options={['Low', 'Medium', 'High']}
+                  name="out"
+                  value={budgetControls.out}
+                  color="gray"
+                  onChange={handleControlChange}
+                />
+              </InputSection>
+
+              <InputSection
+                name="👕 Clothing"
+                amount={getBudgetLabel(currencyName, currencyIndex, partsAmount.clothes, false)}
+                onClick={() => setIsModal(!isModal)}
+              >
+                <Slider
+                  options={['Low', 'Medium', 'High']}
+                  name="clothes"
+                  value={budgetControls.clothes}
+                  color="gray"
+                  onChange={handleControlChange}
+                />
+              </InputSection>
+
+              {budgetType === 'FAMILY' && (
+                <InputSection
+                  name="🏫 Preschool"
+                  amount={getBudgetLabel(
+                    currencyName,
+                    currencyIndex,
+                    partsAmount.preschool!,
+                    false
+                  )}
+                  onClick={() => setIsModal(!isModal)}
+                >
+                  <Switch
+                    options={['On', 'Off']}
+                    name="preschool"
+                    value={budgetControls.preschool!}
+                    color="gray"
+                    onChange={handleControlChange}
+                  />
+                </InputSection>
+              )}
+            </div>
+            <div className="bg-blue-50 border-l-4 border-blue-400 text-blue-800 p-4 rounded-md shadow-sm text-sm">
+              <p className="font-semibold mb-1">Newsletter</p>
+              <p className="text-xs lg:text-sm mb-2">
+                If you find this interesting you should definitely subscribe to out newsletter and
+                enjoy our weekly insights.
+              </p>
+              <div className="flex justify-center">
+                <button
+                  onClick={toggleNewsletterShow}
+                  className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+                >
+                  📧 Subscribe to our newsletter
+                </button>
+              </div>
+            </div>
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
+              <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>
+              <p className="text-xs lg:text-sm">
+                The figures provided here are based on publicly available data and common spending
+                patterns. Our average/medium budgets reflects a relaxed, comfortable lifestyle — not
+                the lowest possible cost. Your actual expenses may vary depending on your personal
+                habits, priorities, and pace of life.
+              </p>
             </div>
           </div>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md shadow-sm mb-6 text-sm">
-            <p className="font-semibold mb-1">Note on Accuracy and Personalization</p>
-            <p className="text-xs lg:text-sm">
-              The figures provided here are based on publicly available data and common spending
-              patterns. Our average/medium budgets reflects a relaxed, comfortable lifestyle — not
-              the lowest possible cost. Your actual expenses may vary depending on your personal
-              habits, priorities, and pace of life.
-            </p>
-          </div>
-        </div>
-      </AsyncStateWrapper>
-    </div>
+        </AsyncStateWrapper>
+      </div>
+    </>
   );
 }
 

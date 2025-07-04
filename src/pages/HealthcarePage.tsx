@@ -31,6 +31,7 @@ import {
 } from '../utils/city';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import MoreData from '../components/Basic/MoreData';
+import { Helmet } from 'react-helmet-async';
 
 function HealthCarePage() {
   const { name } = useParams();
@@ -151,106 +152,117 @@ function HealthCarePage() {
     return <div className="text-center text-2xl">Data is still not available for this city</div>;
   }
   return (
-    <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
-      <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
-      <AsyncStateWrapper
-        isLoading={countryIsLoading || countryIsFetching || cityIsLoading || cityIsFetching}
-        isError={countryIsError || cityIsError}
-        error={countryError || cityError}
-      >
-        <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
-          {currency && <SettingsButton currency={currency} type="dark" top={0} />}
-          <div className="w-full">
-            <h1 className="text-lg text-center lg:text-2xl font-bold text-gray-800 mb-2 ">
-              Healthcare in {name}
-            </h1>
-          </div>
-
-          <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
-            <div className="mb-2">
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {
-                  'Here you’ll find how this city ranks for healthcare quality, what services are available, where English-speaking care can be found, and what kind of insurance options you might need. Whether you’re staying short-term or settling in, this is what healthcare here looks like.'
-                }
-              </p>
-            </div>
-            <div className="bg-white mt-2">
-              <HCRating score={healthcareScore} title={`${name} Healthcare Rating`} />
+    <>
+      <Helmet>
+        <title>{`Healthcare quality in ${name} | LifeRank`}</title>
+        <meta
+          name="description"
+          content={`Healthcare in ${name} for expats and nomads looking for peaceful & affordable places`}
+        />
+      </Helmet>
+      <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
+        <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
+        <AsyncStateWrapper
+          isLoading={countryIsLoading || countryIsFetching || cityIsLoading || cityIsFetching}
+          isError={countryIsError || cityIsError}
+          error={countryError || cityError}
+        >
+          <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
+            {currency && <SettingsButton currency={currency} type="dark" top={0} />}
+            <div className="w-full">
+              <h1 className="text-lg text-center lg:text-2xl font-bold text-gray-800 mb-2 ">
+                Healthcare in {name}
+              </h1>
             </div>
 
-            <div className="mt-8">
-              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
-                English speaking experience
-              </p>
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {`Here’s what access to English-speaking doctors, clinics, and hospital services looks like in this city.`}
-              </p>
-              <div className="bg-white mt-2 mb-8">
-                <HCRating score={languageService.score} title={`${name} HC for English speakers`} />
+            <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
+              <div className="mb-2">
+                <p className="text-sm md:text-base text-gray-800 mb-4">
+                  {
+                    'Here you’ll find how this city ranks for healthcare quality, what services are available, where English-speaking care can be found, and what kind of insurance options you might need. Whether you’re staying short-term or settling in, this is what healthcare here looks like.'
+                  }
+                </p>
+              </div>
+              <div className="bg-white mt-2">
+                <HCRating score={healthcareScore} title={`${name} Healthcare Rating`} />
               </div>
 
-              <div className="mb-8">
-                {languageService.serviceList.map((item) => (
-                  <p className="text-sm md:text-base text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                    {item}
-                  </p>
-                ))}
-              </div>
+              <div className="mt-8">
+                <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                  English speaking experience
+                </p>
+                <p className="text-sm md:text-base text-gray-800 mb-4">
+                  {`Here’s what access to English-speaking doctors, clinics, and hospital services looks like in this city.`}
+                </p>
+                <div className="bg-white mt-2 mb-8">
+                  <HCRating
+                    score={languageService.score}
+                    title={`${name} HC for English speakers`}
+                  />
+                </div>
 
-              <p className="text-base text-gray-800 font-semibold mb-4">
-                Local English speaking healthcare service providers
-              </p>
-
-              <HCMissingTable
-                headers={['HC Provider', 'Comment', 'Service']}
-                data={languageService.places}
-              />
-            </div>
-
-            <div className="mt-8">
-              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
-                Healthcare benchmarks
-              </p>
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {`The table bellow presents how ${name} healthcare system performs using international benchmarks like the OECD health indicators and the Euro Health Consumer Index (EHCI). These metrics give a clearer picture of service quality, access, and overall system performance, which can be useful when evaluating what to expect as a resident`}
-              </p>
-              <div>
-                <MoreData title={'See benchmark data'}>
-                  <HCTable
-                    headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
-                    data={healthcareList}
-                  />{' '}
-                </MoreData>
-              </div>
-            </div>
-
-            <div className="bg-white mt-6">
-              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
-                Not available services
-              </p>
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {
-                  'Specialty services not available locally and typically require travel to a regional or national hospital.'
-                }
-              </p>
-              <div>
-                <MoreData title={'See services not available locally'}>
-                  <>
-                    <HCMissingTable
-                      headers={['Specialty', 'Comment', 'Alternative city']}
-                      data={missingSpecialties}
-                    />
-                    <p className="text-xs md:text-sm italic text-gray-800 mt-4">
-                      *Based on available online data of local and regional health service
-                      directories. For more accurate information you should verify directly with the
-                      local hospitals and clinics.
+                <div className="mb-8">
+                  {languageService.serviceList.map((item) => (
+                    <p className="text-sm md:text-base text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                      ✅ {item}
                     </p>
-                  </>
-                </MoreData>
-              </div>
-            </div>
+                  ))}
+                </div>
 
-            {/* <div className="mt-8 border border-gray-200 rounded-lg p-4">
+                <p className="text-base text-gray-800 font-semibold mb-4">
+                  Local English speaking healthcare service providers
+                </p>
+
+                <HCMissingTable
+                  headers={['HC Provider', 'Comment', 'Service']}
+                  data={languageService.places}
+                />
+              </div>
+
+              <div className="mt-8">
+                <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                  Healthcare benchmarks
+                </p>
+                <p className="text-sm md:text-base text-gray-800 mb-4">
+                  {`The table bellow presents how ${name} healthcare system performs using international benchmarks like the OECD health indicators and the Euro Health Consumer Index (EHCI). These metrics give a clearer picture of service quality, access, and overall system performance, which can be useful when evaluating what to expect as a resident`}
+                </p>
+                <div>
+                  <MoreData title={'See benchmark data'}>
+                    <HCTable
+                      headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
+                      data={healthcareList}
+                    />{' '}
+                  </MoreData>
+                </div>
+              </div>
+
+              <div className="bg-white mt-6">
+                <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                  Not available services
+                </p>
+                <p className="text-sm md:text-base text-gray-800 mb-4">
+                  {
+                    'Specialty services not available locally and typically require travel to a regional or national hospital.'
+                  }
+                </p>
+                <div>
+                  <MoreData title={'See services not available locally'}>
+                    <>
+                      <HCMissingTable
+                        headers={['Specialty', 'Comment', 'Alternative city']}
+                        data={missingSpecialties}
+                      />
+                      <p className="text-xs md:text-sm italic text-gray-800 mt-4">
+                        *Based on available online data of local and regional health service
+                        directories. For more accurate information you should verify directly with
+                        the local hospitals and clinics.
+                      </p>
+                    </>
+                  </MoreData>
+                </div>
+              </div>
+
+              {/* <div className="mt-8 border border-gray-200 rounded-lg p-4">
               <p className="text-base md:text-lg text-gray-800 mb-4 text-center">
                 {
                   'Curious how Italy’s healthcare system works, what’s public vs. private, and what to expect as a foreigner?'
@@ -266,60 +278,63 @@ function HealthCarePage() {
               </div>
             </div> */}
 
-            <div className="mt-8 mb-8">
-              <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Insurance</p>
-              <p className="text-sm md:text-base text-gray-800 mb-4">
-                {
-                  ' We have broken down health insurance into three practical tiers to help you choose what best fits your lifestyle, expectations, and budget. Each tier builds on the one before it, starting from the mandatory public system and scaling up to include faster, more personalized care through private insurance.'
-                }
-              </p>
-              <HCTiersList data={healthcareTiers} />
-
-              <div className="mt-6">
-                <p className="text-base text-gray-800 font-semibold mb-4">Yearly price estimates</p>
-                <SideTabs tabs={healthcareTiers.map((item) => item.title)}>
-                  {Object.keys(healthcareTiersPricing)
-                    .reverse()
-                    .map((key: string) => {
-                      const pricing = healthcareTiersPricing[key];
-                      const text = getHealthPanelsText(key);
-                      return (
-                        <div key={key}>
-                          <PanelTable
-                            name="tier3"
-                            title={text.title}
-                            punchline={text.sub}
-                            currency={currencyName}
-                            index={currencyIndex}
-                            data={pricing}
-                          />
-                        </div>
-                      );
-                    })}
-                </SideTabs>
-              </div>
-
-              <div className="mt-6">
-                <p className="text-base text-gray-800 font-semibold mb-4">
-                  For tourists (stays up to 90 days)
+              <div className="mt-8 mb-8">
+                <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Insurance</p>
+                <p className="text-sm md:text-base text-gray-800 mb-4">
+                  {
+                    ' We have broken down health insurance into three practical tiers to help you choose what best fits your lifestyle, expectations, and budget. Each tier builds on the one before it, starting from the mandatory public system and scaling up to include faster, more personalized care through private insurance.'
+                  }
                 </p>
-                <HCTiersList data={[travelTier]} />
-              </div>
-            </div>
+                <HCTiersList data={healthcareTiers} />
 
-            <div className="flex justify-center">
-              <button
-                onClick={() => navigate(-1)}
-                className="flex items-center px-4 py-2 rounded-lg cursor-pointer bg-blue-600 text-white font-semibold text-md hover:bg-blue-700"
-              >
-                <ArrowLeftIcon className="h-5 w-5 mr-1" />
-                Go back
-              </button>
+                <div className="mt-6">
+                  <p className="text-base text-gray-800 font-semibold mb-4">
+                    Yearly price estimates
+                  </p>
+                  <SideTabs tabs={healthcareTiers.map((item) => item.title)}>
+                    {Object.keys(healthcareTiersPricing)
+                      .reverse()
+                      .map((key: string) => {
+                        const pricing = healthcareTiersPricing[key];
+                        const text = getHealthPanelsText(key);
+                        return (
+                          <div key={key}>
+                            <PanelTable
+                              name="tier3"
+                              title={text.title}
+                              punchline={text.sub}
+                              currency={currencyName}
+                              index={currencyIndex}
+                              data={pricing}
+                            />
+                          </div>
+                        );
+                      })}
+                  </SideTabs>
+                </div>
+
+                <div className="mt-6">
+                  <p className="text-base text-gray-800 font-semibold mb-4">
+                    For tourists (stays up to 90 days)
+                  </p>
+                  <HCTiersList data={[travelTier]} />
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="flex items-center px-4 py-2 rounded-lg cursor-pointer bg-blue-600 text-white font-semibold text-md hover:bg-blue-700"
+                >
+                  <ArrowLeftIcon className="h-5 w-5 mr-1" />
+                  Go back
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </AsyncStateWrapper>
-    </div>
+        </AsyncStateWrapper>
+      </div>
+    </>
   );
 }
 
