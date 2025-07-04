@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { fetchCurrency, fetchHealthcare } from '../utils/apiCalls';
 import { useQuery } from '@tanstack/react-query';
 import NewsletterModal from '../components/Basic/NewsletterModal';
@@ -30,6 +30,7 @@ import {
   getMissingSpec,
 } from '../utils/city';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import MoreData from '../components/Basic/MoreData';
 
 function HealthCarePage() {
   const { name } = useParams();
@@ -185,10 +186,7 @@ function HealthCarePage() {
                 {`Here’s what access to English-speaking doctors, clinics, and hospital services looks like in this city.`}
               </p>
               <div className="bg-white mt-2 mb-8">
-                <HCRating
-                  score={languageService.score}
-                  title={`${name} Healthcare for English speakers`}
-                />
+                <HCRating score={languageService.score} title={`${name} HC for English speakers`} />
               </div>
 
               <div className="mb-8">
@@ -216,10 +214,14 @@ function HealthCarePage() {
               <p className="text-sm md:text-base text-gray-800 mb-4">
                 {`The table bellow presents how ${name} healthcare system performs using international benchmarks like the OECD health indicators and the Euro Health Consumer Index (EHCI). These metrics give a clearer picture of service quality, access, and overall system performance, which can be useful when evaluating what to expect as a resident`}
               </p>
-              <HCTable
-                headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
-                data={healthcareList}
-              />
+              <div>
+                <MoreData title={'See benchmark data'}>
+                  <HCTable
+                    headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
+                    data={healthcareList}
+                  />{' '}
+                </MoreData>
+              </div>
             </div>
 
             <div className="bg-white mt-6">
@@ -231,18 +233,24 @@ function HealthCarePage() {
                   'Specialty services not available locally and typically require travel to a regional or national hospital.'
                 }
               </p>
-              <HCMissingTable
-                headers={['Specialty', 'Comment', 'Alternative city']}
-                data={missingSpecialties}
-              />
-              <p className="text-xs md:text-sm italic text-gray-800 mt-4">
-                *Based on available online data of local and regional health service directories.
-                For more accurate information you should verify directly with the local hospitals
-                and clinics.
-              </p>
+              <div>
+                <MoreData title={'See services not available locally'}>
+                  <>
+                    <HCMissingTable
+                      headers={['Specialty', 'Comment', 'Alternative city']}
+                      data={missingSpecialties}
+                    />
+                    <p className="text-xs md:text-sm italic text-gray-800 mt-4">
+                      *Based on available online data of local and regional health service
+                      directories. For more accurate information you should verify directly with the
+                      local hospitals and clinics.
+                    </p>
+                  </>
+                </MoreData>
+              </div>
             </div>
 
-            <div className="mt-8 border border-gray-200 rounded-lg p-4">
+            {/* <div className="mt-8 border border-gray-200 rounded-lg p-4">
               <p className="text-base md:text-lg text-gray-800 mb-4 text-center">
                 {
                   'Curious how Italy’s healthcare system works, what’s public vs. private, and what to expect as a foreigner?'
@@ -256,7 +264,7 @@ function HealthCarePage() {
                   🧾 Healthcare System in Italy
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-8 mb-8">
               <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Insurance</p>
