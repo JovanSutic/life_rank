@@ -11,19 +11,32 @@ function EuropeMap() {
   }, []);
 
   return (
-    <MapLayout>
-      <MapLayout.Left>
-        <MapFilters />
-      </MapLayout.Left>
+    <>
+      <article>
+        <title>{`Explore map of Europe and filter by budget, healthcare, taxes and safety | LifeRank`}</title>
+        <meta
+          name="description"
+          content="Map of peaceful & affordable places in Europe, ideal for expats and nomads looking for their next destination."
+        />
+        <meta
+          name="keywords"
+          content={`map, explore map, affordable places, peaceful places, places Europe, map of Europe`}
+        />
+      </article>
+      <MapLayout>
+        <MapLayout.Left>
+          <MapFilters />
+        </MapLayout.Left>
 
-      <MapLayout.Main>
-        <MainContent />
-      </MapLayout.Main>
+        <MapLayout.Main>
+          <MainContent />
+        </MapLayout.Main>
 
-      <MapLayout.Right>
-        <CitySide />
-      </MapLayout.Right>
-    </MapLayout>
+        <MapLayout.Right>
+          <CitySide />
+        </MapLayout.Right>
+      </MapLayout>
+    </>
   );
 }
 
