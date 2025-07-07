@@ -7,7 +7,6 @@ import { useMapStore } from '../stores/mapStore';
 import SettingsButton from '../components/Basic/SettingsButton';
 import SideTabs from '../components/Healthcare/SideTabs';
 import PanelTable from '../components/Healthcare/PanelTable';
-import HCTable from '../components/Healthcare/HCTable';
 import type {
   HealthMetricItem,
   LanguageService,
@@ -17,7 +16,7 @@ import type {
 } from '../types/city.types';
 import HCTiersList from '../components/Healthcare/HCTiersList';
 import HCRating from '../components/Healthcare/HCRating';
-import HCMissingTable from '../components/Healthcare/HCMissingTable';
+import ResponsiveTable from '../components/Healthcare/ResponsiveTable';
 import { useMemo } from 'react';
 import { getBudgetLabel } from '../utils/map';
 import {
@@ -216,8 +215,12 @@ function HealthCarePage() {
                   Local English speaking healthcare service providers
                 </p>
 
-                <HCMissingTable
-                  headers={['HC Provider', 'Comment', 'Service']}
+                <ResponsiveTable
+                  headers={[
+                    { name: 'HC Provider', field: 'specialty' },
+                    { name: 'Comment', field: 'comment' },
+                    { name: 'Service', field: 'alternative' },
+                  ]}
                   data={languageService.places}
                 />
               </div>
@@ -231,8 +234,13 @@ function HealthCarePage() {
                 </p>
                 <div>
                   <MoreData title={'See benchmark data'}>
-                    <HCTable
-                      headers={['Metric', 'Estimate', 'Benchmark', 'Comment']}
+                    <ResponsiveTable
+                      headers={[
+                        { name: 'Metric', field: 'name' },
+                        { name: 'Estimate', field: 'value' },
+                        { name: 'Benchmark', field: 'bench' },
+                        { name: 'Comment', field: 'comment' },
+                      ]}
                       data={healthcareList}
                     />{' '}
                   </MoreData>
@@ -251,8 +259,12 @@ function HealthCarePage() {
                 <div>
                   <MoreData title={'See services not available locally'}>
                     <>
-                      <HCMissingTable
-                        headers={['Specialty', 'Comment', 'Alternative city']}
+                      <ResponsiveTable
+                        headers={[
+                          { name: 'Specialty', field: 'specialty' },
+                          { name: 'Comment', field: 'comment' },
+                          { name: 'Alternative city', field: 'alternative' },
+                        ]}
                         data={missingSpecialties}
                       />
                       <p className="text-xs md:text-sm italic text-gray-800 mt-4">
@@ -264,22 +276,6 @@ function HealthCarePage() {
                   </MoreData>
                 </div>
               </div>
-
-              {/* <div className="mt-8 border border-gray-200 rounded-lg p-4">
-              <p className="text-base md:text-lg text-gray-800 mb-4 text-center">
-                {
-                  'Curious how Italy’s healthcare system works, what’s public vs. private, and what to expect as a foreigner?'
-                }
-              </p>
-              <div className="flex justify-center mt-2">
-                <Link
-                  to="/blog/healthcare-system-italy"
-                  className="inline-block px-4 py-1.5 rounded-lg bg-gray-200 text-black font-semibold text-sm hover:bg-gray-300"
-                >
-                  🧾 Healthcare System in Italy
-                </Link>
-              </div>
-            </div> */}
 
               <div className="mt-8 mb-8">
                 <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Insurance</p>
