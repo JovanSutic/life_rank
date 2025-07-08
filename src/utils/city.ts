@@ -1,6 +1,8 @@
 import type { FieldData } from '../types/api.types';
+import type { CurrencyOptions } from '../types/budget.types';
 import type {
   HealthMetricItem,
+  IncomeTax,
   MissingSpecialtyItem,
   PanelTableItem,
   TierData,
@@ -167,4 +169,83 @@ export function getLanguageService(data: FieldData[]) {
     places,
     score: roundToTwoDecimals((score / 3) * 1.2),
   };
+}
+
+function convertCurrencyInString(
+  input: string,
+  rate: number,
+  targetCurrency: 'USD' | 'EUR'
+): string {
+  const conversionRates = {
+    USD: { symbol: '$', rate: rate },
+    EUR: { symbol: '€', rate: rate },
+  };
+
+  return input.replace(
+    /([€$])\s?(\d{1,3}(?:[,.\s]?\d{3})*(?:[.,]\d+)?)/g,
+    (_, symbol, amountStr) => {
+      // Normalize amount to float
+      const cleanAmount = parseFloat(amountStr.replace(/[, ]/g, '').replace(',', '.'));
+
+      // Determine source currency
+      const fromCurrency = symbol === '€' ? 'EUR' : 'USD';
+
+      if (fromCurrency === targetCurrency) return `${symbol}${amountStr}`; // No conversion needed
+
+      const convertedAmount = cleanAmount * conversionRates[fromCurrency].rate;
+      const targetSymbol = conversionRates[targetCurrency].symbol;
+
+      return `${targetSymbol}${convertedAmount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+    }
+  );
+}
+
+export function getTaxGroup(
+  data: FieldData[],
+  type: string,
+  rate: number,
+  currency: CurrencyOptions
+) {
+  const result: IncomeTax[] = [];
+  data
+    .filter((item) => item.definition.type === type)
+    .forEach((item) => {
+      item.values.forEach((val) => {
+        result.push({
+          attribute: val.note!,
+          value: convertCurrencyInString(val.value!, rate, currency),
+          comment: convertCurrencyInString(val.comment!, rate, currency),
+        });
+      });
+    });
+
+  return result;
+}
+
+export function getSpecialTaxGroup(
+  data: FieldData[],
+  type: string,
+  rate: number,
+  currency: CurrencyOptions
+) {
+  const result: { name: string; values: IncomeTax[] }[] = [];
+  const base = data.filter((item) => item.definition.type === type);
+
+  base.forEach((item) => {
+    const taxList: IncomeTax[] = [];
+
+    item.values.forEach((val) => {
+      taxList.push({
+        attribute: val.note!,
+        value: convertCurrencyInString(val.value!, rate, currency),
+        comment: convertCurrencyInString(val.comment!, rate, currency),
+      });
+    });
+    result.push({
+      name: item.definition.label,
+      values: taxList,
+    });
+  });
+
+  return result;
 }
