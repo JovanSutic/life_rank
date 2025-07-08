@@ -130,3 +130,15 @@ export async function fetchHealthcare(
     throw error;
   }
 }
+
+export async function fetchCountryTax(id: number): Promise<FieldData[]> {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/def_value/by-field?field=tax&countryId=${id}`
+    );
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch tax values:', error);
+    throw error;
+  }
+}
