@@ -10,6 +10,7 @@ import {
   cityFeel,
   healthcareCityData,
   healthcareCountryData,
+  taxesCountryData,
 } from './data';
 
 export const handlers = [
@@ -90,6 +91,10 @@ export const handlers = [
       await delay(700);
       const url = new URL(request.url);
       const params = Object.fromEntries(url.searchParams);
+
+      if (params.field === 'tax') {
+        return HttpResponse.json(taxesCountryData);
+      }
 
       const response = Object.keys(params).find((key) => key === 'cityId')
         ? healthcareCityData

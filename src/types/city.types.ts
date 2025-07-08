@@ -32,3 +32,14 @@ export interface LanguageService {
   places: MissingSpecialtyItem[];
   score: number;
 }
+
+export interface IncomeTax {
+  attribute: string;
+  value: string;
+  comment: string;
+}
+
+export interface SpecialTax {
+  name: string;
+  values: IncomeTax[];
+}

@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound';
 import BlogPage from './pages/BlogPage';
 import ScrollTop from './components/Basic/ScrollTop';
 import HealthCarePage from './pages/HealthcarePage';
+import TaxesPage from './pages/TaxesPage';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -61,6 +62,20 @@ function App() {
               }
             >
               <HealthCarePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/taxes/:country"
+          element={
+            <Suspense
+              fallback={
+                <div>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
+              <TaxesPage />
             </Suspense>
           }
         />
