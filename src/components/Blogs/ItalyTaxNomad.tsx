@@ -135,6 +135,50 @@ const table3 = [
     value: '$24,616',
   },
 ];
+const table4 = [
+  {
+    type: 'Income tax',
+    rate: '13.9% effective',
+    country: 'Italy',
+    value: '$13,900',
+  },
+  {
+    type: 'Regional and Municipal taxes',
+    rate: '1.25%',
+    country: 'Italy',
+    value: '$1,250',
+  },
+  {
+    type: 'Social contributions',
+    rate: '26%',
+    country: 'Italy',
+    value: '$26,000',
+  },
+  {
+    type: 'Foreign asset tax',
+    rate: '0.2% + $40',
+    country: 'Italy',
+    value: '$240',
+  },
+  {
+    type: 'Federal tax',
+    rate: 'exempt',
+    country: 'US',
+    value: '$0',
+  },
+  {
+    type: 'Self employed tax',
+    rate: 'exempt',
+    country: 'US',
+    value: '$0',
+  },
+  {
+    type: 'Total',
+    rate: '41.4%',
+    country: 'US + Italy',
+    value: '$41,390',
+  },
+];
 const fed = [
   {
     tax: '10%',
@@ -268,6 +312,13 @@ const list = [
   'You can’t work for your former employer in last 2 years, you must be a self employed (freelancer)',
   "You can't invoice mostly to one business you control via another structure",
   'You must be tax resident of Italy',
+];
+
+const list1 = [
+  'You were not Italian tax residents for the past 3 tax periods',
+  'You are a skilled worker, basically you need to have a university degree or 5 years of relevant working experience in a technical or regulated profession (medicine, law, architecture…)',
+  'You can’t make more than €600K of income a year',
+  'You have to commit to min 4 years on this tax regime or you will lose the benefits',
 ];
 
 function NomadBlog() {
@@ -408,6 +459,41 @@ function NomadBlog() {
             <ResponsiveTable headers={headers1} data={table3} />
           </div>
           <p className="text-sm md:text-base leading-relaxed mb-4">
+            If you are meeting these conditions you can net $74,900 on €85.000 ($99,515) income. You
+            are getting 5% tax income tax on 78% of your income (3.88% effective tax) for the first
+            5 years, then the tax income moves to 15%. You are paying 26% for social contribution,
+            but also on a tax base of 78% of your income (20.23% effective tax). Bottom line, the
+            first 5 years you are paying around 24% tax, after the initial 5 years effective tax
+            moves up to 32%.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h4 className="text-lg md:text-xl font-semibold mb-2">
+            Scenario 3: Lavoratori Impatriati (Impatriate Workers Regime)
+          </h4>
+          <p className="text-sm md:text-base leading-relaxed mb-4">
+            If you are not meeting the conditions for the Regime Forfettario or you are making well
+            more than €85K it would be the best to use this impatriate workers regime which is open
+            to new employees or self-employed people.
+          </p>
+          <p className="text-sm md:text-base font-bold leading-relaxed mb-4">
+            But there are few conditions for this tax regime
+          </p>
+          <div className="mb-4">
+            {list1.map((item) => (
+              <p className="text-sm md:text-base text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                ✅ {item}
+              </p>
+            ))}
+          </div>
+          <div className="mb-1">
+            <ResponsiveTable headers={headers1} data={table4} />
+          </div>
+          <p className="text-sm md:text-base italic leading-relaxed mb-4">
+            *Calculation, for simplicity reasons, is done on $100K annual income.
+          </p>
+          <p className="text-sm md:text-base leading-relaxed mb-4">
             With Lavoratori Impatriati you will be taxed on 50% of your income using Italian
             progressive income tax - 23%: up to €28,000, then 35%: €28,001–€50,000 and 43%: above
             €50,000 of income. So if you are making $100K a year you will pay income taxes only for
@@ -427,9 +513,9 @@ function NomadBlog() {
           </div>
           <p className="text-sm md:text-base leading-relaxed mb-4">
             Lavoratori Impatriati is only for people that want to commit to 4 years of staying in
-            Italy and being a tax resident in this regime. If you decide to leave earlier your
-            taxes, for all years you have used this regime, would be recalculated without the 50%
-            taxed income reduction and you will be in obligation to pay off that difference.
+            Italy and being a tax resident in this regime. If you decide to leave earlier. your
+            taxes, for all years you have been using this regime, would be recalculated without the
+            50% taxed income reduction and you will be in obligation to pay off that difference.
           </p>
         </section>
 
