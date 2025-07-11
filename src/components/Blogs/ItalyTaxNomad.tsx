@@ -86,7 +86,7 @@ const table2 = [
   },
   {
     type: 'Total',
-    rate: '53.93%',
+    rate: '52.93%',
     country: 'US + Italy',
     value: '$52,930',
   },
@@ -419,9 +419,12 @@ function NomadBlog() {
           </p>
 
           <p className="text-sm md:text-base leading-relaxed mb-4">
-            Italy is taxing your foreign kept assets 0.2%. In this scenario I have used 100K as an
-            example of your potential savings. If you have more in the bank back home you will be
-            charged 0.2% on that and 40$ on every foreign bank account.
+            Italy is taxing your foreign kept financial assets with 0.2%. If you have money in the
+            bank which is not an investment, you will only have to pay 40$ for each bank account
+            that has more then $6k. But if you have money in financial assets like stocks, ETFs and
+            bonds you will have to pay 0.2% taxes annually, on the value of all of those assets. In
+            this scenario I have used $100K as an example of your potential foreign financial assets
+            and one bank account where you hold more than $6K.
           </p>
         </section>
 
