@@ -150,9 +150,9 @@ const table4 = [
   },
   {
     type: 'Social contributions',
-    rate: '26%',
+    rate: '13% effective',
     country: 'Italy',
-    value: '$26,000',
+    value: '$13,000',
   },
   {
     type: 'Foreign asset tax',
@@ -174,9 +174,9 @@ const table4 = [
   },
   {
     type: 'Total',
-    rate: '41.4%',
+    rate: '28.39%',
     country: 'US + Italy',
-    value: '$41,390',
+    value: '$28,390',
   },
 ];
 const fed = [
@@ -506,10 +506,10 @@ function NomadBlog() {
             tax bracket and that will increase the effective income tax.
           </p>
           <p className="text-sm md:text-base leading-relaxed mb-4">
-            You will have to pay 26% for the social contributions on the full amount of the income.
-            If your annual income is lower than $130K you will be exempt from the US federal tax,
-            but everything that you make on top of that will be taxed progressively according to the
-            table below.
+            You will have to pay 26% for the social contributions on the taxed amount of the income,
+            so reduced by 50% at least. If your annual income is lower than $130K you will be exempt
+            from the US federal tax, but everything that you make on top of that will be taxed
+            progressively according to the table below.
           </p>
           <div className="mb-4">
             <ResponsiveTable headers={headers2} data={fed} />
