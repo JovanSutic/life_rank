@@ -564,8 +564,8 @@ function NomadBlog() {
           </div>
           <p className="text-sm md:text-base italic leading-relaxed mb-4">
             *These are the effective tax approximations for self-employed (freelancers) in a few
-            states and countries. Calculation, for simplicity reasons, is done on $100K annual
-            income.
+            states and countries. For simplicity reasons, projections are done on $100K annual
+            income without deductibles like IRA, business expenses or private healthcare premiums.
           </p>
           <p className="text-sm md:text-base leading-relaxed mb-4">
             Compared to effective tax rates in the table above, Regime Forfettario's effective tax
