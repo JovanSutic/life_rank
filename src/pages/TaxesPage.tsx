@@ -76,6 +76,13 @@ function HealthCarePage() {
     return [];
   }, [countryData, currencyName, currencyIndex]);
 
+  const highIncomeTax: SpecialTax[] = useMemo(() => {
+    if (countryData) {
+      return getSpecialTaxGroup(countryData, 'high_income_tax', currencyIndex, currencyName);
+    }
+    return [];
+  }, [countryData, currencyIndex, currencyName]);
+
   const selfEmployedTax: SpecialTax[] = useMemo(() => {
     if (countryData) {
       return getSpecialTaxGroup(countryData, 'self_employed_tax', currencyIndex, currencyName);
@@ -139,9 +146,10 @@ function HealthCarePage() {
     return [];
   }, [countryData, currencyName, currencyIndex]);
 
-  if (!idParam || idParam !== '1') {
+  if ((!idParam || (countryData || []).length < 1) && !countryIsLoading) {
     return <div className="text-center text-2xl">Data is still not available for this country</div>;
   }
+
   return (
     <>
       <article>
@@ -173,9 +181,7 @@ function HealthCarePage() {
             <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
               <div className="mb-2">
                 <p className="text-sm md:text-base text-gray-800 mb-4">
-                  {
-                    'Here you’ll find how this city ranks for healthcare quality, what services are available, where English-speaking care can be found, and what kind of insurance options you might need. Whether you’re staying short-term or settling in, this is what healthcare here looks like.'
-                  }
+                  {`Here you’ll find taxes relevant for expats, digital nomads and people looking to relocate to ${name}. Whether you're planning a short stay or long-term move, local tax landscape can help you make better decisions.`}
                 </p>
               </div>
 
@@ -186,12 +192,29 @@ function HealthCarePage() {
                   </p>
                   <p className="text-sm md:text-base text-gray-800 mb-4">
                     {
-                      'This tax applies to income earned from employment, freelance work, and other personal services. Most countries apply progressive rates, with potential deductions and allowances..'
+                      'This tax applies to income earned from employment, freelance work, and other personal services. Most countries apply progressive rates, with potential deductions and allowances.'
                     }
                   </p>
                   <div>
                     <ResponsiveTable headers={incomeHeaders} data={personalIncomeTaxInfo} />
                   </div>
+                </div>
+              )}
+
+              {highIncomeTax.length > 0 && (
+                <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
+                  <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">
+                    High Earnings
+                  </p>
+                  <p className="text-sm md:text-base text-gray-800 mb-4">
+                    {`This tax applies to high individual earners, applied annually to income exceeding some define trashload usually connected to the country's average income.`}
+                  </p>
+                  {highIncomeTax.map((item) => (
+                    <div className="mb-6" key={item.name}>
+                      <p className="text-base text-gray-800 font-semibold mb-4">{item.name}</p>
+                      <ResponsiveTable headers={incomeHeaders} data={item.values} />
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -318,7 +341,7 @@ function HealthCarePage() {
                   <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Exit Tax</p>
                   <p className="text-sm md:text-base text-gray-800 mb-4">
                     {
-                      'Tax is applied to the transfer of wealth either during life (gifts) or after death (inheritance). Rates and exemptions vary depending on the relationship between donor and recipient.'
+                      'Exit tax is a tax on unrealized capital gains that applies when an individual gives up tax residency or citizenship, treating the person as if they sold their assets upon exit.'
                     }
                   </p>
                   <div>
