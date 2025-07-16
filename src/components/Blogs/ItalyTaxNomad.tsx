@@ -307,7 +307,7 @@ const headers4 = [
 ];
 
 const list = [
-  'You must have annual revenue under €85,000 per year',
+  'You must have annual revenue under €85,000',
   'You can’t be a partner in a company or SRL that does similar business',
   'You can’t work for your former employer in last 2 years, you must be a self employed (freelancer)',
   "You can't invoice mostly to one business you control via another structure",

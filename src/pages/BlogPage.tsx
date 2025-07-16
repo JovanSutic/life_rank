@@ -3,14 +3,20 @@ import HealthcareBlog from '../components/Blogs/ItalyHc';
 import { useMemo } from 'react';
 import NomadBlog from '../components/Blogs/ItalyTaxNomad';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import SerbiaBlog from '../components/Blogs/SerbiaBlog';
 
 function BlogPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const slugs = ['healthcare-system-italy', 'taxes-for-digital-nomad-visa-in-italy'];
+  const slugs = [
+    'healthcare-system-italy',
+    'taxes-for-digital-nomad-visa-in-italy',
+    'self-employed-taxes-in-serbia',
+  ];
   const blog = useMemo(() => {
     if (slug === 'healthcare-system-italy') return <HealthcareBlog />;
     if (slug === 'taxes-for-digital-nomad-visa-in-italy') return <NomadBlog />;
+    if (slug === 'self-employed-taxes-in-serbia') return <SerbiaBlog />;
   }, [slug]);
   if (!slugs.includes(slug || '')) {
     return <div className="text-center text-2xl">Blog you are looking for doesn't exist.</div>;
