@@ -65,8 +65,8 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
     <Modal show={show}>
       <h3 className="text-xl font-semibold mb-3 text-center">📧 Newsletter</h3>
       <p className="text-sm text-gray-600 text-center mb-6">
-        Hey each week, we share handpicked insights on <strong>European towns and cities</strong>{' '}
-        where life moves slower, costs less, and feels more meaningful.
+        Hey each week, we share insights on <strong>places in Europe</strong> where you can earn
+        more, spend less, and where life feels more meaningful.
         <br />
         Drop your email to start receiving our weekly newsletter.
       </p>
