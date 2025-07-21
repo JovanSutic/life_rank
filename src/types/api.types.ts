@@ -135,3 +135,27 @@ export interface FieldData {
   definition: Definition;
   values: DefValue[];
 }
+
+export interface BlogSection {
+  id: number;
+  blogId: number;
+  order: number;
+  type: string;
+  content: string;
+  note?: null;
+  created_at: string;
+}
+
+export interface Blog {
+  id: number;
+  cityId?: number;
+  countryId?: number;
+  slug: string;
+  field: string;
+  keywords: string;
+  title: string;
+  description: string;
+  visible?: boolean;
+  created_at: string;
+  blog_sections: BlogSection[];
+}
