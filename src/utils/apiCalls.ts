@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type {
+  Blog,
   Budget,
   City,
   CityContext,
@@ -139,6 +140,16 @@ export async function fetchCountryTax(id: number): Promise<FieldData[]> {
     return res.data;
   } catch (error) {
     console.error('Failed to fetch tax values:', error);
+    throw error;
+  }
+}
+
+export async function fetchBlogBySlug(slug: string): Promise<Blog> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/blogs/slug/${slug}`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch blog by slug values:', error);
     throw error;
   }
 }

@@ -11,6 +11,7 @@ import {
   healthcareCityData,
   healthcareCountryData,
   taxesCountryData,
+  blogData,
 } from './data';
 
 export const handlers = [
@@ -100,6 +101,15 @@ export const handlers = [
         ? healthcareCityData
         : healthcareCountryData;
       return HttpResponse.json(response);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/blogs/slug/:slug`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(blogData);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
