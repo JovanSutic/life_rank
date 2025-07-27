@@ -57,7 +57,7 @@ export default function MainContent() {
   } = useQuery({
     queryKey: [
       'GET_CITIES',
-      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}`,
+      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}-${searchParams.get('layerTypeId')}`,
     ],
     queryFn: () => fetchCities(searchParams ?? undefined),
     retry: 2,

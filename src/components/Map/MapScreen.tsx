@@ -1,6 +1,6 @@
 import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { City, CityFeel } from '../../types/api.types';
+import type { City, Layer } from '../../types/api.types';
 import type { MapData } from '../../types/map.types';
 import BoundsListener from './BoundsListener';
 import { MapResizer } from './MapResizer';
@@ -21,7 +21,7 @@ function MapScreen({
 }: {
   position: [number, number];
   zoom: number;
-  pins: CityFeel[];
+  pins: Layer[];
   onBoundsChange?: (data: MapData) => void;
   onPinClick?: (city: City) => void;
   isMobile?: boolean;
@@ -64,7 +64,7 @@ function MapScreen({
             key={pin.id}
             position={[pin.city.lat, pin.city.lng]}
             icon={createCustomIcon(
-              getBudgetLabel(currency, currencyIndex, pin.budget, true),
+              getBudgetLabel(currency, currencyIndex, pin.value, true),
               pin.city.name,
               isMobile
             )}

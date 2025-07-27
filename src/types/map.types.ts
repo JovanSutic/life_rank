@@ -1,5 +1,5 @@
 import type { LatLng } from 'leaflet';
-import type { CityContext, CrimesSummary, Weather } from './api.types';
+import type { CityContext, CrimesSummary, LayerType, Weather } from './api.types';
 
 export type Device = 'mobile' | 'tablet' | 'desktop';
 
@@ -26,4 +26,9 @@ export interface CityPanelData {
   safety: CrimesSummary;
   weather?: Weather;
   contextualData?: CityContext;
+}
+
+export interface LayerButton extends LayerType {
+  isActive: boolean;
+  onClick: (name: string) => void;
 }
