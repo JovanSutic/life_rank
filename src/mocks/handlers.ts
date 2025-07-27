@@ -12,6 +12,7 @@ import {
   healthcareCountryData,
   taxesCountryData,
   blogData,
+  layerBudget,
 } from './data';
 
 export const handlers = [
@@ -28,6 +29,15 @@ export const handlers = [
     try {
       await delay(700);
       return HttpResponse.json(cityFeelList);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/layers`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(layerBudget);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
