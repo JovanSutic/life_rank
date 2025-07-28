@@ -6,7 +6,7 @@ import AsyncStateWrapper from '../AsyncWrapper';
 import CityInfoPanel from './CityInfoPanel';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { fetchBudgets, fetchCity, fetchCityContext, fetchSummary } from '../../utils/apiCalls';
+import { fetchBudgets, fetchCity, fetchSummary } from '../../utils/apiCalls';
 
 export default function CitySide() {
   const { setRightOpen, setFocusCity, focusCity } = useMapStore();
@@ -60,19 +60,19 @@ export default function CitySide() {
     staleTime: 60 * 60 * 1000,
   });
 
-  const {
-    data: contextData,
-    isLoading: contextIsLoading,
-    isFetching: contextIsFetching,
-    isError: contextIsError,
-    error: contextError,
-  } = useQuery({
-    queryKey: ['GET_CITY_CONTEXT', focusCity?.id],
-    queryFn: () => fetchCityContext(focusCity!.id),
-    enabled: !!focusCity?.id,
-    retry: 2,
-    staleTime: 60 * 60 * 1000,
-  });
+  // const {
+  //   data: contextData,
+  //   isLoading: contextIsLoading,
+  //   isFetching: contextIsFetching,
+  //   isError: contextIsError,
+  //   error: contextError,
+  // } = useQuery({
+  //   queryKey: ['GET_CITY_CONTEXT', focusCity?.id],
+  //   queryFn: () => fetchCityContext(focusCity!.id),
+  //   enabled: !!focusCity?.id,
+  //   retry: 2,
+  //   staleTime: 60 * 60 * 1000,
+  // });
 
   const {
     data: exactData,
@@ -113,13 +113,11 @@ export default function CitySide() {
           isFetching ||
           summaryIsLoading ||
           summaryIsFetching ||
-          contextIsLoading ||
-          contextIsFetching ||
           exactIsLoading ||
           exactIsFetching
         }
-        isError={isError || summaryIsError || contextIsError || exactIsError}
-        error={error || summaryError || contextError || exactError}
+        isError={isError || summaryIsError || exactIsError}
+        error={error || summaryError || exactError}
       >
         <CityInfoPanel
           cityData={{
@@ -138,7 +136,6 @@ export default function CitySide() {
               personalSafetyScore: summary?.personalSafetyScore || 0,
               crimeEscalationIndicator: summary?.crimeEscalationIndicator || 0,
             },
-            contextualData: contextData,
           }}
         />
       </AsyncStateWrapper>
