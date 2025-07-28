@@ -385,6 +385,18 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://theliferank.com/taxes/Bulgaria</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://theliferank.com/taxes/Czech%20Republic</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
    <url>
     <loc>https://theliferank.com/blog/taxes-for-digital-nomad-visa-in-italy</loc>
     <changefreq>weekly</changefreq>

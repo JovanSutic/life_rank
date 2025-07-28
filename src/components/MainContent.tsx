@@ -178,7 +178,8 @@ export default function MainContent() {
               filterChange ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <ArrowUpIcon className="w-4 h-4 mr-2" /> Change filters to get results you want
+            <ArrowUpIcon className="w-4 h-4 mr-2" /> Change layers or filters to get results you
+            want
           </div>
         </>
       </AsyncStateWrapper>
