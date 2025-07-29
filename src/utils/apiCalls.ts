@@ -8,6 +8,8 @@ import type {
   CrimesSummary,
   Currency,
   FieldData,
+  Layer,
+  LayerType,
   Price,
 } from '../types/api.types';
 
@@ -23,9 +25,10 @@ export async function fetchCurrency(): Promise<Currency> {
   }
 }
 
-export async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> {
+export async function fetchCities(params: URLSearchParams): Promise<Layer[]> {
   try {
-    let queryParams = `?north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=36&sortBy=rank&order=desc`;
+    console.log(params.get('layerTypeId'));
+    let queryParams = `?layerTypeId=${params.get('layerTypeId')}&north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=36&sortBy=rank&order=desc`;
 
     if (params.get('size')) {
       queryParams = `${queryParams}&size=${params.get('size')}`;
@@ -43,7 +46,7 @@ export async function fetchCities(params: URLSearchParams): Promise<CityFeel[]> 
       queryParams = `${queryParams}&rank=8`;
     }
 
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/city-feel${queryParams}`);
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/layers${queryParams}`);
     return res.data.data;
   } catch (error) {
     console.error('Failed to fetch cities:', error);
@@ -150,6 +153,16 @@ export async function fetchBlogBySlug(slug: string): Promise<Blog> {
     return res.data;
   } catch (error) {
     console.error('Failed to fetch blog by slug values:', error);
+    throw error;
+  }
+}
+
+export async function fetchLayerTypes(): Promise<LayerType[]> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/layers/types/all`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
     throw error;
   }
 }

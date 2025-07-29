@@ -192,7 +192,7 @@ function HealthCarePage() {
                   </p>
                   <p className="text-sm md:text-base text-gray-800 mb-4">
                     {
-                      'This tax applies to income earned from employment, freelance work, and other personal services. Most countries apply progressive rates, with potential deductions and allowances.'
+                      'This tax applies to income earned from employment in a company. Most countries apply progressive rates, with potential deductions and allowances.'
                     }
                   </p>
                   <div>

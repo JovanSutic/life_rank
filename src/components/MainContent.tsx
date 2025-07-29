@@ -57,7 +57,7 @@ export default function MainContent() {
   } = useQuery({
     queryKey: [
       'GET_CITIES',
-      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}`,
+      `${searchParams.get('north')}-${searchParams.get('zoom')}-${searchParams.get('sea')}-${searchParams.get('size')}-${searchParams.get('country')}-${searchParams.get('rank')}-${searchParams.get('budget')}-${searchParams.get('layerTypeId')}`,
     ],
     queryFn: () => fetchCities(searchParams ?? undefined),
     retry: 2,
@@ -178,7 +178,8 @@ export default function MainContent() {
               filterChange ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <ArrowUpIcon className="w-4 h-4 mr-2" /> Change filters to get results you want
+            <ArrowUpIcon className="w-4 h-4 mr-2" /> Change layers or filters to get results you
+            want
           </div>
         </>
       </AsyncStateWrapper>

@@ -19,6 +19,15 @@ export interface CityFeel {
   city: City;
 }
 
+export interface Layer {
+  id: number;
+  cityId: number;
+  layerTypeId: number;
+  value: number;
+  value_string?: string;
+  city: City;
+}
+
 export const PriceType = {
   CURRENT: 'CURRENT',
   HISTORICAL: 'HISTORICAL',
@@ -158,4 +167,10 @@ export interface Blog {
   visible?: boolean;
   created_at: string;
   blog_sections: BlogSection[];
+}
+
+export interface LayerType {
+  id: number;
+  name: string;
+  type: string;
 }
