@@ -397,6 +397,12 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://theliferank.com/taxes/Spain</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
    <url>
     <loc>https://theliferank.com/blog/taxes-for-digital-nomad-visa-in-italy</loc>
     <changefreq>weekly</changefreq>
