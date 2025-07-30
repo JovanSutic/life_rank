@@ -125,6 +125,13 @@ function HealthCarePage() {
     return [];
   }, [countryData, currencyName, currencyIndex]);
 
+  const wealthTax: IncomeTax[] = useMemo(() => {
+    if (countryData) {
+      return getTaxGroup(countryData, 'wealth_tax', currencyIndex, currencyName);
+    }
+    return [];
+  }, [countryData, currencyName, currencyIndex]);
+
   const specialRegimesTax: SpecialTax[] = useMemo(() => {
     if (countryData) {
       return getSpecialTaxGroup(countryData, 'special_regime', currencyIndex, currencyName);
@@ -313,6 +320,18 @@ function HealthCarePage() {
                   </p>
                   <div>
                     <ResponsiveTable headers={incomeHeaders} data={foreignAssetsTax} />
+                  </div>
+                </div>
+              )}
+
+              {wealthTax.length > 0 && (
+                <div className="bg-white pb-6 mb-6 pt-2 lg:px-0 flex flex-col">
+                  <p className="text-lg md:text-xl text-gray-800 font-semibold mb-4">Wealth Tax</p>
+                  <p className="text-sm md:text-base text-gray-800 mb-4">
+                    {`Wealth tax is an annual tax on an individual's net assets, such as property, savings, and investments. It applies above a certain threshold and is usually progressive.`}
+                  </p>
+                  <div>
+                    <ResponsiveTable headers={incomeHeaders} data={wealthTax} />
                   </div>
                 </div>
               )}
