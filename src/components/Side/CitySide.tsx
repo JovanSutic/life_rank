@@ -60,20 +60,6 @@ export default function CitySide() {
     staleTime: 60 * 60 * 1000,
   });
 
-  // const {
-  //   data: contextData,
-  //   isLoading: contextIsLoading,
-  //   isFetching: contextIsFetching,
-  //   isError: contextIsError,
-  //   error: contextError,
-  // } = useQuery({
-  //   queryKey: ['GET_CITY_CONTEXT', focusCity?.id],
-  //   queryFn: () => fetchCityContext(focusCity!.id),
-  //   enabled: !!focusCity?.id,
-  //   retry: 2,
-  //   staleTime: 60 * 60 * 1000,
-  // });
-
   const {
     data: exactData,
     isLoading: exactIsLoading,
