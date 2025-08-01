@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { CityContext, CrimesSummary, Weather } from '../types/api.types';
+import type { CityContext, CrimesSummary, Layer, Weather } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
 import type { Device } from '../types/map.types';
 import { currencyMap } from './budgetMaps';
@@ -360,4 +360,17 @@ export function formatThousands(num: number): string {
   const decimal = thousands % 1 !== 0;
 
   return decimal ? thousands.toFixed(1) + 'k' : thousands.toFixed(0) + 'k';
+}
+
+export function getPinValue(pin: Layer, currency: CurrencyOptions, currencyIndex: number) {
+  const context = pin.layer_type?.type.split('-')[2];
+  if (context === 'budget') {
+    return getBudgetLabel(currency, currencyIndex, pin.value, true);
+  }
+
+  if (context === 'tax') {
+    return `from ~${pin.value}%`;
+  }
+
+  return '';
 }

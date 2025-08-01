@@ -13,6 +13,7 @@ import {
   taxesCountryData,
   blogData,
   layerBudget,
+  layerTaxes,
 } from './data';
 
 export const handlers = [
@@ -34,8 +35,14 @@ export const handlers = [
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
     }
   }),
-  http.get(`${import.meta.env.VITE_API_URL}/layers`, async () => {
+  http.get(`${import.meta.env.VITE_API_URL}/layers`, async ({ request }) => {
     try {
+      const url = new URL(request.url);
+      const params = Object.fromEntries(url.searchParams);
+
+      if (params.layerTypeId === '3') {
+        return HttpResponse.json(layerTaxes);
+      }
       await delay(700);
       return HttpResponse.json(layerBudget);
     } catch (error) {

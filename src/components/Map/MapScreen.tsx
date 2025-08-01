@@ -8,7 +8,7 @@ import createCustomIcon from './MapIcon';
 import MapViewUpdater from './MapUpdater';
 import { trackEvent } from '../../utils/analytics';
 import { useMapStore } from '../../stores/mapStore';
-import { getBudgetLabel } from '../../utils/map';
+import { getPinValue } from '../../utils/map';
 
 function MapScreen({
   position,
@@ -64,7 +64,7 @@ function MapScreen({
             key={pin.id}
             position={[pin.city.lat, pin.city.lng]}
             icon={createCustomIcon(
-              getBudgetLabel(currency, currencyIndex, pin.value, true),
+              getPinValue(pin, currency, currencyIndex),
               pin.city.name,
               isMobile
             )}

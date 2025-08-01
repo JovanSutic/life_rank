@@ -52,6 +52,7 @@ const countries = [
   'Spain',
   'Sweden',
   'Switzerland',
+  'Turkey',
   'Ukraine',
   'United Kingdom',
 ];
@@ -63,6 +64,12 @@ const defaultFilters = {
   budget: 7000,
   country: '',
 };
+
+const layerStr = [
+  'Estimated monthly budget for a comfortable single living.',
+  'The minimum monthly cost of life with the focus on essential expenses only.',
+  'The lowest effective tax rate available to someone earning €40K or more annually.',
+];
 
 export default function MapFilters() {
   const { setLeftOpen, leftOpen } = useMapStore();
@@ -189,6 +196,9 @@ export default function MapFilters() {
 
         {tab === 'Layers' && (
           <div className="flex-1 overflow-y-auto px-4 pb-10 pt-6 space-y-4">
+            <div>
+              <p className="text-sm text-center text-gray-700">{layerStr[layer - 1]}</p>
+            </div>
             <LayersGrid
               buttons={(typesData || []).map((btn) => ({
                 ...btn,
