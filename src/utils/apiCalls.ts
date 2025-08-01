@@ -27,7 +27,6 @@ export async function fetchCurrency(): Promise<Currency> {
 
 export async function fetchCities(params: URLSearchParams): Promise<Layer[]> {
   try {
-    console.log(params.get('layerTypeId'));
     let queryParams = `?layerTypeId=${params.get('layerTypeId')}&north=${params.get('north')}&south=${params.get('south')}&east=${params.get('east')}&west=${params.get('west')}&take=36&sortBy=rank&order=desc`;
 
     if (params.get('size')) {

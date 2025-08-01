@@ -19,6 +19,12 @@ export interface CityFeel {
   city: City;
 }
 
+export interface LayerType {
+  id: number;
+  name: string;
+  type: string;
+}
+
 export interface Layer {
   id: number;
   cityId: number;
@@ -26,6 +32,7 @@ export interface Layer {
   value: number;
   value_string?: string;
   city: City;
+  layer_type?: LayerType;
 }
 
 export const PriceType = {
