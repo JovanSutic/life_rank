@@ -9,6 +9,9 @@ import BlogPage from './pages/BlogPage';
 import ScrollTop from './components/Basic/ScrollTop';
 import HealthCarePage from './pages/HealthcarePage';
 import TaxesPage from './pages/TaxesPage';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import AuthGuard from './components/AuthGuard';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -91,6 +94,38 @@ function App() {
             >
               <BlogPage />
             </Suspense>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <AuthGuard isProtected={false} redirectPath="/dashboard">
+              <Suspense
+                fallback={
+                  <div>
+                    <LoadingOverlay />
+                  </div>
+                }
+              >
+                <LoginPage />
+              </Suspense>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <AuthGuard isProtected={true} redirectPath="/login?type=login">
+              <Suspense
+                fallback={
+                  <div>
+                    <LoadingOverlay />
+                  </div>
+                }
+              >
+                <DashboardPage />
+              </Suspense>
+            </AuthGuard>
           }
         />
 
