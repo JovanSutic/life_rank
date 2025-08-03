@@ -3,12 +3,14 @@ import type { City } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
 
 interface MapState {
+  isAuthenticated: boolean;
   leftOpen: boolean;
   rightOpen: boolean;
   focusCity: City | null;
   newsLetterShow: boolean;
   currency: CurrencyOptions;
   currencyIndex: number;
+  setIsAuthenticated: (auth: boolean) => void;
   toggleNewsletterShow: () => void;
   toggleLeft: () => void;
   setLeftOpen: (open: boolean) => void;
@@ -18,12 +20,14 @@ interface MapState {
 }
 
 export const useMapStore = create<MapState>((set) => ({
+  isAuthenticated: false,
   leftOpen: false,
   rightOpen: false,
   focusCity: null,
   newsLetterShow: false,
   currency: 'EUR',
   currencyIndex: 1,
+  setIsAuthenticated: (auth) => set({ isAuthenticated: auth }),
   toggleNewsletterShow: () => set((state) => ({ ...state, newsLetterShow: !state.newsLetterShow })),
   toggleLeft: () => set((state) => ({ ...state, leftOpen: !state.leftOpen })),
   setLeftOpen: (open) => set({ leftOpen: open }),
