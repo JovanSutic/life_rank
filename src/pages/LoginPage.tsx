@@ -39,6 +39,7 @@ function LoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null);
 
   const onLogin = async (data: { email: string; password: string }) => {
     setLoading(true);
@@ -61,6 +62,7 @@ function LoginPage() {
     setError(null);
     try {
       const result = await signUp(data.name, data.email, data.password);
+      setCredentials({ email: data.email, password: data.password });
       console.log('Sign up success:', result);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -75,13 +77,16 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const result = await confirmSignUp(email, code);
-      console.log('Confirmation success:', result);
+      await confirmSignUp(email, code);
+      if (credentials) {
+        await signIn(credentials.email, credentials.password);
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || 'Confirmation failed');
       throw Error(err.message || 'Confirmation failed');
     } finally {
+      setCredentials(null);
       setLoading(false);
     }
   };
