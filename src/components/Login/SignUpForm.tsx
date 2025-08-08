@@ -65,7 +65,7 @@ function SignUpForm({ onSignup, onConfirm, loading, error }: SignUpFormProps) {
   const handleCodeConfirm = async (data: CodeData) => {
     try {
       await onConfirm(emailForConfirmation, data.code);
-      navigate('/login?type=loginSignSuccess');
+      navigate('/dashboard');
     } catch (err) {
       console.error('Code confirmation error:', err);
     }
