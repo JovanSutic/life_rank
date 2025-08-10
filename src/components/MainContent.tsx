@@ -14,6 +14,7 @@ import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import SettingsButton from './Basic/SettingsButton';
 import { fetchCities, fetchCurrency } from '../utils/apiCalls';
 import { trackEvent } from '../utils/analytics';
+import TopLogo from './Basic/TopLogo';
 
 const NoResultsOverlay = ({ message = 'No results. Change the filters or move on the map.' }) => {
   return (
@@ -159,10 +160,7 @@ export default function MainContent() {
             }}
             isProgrammaticUpdate={isProgrammaticUpdate}
           />
-          <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
-            <span className="text-blue-800 text-shadow-lg">Life</span>
-            <span className="text-gray-800 text-shadow-lg">Rank</span>
-          </div>
+          <TopLogo />
           <button
             onClick={() => {
               toggleLeft();

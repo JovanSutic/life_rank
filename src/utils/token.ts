@@ -40,3 +40,7 @@ export const checkAndRefreshToken = async (): Promise<boolean> => {
 
   return false;
 };
+
+export function getIdToken() {
+  return sessionStorage.getItem('idToken') || '';
+}

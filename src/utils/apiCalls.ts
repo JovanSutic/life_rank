@@ -11,6 +11,8 @@ import type {
   Layer,
   LayerType,
   Price,
+  ReportDto,
+  ReportUserData,
 } from '../types/api.types';
 
 export async function fetchCurrency(): Promise<Currency> {
@@ -162,6 +164,35 @@ export async function fetchLayerTypes(): Promise<LayerType[]> {
     return res.data;
   } catch (error) {
     console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function postPublicReport(
+  data: ReportUserData
+): Promise<{ net: number; save: number }> {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/reports/public`, data);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to post data to public reports:', error);
+    throw error;
+  }
+}
+
+export async function postReport(variables: {
+  data: ReportUserData;
+  token: string;
+}): Promise<ReportDto> {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/reports/`, variables.data, {
+      headers: {
+        Authorization: `Bearer ${variables.token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to post data to reports:', error);
     throw error;
   }
 }
