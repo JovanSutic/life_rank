@@ -12,6 +12,7 @@ import TaxesPage from './pages/TaxesPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AuthGuard from './components/AuthGuard';
+import NetSavePage from './pages/NetSavePage';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
@@ -110,6 +111,20 @@ function App() {
                 <LoginPage />
               </Suspense>
             </AuthGuard>
+          }
+        />
+        <Route
+          path="/net-save"
+          element={
+            <Suspense
+              fallback={
+                <div>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
+              <NetSavePage />
+            </Suspense>
           }
         />
         <Route

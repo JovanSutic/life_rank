@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Newsletter from '../components/Basic/Newsletter';
 import { trackPageview } from '../utils/analytics';
 import { useEffect } from 'react';
+import TopLogo from '../components/Basic/TopLogo';
 
 function Index() {
   useEffect(() => {
@@ -11,10 +12,7 @@ function Index() {
 
   return (
     <main className="bg-white text-gray-900 font-sans">
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
-        <span className="text-2xl font-bold text-blue-800 text-shadow-lg">Life</span>
-        <span className="text-2xl font-bold text-gray-800 text-shadow-lg">Rank</span>
-      </div>
+      <TopLogo />
       {/* Hero Section */}
       <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-18 md:py-26 bg-blue-50">
         <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black lg:mt-16">

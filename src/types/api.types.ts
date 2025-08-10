@@ -181,3 +181,35 @@ export interface LayerType {
   name: string;
   type: string;
 }
+
+export type CurrencyString = 'usd' | 'eur' | 'gbp';
+
+export interface PersonalIncomes {
+  isUSCitizen: boolean;
+  currency: CurrencyString;
+  income: number;
+}
+
+export interface Dependents {
+  type: 'spouse' | 'kid';
+  isDependent: boolean;
+  age?: number;
+}
+
+export interface ReportUserData {
+  cityId: number;
+  isWorkingMom: boolean;
+  dependents: Dependents[];
+  incomes: PersonalIncomes[];
+}
+
+export interface ReportDto {
+  userUuid: string;
+  cityId: number;
+  net: number;
+  save: number;
+  expensesLow: number;
+  expensesComfort: number;
+  type: SocialType;
+  userData: ReportUserData;
+}
