@@ -130,8 +130,8 @@ function ForgotPasswordForm({
         <form onSubmit={handleResetSubmit(handleReset)} className="space-y-4">
           <div>
             <p className="text-center text-sm text-gray-600">
-              We have sent you 6-digit code. Enter your new password and the 6-digit code from your
-              email.
+              We have sent you confirmation email. Please, check out your email and enter the
+              6-digit code we have sent to you.
             </p>
           </div>
           <div>

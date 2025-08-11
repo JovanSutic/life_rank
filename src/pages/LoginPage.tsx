@@ -11,7 +11,7 @@ import {
   confirmForgotPassword,
 } from '../utils/cognitoService';
 import { useMapStore } from '../stores/mapStore';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postReport } from '../utils/apiCalls';
 import TopLogo from '../components/Basic/TopLogo';
 
@@ -39,6 +39,7 @@ function LoginPage() {
   const type = searchParams.get('type') as keyof LoginTitles | null;
   const navigate = useNavigate();
   const { setIsAuthenticated, saveNetData } = useMapStore();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +54,7 @@ function LoginPage() {
       const result = await signIn(email, password);
       setIsAuthenticated(true);
       if (saveNetData && result) {
+        queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
         mutate({ data: saveNetData, token: result.IdToken! });
       }
       return true;
@@ -163,15 +165,9 @@ function LoginPage() {
   return (
     <>
       <article>
-        <title>{`Healthcare quality in ${name} | LifeRank`}</title>
-        <meta
-          name="description"
-          content={`Healthcare in ${name} for expats and nomads looking for peaceful & affordable places`}
-        />
-        <meta
-          name="keywords"
-          content={`${name}, healthcare, public healthcare, private healthcare, expat healthcare, healthcare insurance, healthcare benchmarks`}
-        />
+        <title>{`Login | LifeRank`}</title>
+        <meta name="description" content={`Login to LifeRank`} />
+        <meta name="keywords" content={`login, sign up, LifeRank, create LifeRank account`} />
       </article>
       <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
         <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">

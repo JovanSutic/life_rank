@@ -201,6 +201,18 @@ export interface ReportUserData {
   isWorkingMom: boolean;
   dependents: Dependents[];
   incomes: PersonalIncomes[];
+  rates?: Record<string, number>;
+}
+
+export interface CostItem {
+  id: number;
+  reportId: number;
+  incomeMaker: number;
+  label: string;
+  type: string;
+  amount: number;
+  note: string;
+  createdAt: string;
 }
 
 export interface ReportDto {
@@ -212,4 +224,17 @@ export interface ReportDto {
   expensesComfort: number;
   type: SocialType;
   userData: ReportUserData;
+  costItems?: CostItem[];
+  createdAt: string;
+}
+
+export interface ReportItem {
+  id: number;
+  createdAt: string;
+  cityId: number;
+  userData: ReportUserData;
+  net: number;
+  city: {
+    name: string;
+  };
 }

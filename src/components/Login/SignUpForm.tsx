@@ -144,8 +144,8 @@ function SignUpForm({ onSignup, onConfirm, loading, error }: SignUpFormProps) {
         <form onSubmit={handleCodeSubmit(handleCodeConfirm)} className="space-y-4">
           <div>
             <p className="text-center text-sm text-gray-600">
-              We have sent you confirmation email. Please, enter the 6-digit code we sent to your
-              email.
+              We have sent you confirmation email. Please, check out your email and enter the
+              6-digit code we have sent to you.
             </p>
           </div>
           <div>

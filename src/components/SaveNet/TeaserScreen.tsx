@@ -33,7 +33,7 @@ function TeaserScreen({
         </li>
         <li className="flex items-center">
           <span className="text-green-500 mr-2">✅</span>
-          More save options
+          See more save options
         </li>
         <li className="flex items-center">
           <span className="text-green-500 mr-2">✅</span>
@@ -46,12 +46,12 @@ function TeaserScreen({
           to="/login?type=signup"
           className="w-full block md:w-[300px] cursor-pointer bg-green-500 hover:bg-green-600 text-white  py-2 px-6 rounded-lg transition-colors"
         >
-          Get Full Report
+          Get Full Report for Free
         </Link>
       </div>
 
       <p className="text-xs text-gray-500 mt-2">
-        Log in or create an account to save your results and access more insights.
+        Log in or create an account to save your results and it is 100% free.
       </p>
 
       <div className="w-full mt-6">

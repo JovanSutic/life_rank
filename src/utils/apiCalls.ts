@@ -12,6 +12,7 @@ import type {
   LayerType,
   Price,
   ReportDto,
+  ReportItem,
   ReportUserData,
 } from '../types/api.types';
 
@@ -193,6 +194,34 @@ export async function postReport(variables: {
     return res.data;
   } catch (error) {
     console.error('Failed to post data to reports:', error);
+    throw error;
+  }
+}
+
+export async function getUserReports(token: string): Promise<ReportItem[]> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/reports`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function getUserReportById(id: number, token: string): Promise<ReportDto> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/reports/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
     throw error;
   }
 }
