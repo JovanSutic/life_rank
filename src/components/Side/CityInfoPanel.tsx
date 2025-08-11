@@ -4,6 +4,7 @@ import type { CityPanelData } from '../../types/map.types';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useMapStore } from '../../stores/mapStore';
+import { flowCounties } from '../../utils/saveNet';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const { toggleNewsletterShow, currency, currencyIndex } = useMapStore();
@@ -33,16 +34,32 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
         <p className="text-gray-500 text-sm">Population: {inhabitants.toLocaleString()}</p>
       </div>
 
-      <div className="flex justify-end pb-4">
-        <div className="flex justify-end">
-          <button
-            onClick={toggleNewsletterShow}
-            className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+      {flowCounties.includes(countryName) ? (
+        <section className="p-3 rounded-lg bg-slate-50 border border-gray-200 shadow-sm mb-3">
+          <h3 className="text-md font-semibold text-center uppercase tracking-wide text-slate-700 mb-3">
+            Thinking about relocating your self-employed business to{' '}
+            <span className="font-bold">{cityName}</span>?
+          </h3>
+          <Link
+            to={`/net-save?cityId=${cityId}`}
+            className="w-full text-center mt-4 inline-block p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200"
+            aria-label={`Start net and save report for ${cityName}`}
           >
-            📧 Subscribe to our newsletter
-          </button>
+            Find out how much you can net & save here
+          </Link>
+        </section>
+      ) : (
+        <div className="flex justify-end pb-4">
+          <div className="flex justify-end">
+            <button
+              onClick={toggleNewsletterShow}
+              className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-blue-500 text-white font-semibold text-sm hover:bg-blue-700"
+            >
+              📧 Subscribe to our newsletter
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* {weather && (
         <section className="p-3 rounded-lg bg-blue-50 border border-blue-100 shadow-sm mb-3">

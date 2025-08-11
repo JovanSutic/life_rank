@@ -39,7 +39,7 @@ import {
   TRANSPORT_MEDIUM_PAIR,
   TRANSPORT_MEDIUM_SOLO,
 } from './budgetMaps';
-import { SocialType, type Price } from '../types/api.types';
+import { SocialType, type CurrencyString, type Price } from '../types/api.types';
 import type { BudgetItem, ConsumptionLevel } from '../types/budget.types';
 
 export function findKeyByValue<T extends Record<string, unknown>>(
@@ -487,3 +487,15 @@ export const getTagIndicator = (tag: string, indicator: string): number | null =
 
   return Number.isNaN(value) ? null : value;
 };
+
+export function getCurrencyRate(
+  currencyMap: Record<string, number>,
+  from: CurrencyString,
+  to: CurrencyString
+) {
+  if (from === 'eur') {
+    return currencyMap[to];
+  } else {
+    return 1 / currencyMap[from];
+  }
+}

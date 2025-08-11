@@ -11,6 +11,9 @@ import {
   confirmForgotPassword,
 } from '../utils/cognitoService';
 import { useMapStore } from '../stores/mapStore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postReport } from '../utils/apiCalls';
+import TopLogo from '../components/Basic/TopLogo';
 
 interface LoginTitles {
   login: string;
@@ -35,19 +38,42 @@ function LoginPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const type = searchParams.get('type') as keyof LoginTitles | null;
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useMapStore();
+  const { setIsAuthenticated, saveNetData } = useMapStore();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null);
+
+  const { mutate } = useMutation({
+    mutationFn: postReport,
+  });
+
+  const loginSequence = async (email: string, password: string) => {
+    try {
+      const result = await signIn(email, password);
+      setIsAuthenticated(true);
+      if (saveNetData && result) {
+        queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
+        mutate({ data: saveNetData, token: result.IdToken! });
+      }
+      return true;
+    } catch (err: unknown) {
+      console.log(err);
+      return false;
+    }
+  };
 
   const onLogin = async (data: { email: string; password: string }) => {
     setLoading(true);
     setError(null);
     try {
-      const result = await signIn(data.email, data.password);
-      console.log('Login success:', result);
-      setIsAuthenticated(true);
-      navigate('/dashboard');
+      const result = await loginSequence(data.email, data.password);
+      if (result) {
+        navigate('/dashboard');
+      } else {
+        throw new Error('Login failed');
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || 'Login failed');
@@ -60,8 +86,8 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const result = await signUp(data.name, data.email, data.password);
-      console.log('Sign up success:', result);
+      await signUp(data.name, data.email, data.password);
+      setCredentials({ email: data.email, password: data.password });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || 'Sign up failed');
@@ -75,13 +101,21 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const result = await confirmSignUp(email, code);
-      console.log('Confirmation success:', result);
+      await confirmSignUp(email, code);
+      if (credentials) {
+        const result = await loginSequence(credentials.email, credentials.password);
+        if (result) {
+          navigate('/dashboard');
+        } else {
+          throw new Error('Login failed');
+        }
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || 'Confirmation failed');
       throw Error(err.message || 'Confirmation failed');
     } finally {
+      setCredentials(null);
       setLoading(false);
     }
   };
@@ -131,22 +165,13 @@ function LoginPage() {
   return (
     <>
       <article>
-        <title>{`Healthcare quality in ${name} | LifeRank`}</title>
-        <meta
-          name="description"
-          content={`Healthcare in ${name} for expats and nomads looking for peaceful & affordable places`}
-        />
-        <meta
-          name="keywords"
-          content={`${name}, healthcare, public healthcare, private healthcare, expat healthcare, healthcare insurance, healthcare benchmarks`}
-        />
+        <title>{`Login | LifeRank`}</title>
+        <meta name="description" content={`Login to LifeRank`} />
+        <meta name="keywords" content={`login, sign up, LifeRank, create LifeRank account`} />
       </article>
       <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
         <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
-          <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold bg-transparent rounded-md z-[1000]">
-            <span className="text-blue-800 text-shadow-lg">Life</span>
-            <span className="text-gray-800 text-shadow-lg">Rank</span>
-          </div>
+          <TopLogo />
           <h1 className="text-xl font-semibold text-center text-gray-800 mt-8">{getTitle(type)}</h1>
           {(type === 'loginSignSuccess' || type === 'login') && (
             <LoginForm

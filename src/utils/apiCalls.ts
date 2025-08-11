@@ -11,6 +11,9 @@ import type {
   Layer,
   LayerType,
   Price,
+  ReportDto,
+  ReportItem,
+  ReportUserData,
 } from '../types/api.types';
 
 export async function fetchCurrency(): Promise<Currency> {
@@ -159,6 +162,63 @@ export async function fetchBlogBySlug(slug: string): Promise<Blog> {
 export async function fetchLayerTypes(): Promise<LayerType[]> {
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/layers/types/all`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function postPublicReport(
+  data: ReportUserData
+): Promise<{ net: number; save: number }> {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/reports/public`, data);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to post data to public reports:', error);
+    throw error;
+  }
+}
+
+export async function postReport(variables: {
+  data: ReportUserData;
+  token: string;
+}): Promise<ReportDto> {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/reports/`, variables.data, {
+      headers: {
+        Authorization: `Bearer ${variables.token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to post data to reports:', error);
+    throw error;
+  }
+}
+
+export async function getUserReports(token: string): Promise<ReportItem[]> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/reports`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function getUserReportById(id: number, token: string): Promise<ReportDto> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/reports/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error('Failed to fetch layer types:', error);
