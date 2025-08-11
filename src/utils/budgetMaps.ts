@@ -30,6 +30,7 @@ export const colorMap: Record<
 export const currencyMap: Record<CurrencyOptions, string> = {
   EUR: '€',
   USD: '$',
+  GBP: '£',
 };
 
 export const apartmentControlMap = {

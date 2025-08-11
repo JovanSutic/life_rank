@@ -12,6 +12,7 @@ import { useMapStore } from '../../stores/mapStore';
 // Zod schema & Types
 // -----------------------------
 const currencyEnum = ['EUR', 'GBP', 'USD'] as const;
+type Currency = (typeof currencyEnum)[number];
 
 const ChildSchema = z.object({
   name: z.string().max(80).optional(),
@@ -62,12 +63,14 @@ const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total 
 export default function SaveNetForm({
   sendData,
   cityId,
+  defaultValues,
 }: {
   sendData: (data: ReportUserData) => void;
   cityId: number;
+  defaultValues: ReportUserData | null;
 }) {
   const totalSteps = 3;
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(defaultValues ? 3 : 1);
   const { setSaveNetData } = useMapStore();
 
   const {
@@ -81,10 +84,26 @@ export default function SaveNetForm({
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     mode: 'onChange',
-    defaultValues: {
-      earners: [{ label: 'Person 1', income: 0, currency: 'EUR', isUSCitizen: false }],
-      dependents: { hasSpouse: false, spouseDependent: false, children: [] },
-    },
+    defaultValues: !defaultValues
+      ? {
+          earners: [{ label: 'Person 1', income: 0, currency: 'EUR', isUSCitizen: false }],
+          dependents: { hasSpouse: false, spouseDependent: false, children: [] },
+        }
+      : {
+          earners: defaultValues.incomes.map((item, index) => ({
+            label: `Person ${index + 1}`,
+            income: item.income,
+            currency: item.currency.toUpperCase() as Currency,
+            isUSCitizen: item.isUSCitizen,
+          })),
+          dependents: {
+            hasSpouse: Boolean(defaultValues.dependents.find((item) => item.type === 'spouse')),
+            spouseDependent: Boolean(
+              defaultValues.dependents.find((item) => item.type === 'spouse')?.isDependent
+            ),
+            children: defaultValues.dependents.filter((item) => item.type === 'kid'),
+          },
+        },
   });
 
   const {
@@ -127,8 +146,6 @@ export default function SaveNetForm({
 
   // UX helpers
   const canAddEarner = earnerFields.length < 2;
-
-  // da li sam ulogovan i da li je moj token istekao što je check and refresh, ako je false prikazuj 2 dogmeta
 
   return (
     <div className="max-w-xl mx-auto">
@@ -411,7 +428,6 @@ export default function SaveNetForm({
           </section>
         )}
 
-        {/* Navigation controls - sticky on mobile mimic */}
         <div className="fixed left-0 right-0 bottom-0 py-4 px-4 md:px-0 bg-white border-t sm:static sm:bg-transparent sm:border-0">
           <div className="max-w-xl mx-auto flex md:justify-center gap-3">
             {step > 1 && (
