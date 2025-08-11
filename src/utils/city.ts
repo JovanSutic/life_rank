@@ -174,11 +174,12 @@ export function getLanguageService(data: FieldData[]) {
 function convertCurrencyInString(
   input: string,
   rate: number,
-  targetCurrency: 'USD' | 'EUR'
+  targetCurrency: 'USD' | 'EUR' | 'GBP'
 ): string {
   const conversionRates = {
     USD: { symbol: '$', rate: rate },
     EUR: { symbol: '€', rate: rate },
+    GBP: { symbol: '£', rate: rate },
   };
 
   return input.replace(
