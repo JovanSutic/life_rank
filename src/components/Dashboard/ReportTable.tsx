@@ -7,6 +7,15 @@ import { useMemo, useState } from 'react';
 import { getCurrencyRate } from '../../utils/budget';
 import { Link } from 'react-router-dom';
 
+const getRightTypes = (baseArr: string[], findArr: string[], trim: boolean) => {
+  if (trim) {
+    return baseArr.filter((item) => {
+      if (!findArr.includes(item)) return item;
+    });
+  }
+  return baseArr;
+};
+
 function ReportTable({ report }: { report: ReportDto | undefined; cityName: string }) {
   const [currency, setCurrency] = useState<CurrencyString>('eur');
   const rate = useMemo(() => {
@@ -35,11 +44,15 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
     savings_comfort: 'Potential savings when living with a comfortable budget.',
   };
 
+  const usTypes = ['us_income_tax', 'us_self_tax'];
+
   const typeOrder = [
     'allowance',
     'accounting',
     'taxable_income',
     'income_tax',
+    'us_income_tax',
+    'us_self_tax',
     'social_contributions',
     'effective_tax',
     'business_cost',
@@ -61,6 +74,10 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
     business_cost:
       'Total cost of business is the amount you need to pay out of your gross income (taxes + expenses + social contributions).',
     net: 'Net income is your final income after all taxes, contributions, and expenses are deducted.',
+    us_income_tax:
+      'U.S. citizens and residents owe tax on all worldwide income, including earnings abroad.',
+    us_self_tax:
+      'Self-employed individuals usually pay U.S. Social Security and Medicare tax on foreign earnings unless exempt by a totalization agreement.',
   };
 
   const boldTypes = ['effective_tax', 'business_cost', 'net'];
@@ -108,7 +125,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                 <div className="px-2">
                   <table className="w-full text-sm">
                     <tbody>
-                      {typeOrder.map((type, typeIndex) => {
+                      {getRightTypes(
+                        typeOrder,
+                        usTypes,
+                        !report.userData.incomes[Number(incomeMakerKey)].isUSCitizen
+                      ).map((type, typeIndex) => {
                         const matchingItems = items?.filter((i) => i.type === type);
                         const lastType = typeOrder.length - 1 === typeIndex;
                         if (matchingItems?.length === 0) return null;
@@ -125,7 +146,13 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                               className={`px-1 py-2 ${boldTypes.includes(type) ? 'font-semibold' : 'font-base'}`}
                             >
                               {item.label}
-                              <Tooltip text={typeExplanations[type]}>
+                              <Tooltip
+                                text={
+                                  usTypes.includes(type)
+                                    ? item.note || typeExplanations[type]
+                                    : typeExplanations[type]
+                                }
+                              >
                                 <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                               </Tooltip>
                             </td>
