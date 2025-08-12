@@ -3,10 +3,10 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Tooltip from '../Basic/Tooltip';
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
 import type { ReportUserData } from '../../types/api.types';
 import { prepData } from '../../utils/saveNet';
 import { useMapStore } from '../../stores/mapStore';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 // -----------------------------
 // Zod schema & Types
@@ -207,11 +207,8 @@ export default function SaveNetForm({
                       />
                       <span>US citizen</span>
                     </label>
-                    <Tooltip
-                      text="We use this to check if U.S. federal and self-employment taxes may apply to your income."
-                      position="-90px"
-                    >
-                      <InformationCircleIcon className="h-6 w-6 stroke-white text-gray-700" />
+                    <Tooltip text="We use this to check if U.S. federal and self-employment taxes may apply to your income.">
+                      <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
                     </Tooltip>
 
                     {earnerFields.length > 1 && (

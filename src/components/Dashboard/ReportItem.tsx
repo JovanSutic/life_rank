@@ -17,10 +17,12 @@ function ReportItem({ data, onClick }: { data: ReportItemType; onClick: () => vo
       className="bg-white cursor-pointer rounded-xl shadow-md py-2 px-4  border border-gray-100 hover:shadow-lg transition-shadow h-full w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-400"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-800">{city.name}</h2>
+        <h2 className="text-lg font-semibold text-gray-800">
+          {city.name}, <span className="font-light text-gray-600">{city.country}</span>
+        </h2>
       </div>
 
-      <div className="text-xl font-bold text-blue-600">
+      <div className="text-xl font-bold text-blue-500">
         €{net.toLocaleString(undefined, { maximumFractionDigits: 0 })}
       </div>
 

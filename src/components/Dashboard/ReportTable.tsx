@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import { getCurrencyRate } from '../../utils/budget';
 import { Link } from 'react-router-dom';
 
-function ReportTable({ report, cityName }: { report: ReportDto | undefined; cityName: string }) {
+function ReportTable({ report }: { report: ReportDto | undefined; cityName: string }) {
   const [currency, setCurrency] = useState<CurrencyString>('eur');
   const rate = useMemo(() => {
     return report?.userData?.rates ? getCurrencyRate(report!.userData!.rates!, currency, 'eur') : 1;
@@ -68,7 +68,12 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
   return (
     <>
       <div className="mb-2">
-        <h1 className="text-xl font-bold text-gray-900">Report for {cityName}</h1>
+        <h1 className="text-xl font-semibold text-gray-800">
+          Report for{' '}
+          <span className="font-bold text-blue-500">
+            {report.city?.name}, {report.city?.country}
+          </span>
+        </h1>
         <span className="text-gray-500 text-sm">Created on {formattedDate}</span>
       </div>
       <div className="flex flex-col mb-4 border-t border-gray-300 pt-2">
@@ -120,7 +125,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                               className={`px-1 py-2 ${boldTypes.includes(type) ? 'font-semibold' : 'font-base'}`}
                             >
                               {item.label}
-                              <Tooltip text={typeExplanations[type]} position="-100px">
+                              <Tooltip text={typeExplanations[type]}>
                                 <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                               </Tooltip>
                             </td>
@@ -154,7 +159,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                 <tr className="border-b border-gray-300">
                   <td className="px-1 py-2 font-semibold">
                     Cumulative Net
-                    <Tooltip text={rowExplanations.cumulative_net} position="-100px">
+                    <Tooltip text={rowExplanations.cumulative_net}>
                       <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                     </Tooltip>
                   </td>
@@ -169,7 +174,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                 <tr className="border-b border-gray-300">
                   <td className="px-1 py-2">
                     Budget (Low){' '}
-                    <Tooltip text={rowExplanations.budget_low} position="-100px">
+                    <Tooltip text={rowExplanations.budget_low}>
                       <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                     </Tooltip>
                   </td>
@@ -184,7 +189,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                 <tr className="border-b border-gray-300">
                   <td className="px-1 py-2">
                     Budget (Comfort){' '}
-                    <Tooltip text={rowExplanations.budget_comfort} position="-100px">
+                    <Tooltip text={rowExplanations.budget_comfort}>
                       <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                     </Tooltip>
                   </td>
@@ -199,7 +204,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                 <tr>
                   <td className="px-1 py-2 font-semibold">
                     Savings Potential (Low){' '}
-                    <Tooltip text={rowExplanations.savings_low} position="-100px">
+                    <Tooltip text={rowExplanations.savings_low}>
                       <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                     </Tooltip>
                   </td>
@@ -216,7 +221,7 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
                 <tr>
                   <td className="px-1 py-2 font-semibold">
                     Savings Potential (Comfort){' '}
-                    <Tooltip text={rowExplanations.savings_comfort} position="-150px">
+                    <Tooltip text={rowExplanations.savings_comfort}>
                       <InformationCircleIcon className="h-4 w-4 inline-block ml-1 stroke-black" />
                     </Tooltip>
                   </td>
@@ -235,13 +240,25 @@ function ReportTable({ report, cityName }: { report: ReportDto | undefined; city
           </div>
         </div>
       </div>
-      <div className="mt-4 mb-4">
-        <p className="text-sm font-light italic">
+      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm font-light text-blue-700">
           <strong>Note:</strong> These numbers are a solid estimate based on current tax rules and
           average expenses. Real life may bring more costs, extra savings, or opportunities to
           optimize taxes—especially for families. Think of it as a very realistic guide, not a
           guarantee.
         </p>
+      </div>
+      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-sm text-yellow-700">
+          {`This report covers the basic tax, but your tax situation may change if you have investments,
+          stocks, or other income sources. For full details, check the official tax page for ${report.city?.country}`}
+        </p>
+        <Link
+          to={`/taxes/${report.city?.country}?country=${report.city?.countriesId || 1}`}
+          className="inline-block mt-4 text-sm font-medium text-yellow-800 underline"
+        >
+          {`Learn more about taxes in ${report.city?.country}`}
+        </Link>
       </div>
       <div className="flex justify-center mt-4 mb-4">
         <Link
