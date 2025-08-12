@@ -225,6 +225,11 @@ export interface ReportDto {
   type: SocialType;
   userData: ReportUserData;
   costItems?: CostItem[];
+  city?: {
+    name: string;
+    country: string;
+    countriesId: string;
+  };
   createdAt: string;
 }
 
@@ -236,5 +241,6 @@ export interface ReportItem {
   net: number;
   city: {
     name: string;
+    country: string;
   };
 }

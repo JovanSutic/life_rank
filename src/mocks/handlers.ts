@@ -14,6 +14,8 @@ import {
   blogData,
   layerBudget,
   layerTaxes,
+  mockReports,
+  mockReport,
 } from './data';
 
 export const handlers = [
@@ -127,6 +129,24 @@ export const handlers = [
     try {
       await delay(700);
       return HttpResponse.json(blogData);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/reports`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(mockReports);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/reports/:id`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(mockReport);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
