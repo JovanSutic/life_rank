@@ -9,9 +9,11 @@ import { checkAndRefreshToken, getIdToken } from '../utils/token';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ReportItem from '../components/Dashboard/ReportItem';
 import ReportTable from '../components/Dashboard/ReportTable';
+import type { ReportItem as ReportItemType } from '../types/api.types';
 
 function DashboardPage() {
   const [searchParams] = useSearchParams();
+  const [token, setToken] = useState<null | string>(null);
   const reportId = searchParams.get('reportId');
 
   const [tab] = useState('Reports');
@@ -26,16 +28,8 @@ function DashboardPage() {
     error: reportItemError,
   } = useQuery({
     queryKey: ['GET_USER_REPORT', reportId],
-    queryFn: async () => {
-      const tokenValid = await checkAndRefreshToken();
-      if (!tokenValid) {
-        navigate('/login'); // Redirect if token refresh fails
-        return;
-      }
-      const token = getIdToken();
-      return getUserReportById(Number(reportId), token); // Pass token to API
-    },
-    enabled: !!reportId,
+    queryFn: () => getUserReportById(Number(reportId), token!),
+    enabled: !!reportId && !!token,
     retry: 1,
     staleTime: 60 * 60 * 1000,
   });
@@ -49,21 +43,37 @@ function DashboardPage() {
   } = useQuery({
     queryKey: ['GET_USER_REPORTS'],
     queryFn: async () => {
-      const tokenValid = await checkAndRefreshToken();
-      if (!tokenValid) {
-        navigate('/login'); // Redirect if token refresh fails
-        return;
+      let reports: ReportItemType[] = [];
+
+      for (let i = 0; i < 5; i++) {
+        reports = await getUserReports(token!);
+        if (reports.length > 0) break;
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
-      const token = getIdToken();
-      return getUserReports(token); // Pass token to API
+
+      return reports;
     },
-    enabled: true,
+    enabled: !!token,
     retry: 1,
     staleTime: 60 * 60 * 1000,
   });
 
   useEffect(() => {
     setSaveNetData(null);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const tokenValid = await checkAndRefreshToken();
+      if (!tokenValid) {
+        navigate('/login');
+        return;
+      }
+      const token = getIdToken();
+      if (token) {
+        setToken(token);
+      }
+    })();
   }, []);
 
   return (
