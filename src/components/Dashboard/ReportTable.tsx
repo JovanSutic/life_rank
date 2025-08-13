@@ -116,11 +116,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
               <div key={incomeMakerKey} className="relative rounded-lg shadow-sm">
                 <div className="bg-gray-100 px-4 py-2 font-semibold">
                   Income Maker {Number(incomeMakerKey) + 1}
-                  <span className="block font-medium text-sm text-gray-400">{`Gross income: ${report.userData.incomes[
+                  <span className="block font-medium text-sm text-gray-400">{`Gross income: ${currencyMap[report.userData.incomes[Number(incomeMakerKey)].currency.toUpperCase() as CurrencyOptions]}${report.userData.incomes[
                     Number(incomeMakerKey)
                   ].income.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
-                  })} ${currencyMap[report.userData.incomes[Number(incomeMakerKey)].currency.toUpperCase() as CurrencyOptions]}`}</span>
+                  })}`}</span>
                 </div>
                 <div className="px-2">
                   <table className="w-full text-sm">
@@ -159,13 +159,14 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                             <td
                               className={`px-1 py-2 text-right ${boldTypes.includes(type) ? 'font-bold' : 'font-medium'} ${type === 'net' ? 'text-green-600' : 'text-gray-700'}`}
                             >
-                              {`${(type === 'effective_tax'
+                              {`${type === 'effective_tax' ? '' : currencyMap[currency.toUpperCase() as CurrencyOptions]}${(type ===
+                              'effective_tax'
                                 ? item.amount
                                 : item.amount * rate
                               ).toLocaleString(undefined, {
                                 minimumFractionDigits: type === 'effective_tax' ? 0 : 2,
                                 maximumFractionDigits: type === 'effective_tax' ? 0 : 2,
-                              })}${type === 'effective_tax' ? '%' : currencyMap[currency.toUpperCase() as CurrencyOptions]}`}
+                              })}${type === 'effective_tax' ? '%' : ''}`}
                             </td>
                           </tr>
                         ));
@@ -191,11 +192,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                     </Tooltip>
                   </td>
                   <td className="px-1 py-2 text-right font-semibold text-green-600">
+                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                     {(rate * report.net).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
-                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                   </td>
                 </tr>
                 <tr className="border-b border-gray-300">
@@ -206,11 +207,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                     </Tooltip>
                   </td>
                   <td className="px-1 py-2 text-right font-medium">
+                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                     {(rate * report.expensesLow).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
-                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                   </td>
                 </tr>
                 <tr className="border-b border-gray-300">
@@ -221,11 +222,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                     </Tooltip>
                   </td>
                   <td className="px-1 py-2 text-right font-medium">
+                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                     {(rate * report.expensesComfort).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
-                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                   </td>
                 </tr>
                 <tr>
@@ -238,11 +239,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                   <td
                     className={`px-1 py-2 text-right font-bold ${report.net - report.expensesLow < 0 ? 'text-red-600' : 'text-green-600'}`}
                   >
+                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                     {(rate * (report.net - report.expensesLow)).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}{' '}
-                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
+                    })}
                   </td>
                 </tr>
                 <tr>
@@ -255,11 +256,11 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
                   <td
                     className={`px-1 py-2 text-right font-bold ${report.net - report.expensesComfort < 0 ? 'text-red-600' : 'text-green-600'}`}
                   >
+                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                     {(rate * (report.net - report.expensesComfort)).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
-                    {currencyMap[currency.toUpperCase() as CurrencyOptions]}
                   </td>
                 </tr>
               </tbody>
