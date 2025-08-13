@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { trackEvent } from '../../utils/analytics';
 
 function TeaserScreen({
   cityName,
@@ -9,6 +11,9 @@ function TeaserScreen({
   netIncome: number;
   savings: number;
 }) {
+  useEffect(() => {
+    trackEvent('net-flow-finish');
+  }, []);
   return (
     <div className="max-w-md mx-auto py-6 bg-white rounded-xl text-center pt-10">
       <h1 className="text-xl font-bold text-gray-900 mb-8">

@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { trackEvent } from '../../utils/analytics';
 
 function WelcomeScreen({ cityName, onStart }: { cityName: string; onStart: () => void }) {
+  useEffect(() => {
+    trackEvent('net-flow-welcome');
+  }, []);
   return (
     <div className="flex flex-col items-center justify-center pt-16">
       <h1 className="text-xl text-center font-bold text-gray-800 mb-8">

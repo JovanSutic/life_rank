@@ -36,16 +36,15 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
 
       {flowCounties.includes(countryName) ? (
         <section className="p-3 rounded-lg bg-slate-50 border border-gray-200 shadow-sm mb-3">
-          <h3 className="text-md font-semibold text-center uppercase tracking-wide text-slate-700 mb-3">
-            Thinking about relocating your self-employed business to{' '}
-            <span className="font-bold">{cityName}</span>?
+          <h3 className="text-md font-bold text-center uppercase tracking-wide text-slate-700 mb-2">
+            {`Thinking about relocation to ${cityName}?`}
           </h3>
           <Link
             to={`/net-save?cityId=${cityId}`}
-            className="w-full text-center mt-4 inline-block p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200"
+            className="w-full text-center inline-block p-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200"
             aria-label={`Start net and save report for ${cityName}`}
           >
-            Find out how much you can net & save here
+            {`See how much you will net & save here`}
           </Link>
         </section>
       ) : (
