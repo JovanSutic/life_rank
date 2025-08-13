@@ -54,7 +54,7 @@ function LoginPage() {
       const result = await signIn(email, password);
       setIsAuthenticated(true);
       if (saveNetData && result) {
-        queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
+        await queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
         mutate({ data: saveNetData, token: result.IdToken! });
       }
       return true;

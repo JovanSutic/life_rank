@@ -59,7 +59,7 @@ function NetSavePage() {
       publicMutate(data);
     } else {
       const token = getIdToken();
-      queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
+      await queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
       mutate({ data, token });
     }
   };
