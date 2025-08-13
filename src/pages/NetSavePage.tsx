@@ -12,6 +12,7 @@ import type { ReportUserData } from '../types/api.types';
 import { checkAndRefreshToken, getIdToken } from '../utils/token';
 import TopLogo from '../components/Basic/TopLogo';
 import { useMapStore } from '../stores/mapStore';
+import { trackEvent } from '../utils/analytics';
 
 function NetSavePage() {
   const [welcome, setWelcome] = useState<boolean>(true);
@@ -72,7 +73,15 @@ function NetSavePage() {
   function getScreen() {
     if (invalidCity) return <InvalidScreen cityName={cityData?.name || ''} />;
     if (welcome)
-      return <WelcomeScreen cityName={cityData?.name || ''} onStart={() => setWelcome(false)} />;
+      return (
+        <WelcomeScreen
+          cityName={cityData?.name || ''}
+          onStart={() => {
+            trackEvent('net-flow-start');
+            setWelcome(false);
+          }}
+        />
+      );
     if (publicIsSuccess)
       return (
         <TeaserScreen
