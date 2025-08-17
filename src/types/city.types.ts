@@ -43,3 +43,9 @@ export interface SpecialTax {
   name: string;
   values: IncomeTax[];
 }
+
+export interface ReportEssentials {
+  net: number;
+  tax: number;
+  effectiveTax: number;
+}

@@ -162,7 +162,7 @@ function HealthCarePage() {
           content={`${name}, healthcare, public healthcare, private healthcare, expat healthcare, healthcare insurance, healthcare benchmarks`}
         />
       </article>
-      <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
+      <div className="relative flex flex-col min-h-screen w-full px-4 pb-6 pt-2">
         <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
         <AsyncStateWrapper
           isLoading={countryIsLoading || countryIsFetching || cityIsLoading || cityIsFetching}

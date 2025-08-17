@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SaveNetForm from '../components/SaveNet/SaveNetForm';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchCity, postPublicReport, postReport } from '../utils/apiCalls';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { fetchCity, getTaxDefValues, postPublicReport, postReport } from '../utils/apiCalls';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import WelcomeScreen from '../components/SaveNet/WelcomeScreen';
 import TeaserScreen from '../components/SaveNet/TeaserScreen';
@@ -11,15 +11,13 @@ import { flowCounties } from '../utils/saveNet';
 import type { ReportUserData } from '../types/api.types';
 import { checkAndRefreshToken, getIdToken } from '../utils/token';
 import TopLogo from '../components/Basic/TopLogo';
-import { useMapStore } from '../stores/mapStore';
 import { trackEvent } from '../utils/analytics';
 
 function NetSavePage() {
   const [welcome, setWelcome] = useState<boolean>(true);
   const [invalidCity, setInvalidCity] = useState<boolean>(false);
+  const [result, setResult] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
-  const { saveNetData } = useMapStore();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const cityId = searchParams.get('cityId');
 
@@ -39,6 +37,20 @@ function NetSavePage() {
   });
 
   const {
+    data: taxData,
+    isLoading: taxIsLoading,
+    isFetching: taxIsFetching,
+    isError: taxIsError,
+    error: taxError,
+  } = useQuery({
+    queryKey: ['GET_COUNTY_CGT_DATA', cityData?.countriesId],
+    queryFn: () => getTaxDefValues(Number(cityData?.countriesId)),
+    enabled: !!cityData?.countriesId,
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
+  });
+
+  const {
     data: publicData,
     isPending: publicIsPending,
     isSuccess: publicIsSuccess,
@@ -47,6 +59,9 @@ function NetSavePage() {
     error: publicError,
   } = useMutation({
     mutationFn: postPublicReport,
+    onSuccess: () => {
+      setResult(true);
+    },
   });
 
   const { isPending, isSuccess, mutate } = useMutation({
@@ -59,7 +74,6 @@ function NetSavePage() {
       publicMutate(data);
     } else {
       const token = getIdToken();
-      await queryClient.invalidateQueries({ queryKey: ['GET_USER_REPORTS'] });
       mutate({ data, token });
     }
   };
@@ -77,22 +91,23 @@ function NetSavePage() {
         <WelcomeScreen
           cityName={cityData?.name || ''}
           onStart={() => {
-            trackEvent('net-flow-start');
+            trackEvent('net-flow-result');
             setWelcome(false);
           }}
         />
       );
-    if (publicIsSuccess)
+    if (publicIsSuccess && cityData && result)
       return (
         <TeaserScreen
-          cityName={cityData?.name || ''}
-          netIncome={publicData.net}
-          savings={publicData.save}
+          city={cityData}
+          data={publicData}
+          capitalGains={taxData?.[0].values}
+          reset={() => {
+            setResult(false);
+          }}
         />
       );
-    return (
-      <SaveNetForm sendData={sendData} cityId={Number(cityId) || 0} defaultValues={saveNetData} />
-    );
+    return <SaveNetForm sendData={sendData} cityId={Number(cityId) || 0} />;
   }
 
   useEffect(() => {
@@ -102,12 +117,6 @@ function NetSavePage() {
       }
     }
   }, [citySuccess, cityData?.country]);
-
-  useEffect(() => {
-    if (saveNetData) {
-      setWelcome(false);
-    }
-  }, []);
 
   return (
     <>
@@ -122,14 +131,21 @@ function NetSavePage() {
           content={`net amount in ${cityData?.name}, save amount in ${cityData?.name}  `}
         />
       </article>
-      <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
+      <div className="relative flex flex-col min-h-screen w-full px-4 pb-6 pt-2">
         <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
           <TopLogo />
           <div className="mt-2">
             <AsyncStateWrapper
-              isLoading={cityIsLoading || cityIsFetching || publicIsPending || isPending}
-              isError={cityIsError || publicIsError}
-              error={cityError || publicError}
+              isLoading={
+                cityIsLoading ||
+                cityIsFetching ||
+                publicIsPending ||
+                isPending ||
+                taxIsLoading ||
+                taxIsFetching
+              }
+              isError={cityIsError || publicIsError || taxIsError}
+              error={cityError || publicError || taxError}
             >
               {getScreen()}
             </AsyncStateWrapper>

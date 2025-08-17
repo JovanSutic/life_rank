@@ -14,7 +14,7 @@ function Index() {
     <main className="bg-white text-gray-900 font-sans">
       <TopLogo />
       {/* Hero Section */}
-      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-6 py-18 md:py-26 bg-blue-50">
+      <section className="min-h-[500px] flex flex-col justify-center items-center text-center px-4 py-18 md:py-26 bg-blue-50">
         <h1 className="text-2xl md:text-4xl font-bold leading-tight max-w-4xl text-black lg:mt-16">
           Peaceful & Affordable Places to Live in Europe – Find Your New Home
         </h1>
@@ -24,7 +24,7 @@ function Index() {
         </p>
         <Link
           to="/europe?layerTypeId=1&centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=false"
-          className="mt-10 lg:mt-20 px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
+          className="mt-10 lg:mt-20 px-4 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Explore the Map
           <ArrowRightIcon className="w-5 h-5" />
@@ -35,12 +35,12 @@ function Index() {
         </p>
       </section>
 
-      <section className="py-8 px-6 text-center bg-gray-50">
+      <section className="py-8 px-4 text-center bg-gray-50">
         <Newsletter />
       </section>
 
       {/* Why Map Section */}
-      <section className="py-24 px-6 bg-white text-center">
+      <section className="py-24 px-4 bg-white text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-medium mb-6">🗺️ Discover places you may like</h2>
           <p className="text-gray-600 text-md md:text-lg">
@@ -54,7 +54,7 @@ function Index() {
       </section>
 
       {/* What You Get Grid */}
-      <section className="py-12 px-6 bg-gray-100">
+      <section className="py-12 px-4 bg-gray-100">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-medium text-center mb-12">
             What you'll find in each city profile
@@ -94,7 +94,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-blue-50 text-center">
+      <section className="py-20 px-4 bg-blue-50 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Discover Affordable, Peaceful Places to Live in Europe
@@ -111,7 +111,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 px-6 bg-white text-center">
+      <section className="py-24 px-4 bg-white text-center">
         <h2 className="text-2xl md:text-3xl font-medium mb-6">
           Dreaming of a better life with more meaning?
         </h2>
@@ -121,7 +121,7 @@ function Index() {
         </p>
         <Link
           to="/europe?layerTypeId=1&centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=false"
-          className="px-6 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
+          className="px-4 py-4 bg-blue-800 text-white text-base font-medium rounded-md inline-flex items-center gap-3 hover:bg-blue-700 transition"
         >
           Begin your journey
           <ArrowRightIcon className="w-5 h-5" />
