@@ -5,14 +5,12 @@ import * as z from 'zod';
 import Tooltip from '../Basic/Tooltip';
 import type { ReportUserData } from '../../types/api.types';
 import { prepData } from '../../utils/saveNet';
-import { useMapStore } from '../../stores/mapStore';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 // -----------------------------
 // Zod schema & Types
 // -----------------------------
 const currencyEnum = ['EUR', 'GBP', 'USD'] as const;
-type Currency = (typeof currencyEnum)[number];
 
 const ChildSchema = z.object({
   name: z.string().max(80).optional(),
@@ -27,9 +25,10 @@ const DependentSchema = z.object({
 });
 
 const EarnerSchema = z.object({
-  label: z.string().min(1).max(60).optional(),
   income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
   currency: z.enum(currencyEnum),
+  accountantCost: z.number().min(80, { message: 'Monthly accountant costs must be at least 80' }),
+  expensesCost: z.number().min(100, { message: 'Monthly business expenses must be at least 100' }),
   isUSCitizen: z.boolean(),
 });
 
@@ -63,15 +62,12 @@ const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total 
 export default function SaveNetForm({
   sendData,
   cityId,
-  defaultValues,
 }: {
   sendData: (data: ReportUserData) => void;
   cityId: number;
-  defaultValues: ReportUserData | null;
 }) {
   const totalSteps = 3;
-  const [step, setStep] = useState(defaultValues ? 3 : 1);
-  const { setSaveNetData } = useMapStore();
+  const [step, setStep] = useState(1);
 
   const {
     register,
@@ -84,26 +80,18 @@ export default function SaveNetForm({
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     mode: 'onChange',
-    defaultValues: !defaultValues
-      ? {
-          earners: [{ label: 'Person 1', income: 0, currency: 'EUR', isUSCitizen: false }],
-          dependents: { hasSpouse: false, spouseDependent: false, children: [] },
-        }
-      : {
-          earners: defaultValues.incomes.map((item, index) => ({
-            label: `Person ${index + 1}`,
-            income: item.income,
-            currency: item.currency.toUpperCase() as Currency,
-            isUSCitizen: item.isUSCitizen,
-          })),
-          dependents: {
-            hasSpouse: Boolean(defaultValues.dependents.find((item) => item.type === 'spouse')),
-            spouseDependent: Boolean(
-              defaultValues.dependents.find((item) => item.type === 'spouse')?.isDependent
-            ),
-            children: defaultValues.dependents.filter((item) => item.type === 'kid'),
-          },
+    defaultValues: {
+      earners: [
+        {
+          income: 0,
+          currency: 'EUR',
+          accountantCost: 80,
+          expensesCost: 100,
+          isUSCitizen: false,
         },
+      ],
+      dependents: { hasSpouse: false, spouseDependent: false, children: [] },
+    },
   });
 
   const {
@@ -138,7 +126,6 @@ export default function SaveNetForm({
 
   const onSubmit = (data: FormValues) => {
     const fullData = prepData(data, cityId);
-    setSaveNetData(fullData);
     reset();
 
     sendData(fullData);
@@ -168,6 +155,19 @@ export default function SaveNetForm({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
+                      <label className="block text-xs mb-1">Currency</label>
+                      <select
+                        {...register(`earners.${idx}.currency` as const)}
+                        className="w-full p-2 border rounded"
+                      >
+                        {currencyEnum.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-xs mb-1">Expected annual income</label>
                       <input
                         type="number"
@@ -184,17 +184,39 @@ export default function SaveNetForm({
                     </div>
 
                     <div>
-                      <label className="block text-xs mb-1">Currency</label>
-                      <select
-                        {...register(`earners.${idx}.currency` as const)}
+                      <label className="block text-xs mb-1">Monthly accounting expense</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        {...register(`earners.${idx}.accountantCost` as const, {
+                          valueAsNumber: true,
+                        })}
                         className="w-full p-2 border rounded"
-                      >
-                        {currencyEnum.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
+                        placeholder="0"
+                      />
+                      {errors.earners?.[idx]?.accountantCost && (
+                        <p className="text-xs text-red-500">
+                          {String(errors.earners?.[idx]?.accountantCost?.message)}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs mb-1">Other monthly business expenses</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        {...register(`earners.${idx}.expensesCost` as const, {
+                          valueAsNumber: true,
+                        })}
+                        className="w-full p-2 border rounded"
+                        placeholder="0"
+                      />
+                      {errors.earners?.[idx]?.expensesCost && (
+                        <p className="text-xs text-red-500">
+                          {String(errors.earners?.[idx]?.expensesCost?.message)}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -230,8 +252,9 @@ export default function SaveNetForm({
                   disabled={!canAddEarner}
                   onClick={() =>
                     appendEarner({
-                      label: `Person ${earnerFields.length + 1}`,
                       income: 0,
+                      accountantCost: 100,
+                      expensesCost: 200,
                       currency: 'EUR',
                       isUSCitizen: false,
                     })
@@ -364,7 +387,7 @@ export default function SaveNetForm({
                     <div className="mt-2 text-sm text-gray-700">
                       {watch('earners').map((e, i) => (
                         <div key={i} className="mb-1">
-                          <strong>{e.label ?? `Person ${i + 1}`}</strong> — {e.income} {e.currency}{' '}
+                          <strong>{`Person ${i + 1}`}</strong> — {e.income} {e.currency}{' '}
                           {e.isUSCitizen ? '· US citizen' : ''}
                         </div>
                       ))}
@@ -416,7 +439,7 @@ export default function SaveNetForm({
               <div className="text-right">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 cursor-pointer text-white"
+                  className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer text-white"
                 >
                   Confirm & Calculate
                 </button>
@@ -431,7 +454,7 @@ export default function SaveNetForm({
               <button
                 type="button"
                 onClick={onBack}
-                className="flex-1 py-2 rounded border cursor-pointer"
+                className="flex-1 py-2 rounded-lg border cursor-pointer"
               >
                 Back
               </button>

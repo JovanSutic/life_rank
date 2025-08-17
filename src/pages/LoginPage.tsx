@@ -169,7 +169,7 @@ function LoginPage() {
         <meta name="description" content={`Login to LifeRank`} />
         <meta name="keywords" content={`login, sign up, LifeRank, create LifeRank account`} />
       </article>
-      <div className="relative flex flex-col min-h-screen w-full px-6 pb-6 pt-2">
+      <div className="relative flex flex-col min-h-screen w-full px-4 pb-6 pt-2">
         <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
           <TopLogo />
           <h1 className="text-xl font-semibold text-center text-gray-800 mt-8">{getTitle(type)}</h1>
