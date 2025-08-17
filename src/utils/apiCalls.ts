@@ -169,9 +169,7 @@ export async function fetchLayerTypes(): Promise<LayerType[]> {
   }
 }
 
-export async function postPublicReport(
-  data: ReportUserData
-): Promise<{ net: number; save: number }> {
+export async function postPublicReport(data: ReportUserData): Promise<ReportDto> {
   try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/reports/public`, data);
     return res.data;
@@ -219,6 +217,18 @@ export async function getUserReportById(id: number, token: string): Promise<Repo
         Authorization: `Bearer ${token}`,
       },
     });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function getTaxDefValues(countryId: number): Promise<FieldData[]> {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/def_value/by-field?field=tax&countryId=${countryId}&definitionId=33`
+    );
     return res.data;
   } catch (error) {
     console.error('Failed to fetch layer types:', error);

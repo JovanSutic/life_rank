@@ -131,7 +131,7 @@ interface Definition {
   aspectId: number;
 }
 
-interface DefValue {
+export interface DefValue {
   id: number;
   definitionId: number;
   cityId: number | null;
@@ -188,6 +188,8 @@ export interface PersonalIncomes {
   isUSCitizen: boolean;
   currency: CurrencyString;
   income: number;
+  accountantCost: number;
+  expensesCost: number;
 }
 
 export interface Dependents {
