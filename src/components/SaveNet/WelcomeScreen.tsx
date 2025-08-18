@@ -9,7 +9,7 @@ function WelcomeScreen({ cityName, onStart }: { cityName: string; onStart: () =>
   return (
     <div className="flex flex-col items-center justify-center pt-16">
       <h1 className="text-xl text-center font-bold text-gray-800 mb-8">
-        Find Your Net & Savings in {cityName}
+        Discover Your Net Income in {cityName}
       </h1>
 
       <ul className="text-left space-y-3 mb-6">

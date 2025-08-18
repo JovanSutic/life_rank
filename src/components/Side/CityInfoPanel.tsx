@@ -42,7 +42,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
           <Link
             to={`/net-save?cityId=${cityId}`}
             className="w-full text-center inline-block p-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200"
-            aria-label={`Start net and save report for ${cityName}`}
+            aria-label={`Get your Net report for ${cityName}`}
           >
             {`See how much you will net & save here`}
           </Link>

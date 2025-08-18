@@ -1,5 +1,7 @@
 import { regionalWealthTaxDetails } from '../../data/spain';
+import { useMapStore } from '../../stores/mapStore';
 import type { DefValue } from '../../types/api.types';
+import { convertCurrencyInString } from '../../utils/city';
 import DisplayBox from '../Basic/DisplayBox';
 
 const OtherTaxes = ({
@@ -9,19 +11,22 @@ const OtherTaxes = ({
   regionName: keyof typeof regionalWealthTaxDetails;
   capitalGainsData: DefValue[];
 }) => {
+  const { currency, currencyIndex } = useMapStore();
   const wealthTaxDetails =
     regionalWealthTaxDetails[regionName] || 'Details for this region are not available.';
 
   const renderTaxCard = (definitionValues: DefValue[]) => (
-    <div className="bg-gray-100 p-6 rounded-2xl shadow-inner mt-4">
+    <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
       <h4 className="text-xl font-semibold text-gray-800 mb-2">Key Rates</h4>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {definitionValues
           .filter((item) => item.note?.includes('Tax Bracket'))
           .map((item) => (
             <div key={item.id} className="bg-white p-4 rounded-xl shadow-md border border-gray-200">
-              <p className="text-lg font-bold text-indigo-600">{item.value}</p>
-              <p className="text-sm text-gray-600 mt-1">{item.comment}</p>
+              <p className="text-lg font-bold text-blue-500">{item.value}</p>
+              <p className="text-sm text-gray-600 mt-1">
+                {convertCurrencyInString(item.comment || '', currencyIndex, currency)}
+              </p>
             </div>
           ))}
       </div>
@@ -41,9 +46,12 @@ const OtherTaxes = ({
               (e.g., mortgages). Each Spanish region, or Autonomous Community, can set its own
               rules, rates, and exemptions, which can result in significant differences in tax
               liability depending on where you reside."
-              color="blue"
+              color="yellow"
             />
-            <DisplayBox message={wealthTaxDetails} color="blue" />
+            <DisplayBox
+              message={convertCurrencyInString(wealthTaxDetails, currencyIndex, currency)}
+              color="yellow"
+            />
             <DisplayBox
               title={'The 60% Rule: The Tax Cap'}
               message={

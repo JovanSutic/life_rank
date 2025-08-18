@@ -1,80 +1,84 @@
+import { BanknotesIcon, ChartBarIcon } from '@heroicons/react/24/solid';
 import { formatCurrency } from '../../utils/saveNet';
+import type { CurrencyOptions } from '../../types/budget.types';
 
-function ComparisonBar({
-  label,
-  cost,
-  low,
-  net,
-}: {
-  label: string;
-  cost: number;
-  low: boolean;
-  net: number;
-}) {
-  const percentage = (net / cost) * 100;
-  const barWidth = `${Math.min(percentage, 100)}%`;
-  const indicatorLeft = `${Math.min(percentage, 100)}%`;
-  const isCovered = net >= cost;
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-gray-500 font-base">{label}</span>
-        <span className={`font-semibold ${isCovered ? 'text-green-600' : 'text-red-500'}`}>
-          {isCovered ? 'Covered! ✅' : 'Not Covered ❌'}
-        </span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-        <div
-          className={`rounded-full h-4 ${low ? 'bg-blue-500' : 'bg-green-500'} transition-all duration-500 ease-in-out`}
-          style={{ width: barWidth }}
-        ></div>
-        <div
-          className={`absolute h-6 w-1 rounded-full -top-1 ${low ? 'bg-blue-500' : 'bg-green-500'} transition-all duration-500 ease-in-out`}
-          style={{ left: indicatorLeft }}
-        ></div>
-      </div>
-    </div>
-  );
+interface BudgetCostData {
+  name: string;
+  description: string;
+  num: number;
 }
 
-function BudgetPresentation({ low, comfort, net }: { low: number; comfort: number; net: number }) {
+function BudgetPresentation({
+  costOfLiving,
+  netIncomeProjection,
+  currency,
+}: {
+  costOfLiving: BudgetCostData[];
+  netIncomeProjection: BudgetCostData[];
+  currency: CurrencyOptions;
+}) {
+  // Check if data is available before rendering
+  if (!costOfLiving || !netIncomeProjection) {
+    return null;
+  }
+
   return (
-    <div className="bg-white">
-      {/* Data Display */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div>
-          <div className="text-gray-500 text-sm md:text-base">Low-Cost Scenario</div>
-          <div className="text-2xl md:text-3xl font-bold text-blue-500">{formatCurrency(low)}</div>
-        </div>
-        <div>
-          <div className="text-gray-500 text-sm md:text-base">Comfortable Scenario</div>
-          <div className="text-2xl md:text-3xl font-bold text-green-500">
-            {formatCurrency(comfort)}
-          </div>
-        </div>
+    // Outer container with a soft, recessed background
+    <div className="bg-gray-100 rounded-2xl shadow-inner px-4 py-6 mb-6">
+      {/* Section 1: Annual Cost of Living */}
+      <div className="flex items-center space-x-3 text-blue-600 mb-4">
+        <BanknotesIcon className="h-5 w-5" />
+        <h3 className="text-xl font-semibold">Annual Cost of Living</h3>
       </div>
 
-      {/* Comparison Bars Section */}
-      <div className="space-y-8">
-        {/* User Input for Net Income */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-          <p className="text-gray-700 font-medium whitespace-nowrap">
-            Your Annual Net Income:{' '}
-            <span className="text-xl font-bold text-gray-700">{formatCurrency(net)}</span>
-          </p>
-        </div>
+      <div>
+        {costOfLiving.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white border border-gray-200 rounded-xl shadow-md p-4 mb-3 grid grid-cols-1 md:grid-cols-2 gap-4 items-center"
+          >
+            <div className="flex flex-col">
+              <p className="font-bold text-gray-800 text-lg">{item.name}</p>
+              <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+            </div>
 
-        {/* Low-Cost Comparison */}
-        <ComparisonBar net={net} label="Ability to cover Low-Cost Scenario" cost={low} low={true} />
+            <div className="flex flex-col items-start md:items-end">
+              <span className="font-bold text-xl text-gray-900">
+                {formatCurrency(item.num, currency)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Comfortable Comparison */}
-        <ComparisonBar
-          net={net}
-          label="Ability to cover Comfortable Scenario"
-          cost={comfort}
-          low={false}
-        />
+      {/* A separator for the next section */}
+      <hr className="my-6 border-gray-200" />
+
+      {/* Section 2: Annual Net Income Projection */}
+      <div className="flex items-center space-x-3 text-green-600 mb-4">
+        <ChartBarIcon className="h-5 w-5" />
+        <h3 className="text-xl font-semibold">Annual Lifestyle Projection</h3>
+      </div>
+
+      {/* Individual cards for each projected year */}
+      <div>
+        {netIncomeProjection.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white border border-gray-200 rounded-xl shadow-md p-4 mb-3 grid grid-cols-1 md:grid-cols-2 gap-4 items-center"
+          >
+            <div className="flex flex-col">
+              <p className="font-medium text-gray-800 text-base">{item.name}</p>
+              <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+            </div>
+
+            <div className="flex flex-col items-start md:items-end">
+              <span className="font-bold text-lg text-gray-900">
+                Net: {formatCurrency(item.num, currency)}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

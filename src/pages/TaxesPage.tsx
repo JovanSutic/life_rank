@@ -1,10 +1,9 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { fetchCountryTax, fetchCurrency } from '../utils/apiCalls';
+import { fetchCountryTax } from '../utils/apiCalls';
 import { useQuery } from '@tanstack/react-query';
 import NewsletterModal from '../components/Basic/NewsletterModal';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import { useMapStore } from '../stores/mapStore';
-import SettingsButton from '../components/Basic/SettingsButton';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import ResponsiveTable from '../components/Healthcare/ResponsiveTable';
 import { useMemo } from 'react';
@@ -47,13 +46,6 @@ function HealthCarePage() {
     newsLetterShow,
     toggleNewsletterShow,
   } = useMapStore();
-
-  const { data: currency } = useQuery({
-    queryKey: ['GET_CURRENCY'],
-    queryFn: () => fetchCurrency(),
-    retry: 2,
-    staleTime: 60 * 60 * 1000,
-  });
 
   const {
     data: countryData,
@@ -178,7 +170,6 @@ function HealthCarePage() {
           error={countryError}
         >
           <div className="relative bg-white w-full lg:w-[764px] mx-auto pt-4">
-            {currency && <SettingsButton currency={currency} type="dark" top={0} />}
             <div className="w-full">
               <h1 className="text-lg text-center lg:text-2xl font-bold text-gray-800 mb-2 ">
                 Taxes in {name}
