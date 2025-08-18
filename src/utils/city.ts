@@ -171,34 +171,32 @@ export function getLanguageService(data: FieldData[]) {
   };
 }
 
-function convertCurrencyInString(
+export function convertCurrencyInString(
   input: string,
   rate: number,
   targetCurrency: 'USD' | 'EUR' | 'GBP'
 ): string {
-  const conversionRates = {
-    USD: { symbol: '$', rate: rate },
-    EUR: { symbol: '€', rate: rate },
-    GBP: { symbol: '£', rate: rate },
+  // Map currency codes to their symbols
+  const currencyToSymbolMap = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
   };
 
-  return input.replace(
-    /([€$])\s?(\d{1,3}(?:[,.\s]?\d{3})*(?:[.,]\d+)?)/g,
-    (_, symbol, amountStr) => {
-      // Normalize amount to float
-      const cleanAmount = parseFloat(amountStr.replace(/[, ]/g, '').replace(',', '.'));
+  // Regular expression to find any amount with a €, $, or £ symbol
+  const regex = /([€$£])\s?(\d{1,3}(?:[,.\s]?\d{3})*(?:[.,]\d+)?)/g;
 
-      // Determine source currency
-      const fromCurrency = symbol === '€' ? 'EUR' : 'USD';
+  return input.replace(regex, (_, __, amountStr) => {
+    // Clean and parse the amount string
+    const cleanAmount = parseFloat(amountStr.replace(/[, ]/g, '').replace(',', '.'));
 
-      if (fromCurrency === targetCurrency) return `${symbol}${amountStr}`; // No conversion needed
+    // Apply the single rate to every amount found
+    const convertedAmount = cleanAmount * rate;
+    const targetSymbol = currencyToSymbolMap[targetCurrency];
 
-      const convertedAmount = cleanAmount * conversionRates[fromCurrency].rate;
-      const targetSymbol = conversionRates[targetCurrency].symbol;
-
-      return `${targetSymbol}${convertedAmount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
-    }
-  );
+    // Return the new symbol and converted amount, formatted to 2 decimal places
+    return `${targetSymbol}${convertedAmount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  });
 }
 
 export function getTaxGroup(
