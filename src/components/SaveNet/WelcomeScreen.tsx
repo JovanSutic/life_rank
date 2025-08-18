@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { trackEvent } from '../../utils/analytics';
+import { mapCompass } from '../../data/spain';
+import type { City } from '../../types/api.types';
 
-function WelcomeScreen({ cityName, onStart }: { cityName: string; onStart: () => void }) {
+function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) {
   useEffect(() => {
     trackEvent('net-flow-welcome');
   }, []);
   return (
     <div className="flex flex-col items-center justify-center pt-16">
       <h1 className="text-xl text-center font-bold text-gray-800 mb-8">
-        Discover Your Net Income in {cityName}
+        Discover Your Net Income in {city?.name}
       </h1>
 
       <ul className="text-left space-y-3 mb-6">
@@ -41,7 +43,7 @@ function WelcomeScreen({ cityName, onStart }: { cityName: string; onStart: () =>
         Start Now
       </button>
       <Link
-        to="/europe?layerTypeId=1&centerLat=48.07649&centerLng=16.32731&north=58.40171&south=35.13787&east=40.73730&west=-8.04199&zoom=5&budget=7000&size=9007199254740991&sea=false&rank=false"
+        to={mapCompass[city?.country || 'Spain']}
         className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors mt-4"
       >
         Back on the Map
