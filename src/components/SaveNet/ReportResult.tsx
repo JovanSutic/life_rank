@@ -3,7 +3,7 @@ import type { City, DefValue, ReportDto } from '../../types/api.types';
 import { formatCurrency, formatPercentage, getEssentialReportData } from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
 import OtherTaxes from './OtherTaxes';
-import { regionsSpain } from '../../data/spain';
+import { mapCompass, regionsSpain } from '../../data/spain';
 import BudgetPresentation from './BudgetPresentation';
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -261,7 +261,7 @@ function ReportResult({
           </div>
           <div className="w-full mt-6 flex flex-col items-center justify-center">
             <Link
-              to="/europe?layerTypeId=1&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Spain"
+              to={mapCompass[city?.country || 'Spain']}
               className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
             >
               Cost of living in {city?.country}

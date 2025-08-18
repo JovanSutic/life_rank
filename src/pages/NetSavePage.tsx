@@ -89,7 +89,7 @@ function NetSavePage() {
     if (welcome)
       return (
         <WelcomeScreen
-          cityName={cityData?.name || ''}
+          city={cityData}
           onStart={() => {
             trackEvent('net-flow-result');
             setWelcome(false);
