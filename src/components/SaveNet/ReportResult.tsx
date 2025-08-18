@@ -1,10 +1,4 @@
-import {
-  ArrowTrendingUpIcon,
-  BanknotesIcon,
-  ChartBarIcon,
-  UserIcon,
-  ClockIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowTrendingUpIcon, BanknotesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import type { City, DefValue, ReportDto } from '../../types/api.types';
 import { formatCurrency, formatPercentage, getEssentialReportData } from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
@@ -12,20 +6,35 @@ import OtherTaxes from './OtherTaxes';
 import { regionsSpain } from '../../data/spain';
 import BudgetPresentation from './BudgetPresentation';
 import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useMapStore } from '../../stores/mapStore';
+import type { CurrencyOptions } from '../../types/budget.types';
+import { convertCurrencyInString } from '../../utils/city';
+
+function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div className="space-y-6 mb-8">
+      <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
+      <p className="font-light text-gray-500 mb-8">{subtitle}</p>
+    </div>
+  );
+}
 
 function Card({
   net,
   cumulativeTax,
   effectiveTax,
+  currency,
   style = 'normal',
 }: {
   net: number;
   cumulativeTax: number;
   effectiveTax: number;
+  currency: CurrencyOptions;
   style?: 'normal' | 'future';
 }) {
   return (
-    <div className="flex justify-center items-center font-sans mb-10">
+    <div className="flex justify-center items-center font-sans">
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl border border-gray-100 shadow-md transition-all duration-300 transform hover:scale-105">
           <div
@@ -39,7 +48,7 @@ function Card({
             Annual Net Income
           </span>
           <span className="mt-2 text-2xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
-            {formatCurrency(net)}
+            {formatCurrency(net, currency)}
           </span>
         </div>
 
@@ -55,7 +64,7 @@ function Card({
             Taxes & Contributions
           </span>
           <span className="mt-2 text-2xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
-            {formatCurrency(cumulativeTax)}
+            {formatCurrency(cumulativeTax, currency)}
           </span>
         </div>
 
@@ -88,128 +97,166 @@ function ReportResult({
   city: City | undefined;
   capitalGains?: DefValue[];
 }) {
-  const { cumulativeTax, effectiveTax, earners, future, displayMessages } =
-    getEssentialReportData(data);
+  const { currency, currencyIndex } = useMapStore();
+
+  const { cumulativeTax, effectiveTax, earners, future, displayMessages } = useMemo(() => {
+    return getEssentialReportData(data, currencyIndex, currency);
+  }, [data, currencyIndex, currency]);
 
   return (
     <div className="space-y-8">
-      <section className="border-b border-gray-300 pb-8">
-        <h3 className="text-xl font-bold mb-6 text-gray-800">Financial Summery</h3>
-        <Card net={data.net} cumulativeTax={cumulativeTax} effectiveTax={effectiveTax} />
+      <section className="border-b border-gray-300 pb-10">
+        <SectionHeader
+          title="Financial Summery"
+          subtitle="This is a quick summery of your use case finances that is helping you quickly see
+          what you'll be paying and what you'll be taking home in the first year of operation."
+        />
+        <Card
+          net={data.net * currencyIndex}
+          cumulativeTax={cumulativeTax}
+          effectiveTax={effectiveTax}
+          currency={currency}
+        />
       </section>
-      <section className="border-b border-gray-300 pb-8">
-        <h3 className="text-xl font-bold mb-6 text-gray-800">Step-by-Step Breakdown</h3>
+      <section className="border-b border-gray-300 pb-10">
+        <SectionHeader
+          title="Step-by-Step Breakdown"
+          subtitle="This is a breakdown of your self-employment tax calculation. Use this detailed view to understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
+        />
         {earners[0].length > 0 && (
-          <>
-            <div
-              className={`inline-flex items-center px-3 py-1.5 rounded-full bg-blue-500 text-white mb-1`}
-            >
-              <UserIcon className="h-4 w-4" />
-              <span className="text-sm font-medium">Income earner 1</span>
-            </div>
-            <div className="divide-y divide-gray-200 mb-4">
+          <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
+            {earners.length > 1 && (
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 1</h4>
+            )}
+
+            <div className="space-y-4 my-2">
               {earners[0].map((item) => (
                 <div
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4"
+                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
                   key={`0${item.name}`}
                 >
                   <div className="flex-1">
                     <p className="font-medium text-gray-700">{item.name}</p>
-                    <p className="text-sm text-gray-500 mt-1 italic pr-4">{item.explain}</p>
+                    <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
                     {item.calc && <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>}
                   </div>
                   <div className="mt-2 sm:mt-0 text-right">
-                    <span
-                      // eslint-disable-next-line no-constant-condition
-                      className={`font-semibold ${30 < 0 ? 'text-green-600' : 'text-gray-900'}`}
-                    >
-                      Total: {item.total}
-                    </span>
+                    <span className="font-semibold">Total: </span>
+                    <span className="font-bold text-blue-500">{item.total}</span>
                   </div>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
         {earners[1].length > 0 && (
-          <>
-            <div
-              className={`inline-flex items-center px-3 py-1.5 rounded-full bg-blue-500 text-white mb-1`}
-            >
-              <UserIcon className="h-4 w-4" />
-              <span className="text-sm font-medium">Income earner 2</span>
-            </div>
-            <div className="divide-y divide-gray-200">
+          <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-10">
+            <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 2</h4>
+            <div className="space-y-4 mb-2">
               {earners[1].map((item) => (
                 <div
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4"
+                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
                   key={`1${item.name}`}
                 >
                   <div className="flex-1">
                     <p className="font-medium text-gray-700">{item.name}</p>
-                    <p className="text-sm text-gray-500 mt-1 italic pr-4">{item.explain}</p>
+                    <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
                     {item.calc && <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>}
                   </div>
                   <div className="mt-2 sm:mt-0 text-right">
-                    <span
-                      // eslint-disable-next-line no-constant-condition
-                      className={`font-semibold ${30 < 0 ? 'text-green-600' : 'text-gray-900'}`}
-                    >
-                      Total: {item.total}
-                    </span>
+                    <span className="font-semibold">Total: </span>
+                    <span className="font-bold text-blue-500">{item.total}</span>
                   </div>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </section>
-      <section className="border-b border-gray-300 pb-8">
-        <h3 className="text-xl font-bold mb-4 text-gray-800">What's Next? 2-Year Forecast</h3>
-        <p className="font-light text-gray-500 mb-8">
-          Curious about what's ahead? This two-year forecast breaks down your estimated tax outlook,
+      <section className="border-b border-gray-300 pb-10">
+        <SectionHeader
+          title="What's Next? 2-Year Forecast"
+          subtitle="Curious about what's ahead? This two-year forecast breaks down your estimated tax outlook,
           highlighting how expiring reductions and allowances could affect your taxes in the coming
-          years.
-        </p>
+          years."
+        />
         {future.map((item) => (
-          <div key={`future${item.year}`}>
-            <div
-              className={`inline-flex items-center px-3 py-1.5 rounded-full bg-purple-500 text-white mb-4`}
-            >
-              <ClockIcon className="h-4 w-4" />
-              <span className="text-sm font-medium">{`Year ${item.year}`}</span>
-            </div>
+          <div key={`future${item.year}`} className="mb-6">
+            <h4 className="text-xl font-semibold text-gray-800 mb-2">{`Year ${item.year}`}</h4>
             <Card
               net={item.net}
               cumulativeTax={item.cumulativeTax}
               effectiveTax={item.effectiveTax}
+              currency={currency}
               style="future"
             />
           </div>
         ))}
         <div className="space-y-4">
           {displayMessages.map((item) => (
-            <DisplayBox key={item.id} title={item.title} message={item.message} />
+            <DisplayBox
+              key={item.id}
+              title={item.title}
+              message={convertCurrencyInString(item.message, currencyIndex, currency)}
+            />
           ))}
         </div>
       </section>
-      <section className="border-b border-gray-300 pb-8">
-        <h3 className="text-xl font-bold mb-6 text-gray-800">Other Relevant Taxes</h3>
+      <section className="border-b border-gray-300 pb-10">
+        <SectionHeader
+          title="Other Relevant Taxes"
+          subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of Wealth Tax and Capital Gains Tax, which can create new financial obligations."
+        />
         <div>
           <OtherTaxes
             regionName={regionsSpain[data.cityId]?.region}
             capitalGainsData={capitalGains || []}
           />
+          <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
+            <Link
+              to={`/taxes/${city?.country}?country=${city?.countriesId}`}
+              className="w-full block md:w-[300px] cursor-pointer bg-green-500 hover:bg-green-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+            >
+              Check out other taxes in {city?.country}
+            </Link>
+          </div>
         </div>
       </section>
       <section>
-        <h3 className="text-xl font-bold mb-6 text-gray-800">The Cost of Living</h3>
-        <div className="p-8 rounded-xl border border-gray-300 shadow-xl space-y-10">
+        <SectionHeader
+          title="The Cost of Living"
+          subtitle={`We provide a practical comparison of your net income with the estimated cost of living in ${city?.name}. Use this information to better plan your budget and understand your financial comfort level in your new location.`}
+        />
+        <div className="rounded-xl space-y-10">
           <div>
             <BudgetPresentation
-              low={data.expensesLow}
-              comfort={data.expensesComfort}
-              net={data.net}
+              currency={currency}
+              costOfLiving={[
+                {
+                  name: 'Low Cost Scenario',
+                  description:
+                    'Represents the minimum cost required to cover essential necessities. It is budget-focused with limited non-essential spending.',
+                  num: data.expensesLow * currencyIndex,
+                },
+                {
+                  name: 'Comfortable Scenario',
+                  description:
+                    'It accounts for more than just the bare necessities, allowing for very good quality of life.',
+                  num: data.expensesComfort * currencyIndex,
+                },
+              ]}
+              netIncomeProjection={[
+                {
+                  name: 'Year 1',
+                  description: `Net ${data.expensesLow < data.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort < data.net ? 'higher then' : 'lower then'} comfortable scenario`,
+                  num: data.net * currencyIndex,
+                },
+                ...future.map((item) => ({
+                  name: `Year ${item.year}`,
+                  description: `Net ${data.expensesLow * currencyIndex < item.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort * currencyIndex < item.net ? 'higher then' : 'lower then'} comfortable scenario`,
+                  num: item.net,
+                })),
+              ]}
             />
           </div>
           <div className="w-full mt-6 flex flex-col items-center justify-center">
@@ -217,7 +264,7 @@ function ReportResult({
               to="/europe?layerTypeId=1&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Spain"
               className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
             >
-              Check out other cities in {city?.country}
+              Cost of living in {city?.country}
             </Link>
           </div>
         </div>

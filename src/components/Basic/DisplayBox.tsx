@@ -1,4 +1,4 @@
-type DisplayBoxColor = 'red' | 'yellow' | 'gray' | 'blue';
+type DisplayBoxColor = 'red' | 'yellow' | 'gray' | 'blue' | 'green';
 interface DisplayBoxColorTypes {
   box: string;
   title: string;
@@ -35,12 +35,17 @@ function DisplayBox({
       title: 'text-blue-800',
       message: 'text-blue-800',
     },
+    green: {
+      box: 'border-green-300 bg-green-50',
+      title: 'text-green-800',
+      message: 'text-green-800',
+    },
   };
   return (
     <div className={`border p-4 rounded-lg ${colorMap[color].box}`}>
       {title && <h4 className={`font-semibold text-lg ${colorMap[color].title} mb-2`}>{title}</h4>}
 
-      <p className={`text-base ${colorMap[color].message} leading-relaxed`}>{message}</p>
+      <p className={`text-sm ${colorMap[color].message} leading-relaxed`}>{message}</p>
     </div>
   );
 }

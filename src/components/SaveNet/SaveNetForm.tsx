@@ -85,8 +85,8 @@ export default function SaveNetForm({
         {
           income: 0,
           currency: 'EUR',
-          accountantCost: 80,
-          expensesCost: 100,
+          accountantCost: 120,
+          expensesCost: 350,
           isUSCitizen: false,
         },
       ],
@@ -168,7 +168,7 @@ export default function SaveNetForm({
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs mb-1">Expected annual income</label>
+                      <label className="block text-xs mb-1">Expected annual gross income</label>
                       <input
                         type="number"
                         step="0.01"
@@ -253,8 +253,8 @@ export default function SaveNetForm({
                   onClick={() =>
                     appendEarner({
                       income: 0,
-                      accountantCost: 100,
-                      expensesCost: 200,
+                      accountantCost: 120,
+                      expensesCost: 350,
                       currency: 'EUR',
                       isUSCitizen: false,
                     })

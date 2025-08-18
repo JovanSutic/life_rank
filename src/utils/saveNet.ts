@@ -6,6 +6,7 @@ import type {
   ReportDto,
   ReportUserData,
 } from '../types/api.types';
+import type { CurrencyOptions } from '../types/budget.types';
 
 export const flowCounties: string[] = ['Spain'];
 
@@ -38,10 +39,10 @@ export const formatPercentage = (rate: number): string => {
   return rate.toFixed(2) + '%';
 };
 
-export const formatCurrency = (amount: number): string => {
+export const formatCurrency = (amount: number, currency: CurrencyOptions): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'EUR',
+    currency: currency,
     minimumFractionDigits: 2,
   }).format(amount);
 };
@@ -65,7 +66,7 @@ interface DisplayItems {
   message: string;
 }
 
-export function getEssentialReportData(data: ReportDto) {
+export function getEssentialReportData(data: ReportDto, rate: number, currency: CurrencyOptions) {
   let cumulativeTax: number = 0;
   let mainGross = 0;
   const earners: Earners = {
@@ -75,11 +76,10 @@ export function getEssentialReportData(data: ReportDto) {
   };
 
   data.userData.incomes.forEach((item, index) => {
-    let gross = item.income;
+    let gross = 0;
     let expenses = 0;
     let social = 0;
     let reductions = 0;
-    let allowance = 0;
     let regional = 0;
     let state = 0;
     let credit = 0;
@@ -92,15 +92,13 @@ export function getEssentialReportData(data: ReportDto) {
       if (cost.incomeMaker === index) {
         if (cost.type === 'gross') {
           gross = cost.amount;
+          mainGross = mainGross + cost.amount;
         }
         if (cost.type === 'expenses') {
           expenses = cost.amount;
         }
         if (cost.type === 'social_contributions') {
           social = cost.amount;
-        }
-        if (cost.type === 'allowance') {
-          allowance = cost.amount;
         }
         if (cost.type === 'reduction') {
           reductions = reductions + cost.amount;
@@ -125,15 +123,15 @@ export function getEssentialReportData(data: ReportDto) {
         }
 
         if (cost.type === 'tax_credit') {
-          credit = cost.amount;
+          if (cost.label !== 'Allowance tax credit') {
+            credit = cost.amount;
+          }
         }
       }
     });
 
-    mainGross = gross;
-
     const firstBase = gross - expenses - social;
-    const secondBase = firstBase - reductions - allowance;
+    const secondBase = firstBase - reductions;
     const taxes = regional + state - credit;
     const businessCost = taxes + expenses + social;
     const net = gross - businessCost;
@@ -142,20 +140,20 @@ export function getEssentialReportData(data: ReportDto) {
       {
         name: 'Taxable base before reductions',
         explain: 'gross income - business expenses - social contributions',
-        calc: `(${formatCurrency(gross)} - ${formatCurrency(expenses)} - ${formatCurrency(social)})`,
-        total: formatCurrency(firstBase),
+        calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(social * rate, currency)})`,
+        total: formatCurrency(firstBase * rate, currency),
       },
       {
         name: 'Taxable base',
-        explain: 'base - reductions - allowance',
-        calc: `(${formatCurrency(firstBase)} - ${formatCurrency(reductions)} - ${formatCurrency(allowance)})`,
-        total: formatCurrency(secondBase),
+        explain: 'base - reductions',
+        calc: `(${formatCurrency(firstBase * rate, currency)} - ${formatCurrency(reductions * rate, currency)})`,
+        total: formatCurrency(secondBase * rate, currency),
       },
       {
         name: 'Taxes',
-        explain: 'regional tax + state tax - tax credit',
-        calc: `(${formatCurrency(regional)} + ${formatCurrency(state)} - ${formatCurrency(credit)})`,
-        total: formatCurrency(taxes),
+        explain: 'regional tax + state tax (with applied allowances) - tax credit',
+        calc: `(${formatCurrency(regional * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+        total: formatCurrency(taxes * rate, currency),
       },
       ...(usTax
         ? [
@@ -163,7 +161,7 @@ export function getEssentialReportData(data: ReportDto) {
               name: 'US Federal Tax',
               explain: usTax,
               calc: '',
-              total: formatCurrency(usTaxAmount),
+              total: formatCurrency(usTaxAmount * rate, currency),
             },
           ]
         : []),
@@ -173,21 +171,21 @@ export function getEssentialReportData(data: ReportDto) {
               name: 'US Self Employment Tax',
               explain: usSelf,
               calc: '',
-              total: formatCurrency(usSelfAmount),
+              total: formatCurrency(usSelfAmount * rate, currency),
             },
           ]
         : []),
       {
         name: 'Cost of operation',
         explain: 'taxes + business expenses + social contributions',
-        calc: `(${formatCurrency(taxes)} + ${formatCurrency(expenses)} + ${formatCurrency(social)})`,
-        total: formatCurrency(businessCost),
+        calc: `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)})`,
+        total: formatCurrency(businessCost * rate, currency),
       },
       {
         name: 'Annual net income',
         explain: 'gross - cost of operation',
-        calc: `(${formatCurrency(gross)} - ${formatCurrency(businessCost)})`,
-        total: formatCurrency(net),
+        calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(businessCost * rate, currency)})`,
+        total: formatCurrency(net * rate, currency),
       },
     ];
     if (index === 0) {
@@ -227,14 +225,14 @@ export function getEssentialReportData(data: ReportDto) {
   const future = [
     {
       year: 2,
-      net: future2Net,
-      cumulativeTax: future2Tax,
+      net: future2Net * rate,
+      cumulativeTax: future2Tax * rate,
       effectiveTax: future2Tax / mainGross,
     },
     {
       year: 3,
-      net: future3Net,
-      cumulativeTax: future3Tax,
+      net: future3Net * rate,
+      cumulativeTax: future3Tax * rate,
       effectiveTax: future3Tax / mainGross,
     },
   ];
@@ -264,7 +262,7 @@ export function getEssentialReportData(data: ReportDto) {
   }
 
   return {
-    cumulativeTax,
+    cumulativeTax: rate * cumulativeTax,
     effectiveTax: cumulativeTax / mainGross,
     earners,
     future,
