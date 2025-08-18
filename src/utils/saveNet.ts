@@ -75,7 +75,7 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
     '1': [],
   };
 
-  data.userData.incomes.forEach((item, index) => {
+  data.userData.incomes.forEach((_, index) => {
     let gross = 0;
     let expenses = 0;
     let social = 0;

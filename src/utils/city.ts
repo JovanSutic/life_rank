@@ -186,7 +186,7 @@ export function convertCurrencyInString(
   // Regular expression to find any amount with a €, $, or £ symbol
   const regex = /([€$£])\s?(\d{1,3}(?:[,.\s]?\d{3})*(?:[.,]\d+)?)/g;
 
-  return input.replace(regex, (match, symbol, amountStr) => {
+  return input.replace(regex, (_, __, amountStr) => {
     // Clean and parse the amount string
     const cleanAmount = parseFloat(amountStr.replace(/[, ]/g, '').replace(',', '.'));
 
