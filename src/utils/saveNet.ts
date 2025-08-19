@@ -269,3 +269,23 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
     displayMessages,
   };
 }
+
+export function trackPeople(userData: ReportUserData) {
+  let adults = 1;
+  let kids = 0;
+
+  if (userData.incomes.length > 1) {
+    adults = 2;
+  }
+
+  userData.dependents.forEach((item) => {
+    if (item.type === 'kid' && item.isDependent) {
+      kids++;
+    }
+  });
+
+  const adultRef = adults > 1 ? 'adults' : 'adult';
+  const kidRef = kids > 1 ? 'children' : 'child';
+
+  return `For ${adults} ${adultRef} ${kids > 0 ? 'and ' + kids + ' ' + kidRef : ''}`;
+}
