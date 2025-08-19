@@ -34,6 +34,13 @@ function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) 
             Takes <strong>about 1 minute</strong> to complete
           </span>
         </li>
+        <li className="flex items-start">
+          <span className="text-green-600 text-lg mr-2">✅</span>
+          <span className="text-gray-700">
+            Instantly generate a <strong>personalized report</strong> with a detailed breakdown of
+            your numbers
+          </span>
+        </li>
       </ul>
 
       <button
