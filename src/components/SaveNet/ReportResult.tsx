@@ -1,6 +1,11 @@
 import { ArrowTrendingUpIcon, BanknotesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import type { City, DefValue, ReportDto } from '../../types/api.types';
-import { formatCurrency, formatPercentage, getEssentialReportData } from '../../utils/saveNet';
+import {
+  formatCurrency,
+  formatPercentage,
+  getEssentialReportData,
+  trackPeople,
+} from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
 import OtherTaxes from './OtherTaxes';
 import { mapCompass, regionsSpain } from '../../data/spain';
@@ -14,8 +19,8 @@ import { convertCurrencyInString } from '../../utils/city';
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="space-y-6 mb-8">
-      <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
-      <p className="font-light text-gray-500 mb-8">{subtitle}</p>
+      <h3 className="text-lg font-bold mb-4 text-gray-800">{title}</h3>
+      <p className="font-base text-gray-500 mb-8">{subtitle}</p>
     </div>
   );
 }
@@ -92,10 +97,12 @@ function ReportResult({
   data,
   city,
   capitalGains,
+  activeTab = 'Summery',
 }: {
   data: ReportDto;
   city: City | undefined;
   capitalGains?: DefValue[];
+  activeTab?: string;
 }) {
   const { currency, currencyIndex } = useMapStore();
 
@@ -103,12 +110,187 @@ function ReportResult({
     return getEssentialReportData(data, currencyIndex, currency);
   }, [data, currencyIndex, currency]);
 
-  return (
-    <div className="space-y-8">
+  function getSection() {
+    if (activeTab === 'Breakdown') {
+      return (
+        <section className="border-b border-gray-300 pb-10">
+          <SectionHeader
+            title="Step-by-Step Breakdown"
+            subtitle="This is a breakdown of your self-employment tax calculation. Use this detailed view to understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
+          />
+          {earners[0].length > 0 && (
+            <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
+              {earners.length > 1 && (
+                <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 1</h4>
+              )}
+
+              <div className="space-y-4 my-2">
+                {earners[0].map((item) => (
+                  <div
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
+                    key={`0${item.name}`}
+                  >
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-700">{item.name}</p>
+                      <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
+                      {item.calc && (
+                        <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>
+                      )}
+                    </div>
+                    <div className="mt-2 sm:mt-0 text-right">
+                      <span className="font-semibold">Total: </span>
+                      <span className="font-bold text-blue-500">{item.total}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {earners[1].length > 0 && (
+            <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-10">
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 2</h4>
+              <div className="space-y-4 mb-2">
+                {earners[1].map((item) => (
+                  <div
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
+                    key={`1${item.name}`}
+                  >
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-700">{item.name}</p>
+                      <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
+                      {item.calc && (
+                        <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>
+                      )}
+                    </div>
+                    <div className="mt-2 sm:mt-0 text-right">
+                      <span className="font-semibold">Total: </span>
+                      <span className="font-bold text-blue-500">{item.total}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      );
+    }
+
+    if (activeTab === 'Forecast') {
+      return (
+        <section className="border-b border-gray-300 pb-10">
+          <SectionHeader
+            title="What's Next? 2-Year Forecast"
+            subtitle="Curious about what's ahead? This two-year forecast breaks down your estimated tax outlook,
+          highlighting how expiring reductions and allowances could affect your taxes in the coming
+          years."
+          />
+          {future.map((item) => (
+            <div key={`future${item.year}`} className="mb-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">{`Year ${item.year}`}</h4>
+              <Card
+                net={item.net}
+                cumulativeTax={item.cumulativeTax}
+                effectiveTax={item.effectiveTax}
+                currency={currency}
+              />
+            </div>
+          ))}
+          <div className="space-y-4">
+            {displayMessages.map((item) => (
+              <DisplayBox
+                key={item.id}
+                title={item.title}
+                message={convertCurrencyInString(item.message, currencyIndex, currency)}
+              />
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    if (activeTab === 'Other Taxes') {
+      return (
+        <section className="border-b border-gray-300 pb-10">
+          <SectionHeader
+            title="Other Relevant Taxes"
+            subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of Wealth Tax and Capital Gains Tax, which can create new financial obligations."
+          />
+          <div>
+            <OtherTaxes
+              regionName={regionsSpain[data.cityId]?.region}
+              capitalGainsData={capitalGains || []}
+            />
+            <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
+              <Link
+                to={`/taxes/${city?.country}?country=${city?.countriesId}`}
+                className="w-full block md:w-[300px] cursor-pointer bg-green-500 hover:bg-green-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+              >
+                Check out other taxes in {city?.country}
+              </Link>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (activeTab === 'Cost of Living') {
+      return (
+        <section className="border-b border-gray-300 pb-10">
+          <SectionHeader
+            title="The Cost of Living"
+            subtitle={`We provide a practical comparison of your net income with the estimated cost of living in ${city?.name}. Use this information to better plan your budget and understand your financial comfort level in your new location.`}
+          />
+          <div className="rounded-xl space-y-10">
+            <div>
+              <BudgetPresentation
+                currency={currency}
+                peopleTrack={trackPeople(data.userData)}
+                costOfLiving={[
+                  {
+                    name: 'Low Cost Scenario',
+                    description:
+                      'Represents the minimum cost required to cover essential necessities. It is budget-focused with limited non-essential spending.',
+                    num: data.expensesLow * currencyIndex,
+                  },
+                  {
+                    name: 'Comfortable Scenario',
+                    description:
+                      'It accounts for more than just the bare necessities, allowing for very good quality of life.',
+                    num: data.expensesComfort * currencyIndex,
+                  },
+                ]}
+                netIncomeProjection={[
+                  {
+                    name: 'Year 1',
+                    description: `Net ${data.expensesLow < data.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort < data.net ? 'higher then' : 'lower then'} comfortable scenario`,
+                    num: data.net * currencyIndex,
+                  },
+                  ...future.map((item) => ({
+                    name: `Year ${item.year}`,
+                    description: `Net ${data.expensesLow * currencyIndex < item.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort * currencyIndex < item.net ? 'higher then' : 'lower then'} comfortable scenario`,
+                    num: item.net,
+                  })),
+                ]}
+              />
+            </div>
+            <div className="w-full mt-6 flex flex-col items-center justify-center">
+              <Link
+                to={mapCompass[city?.country || 'Spain']}
+                className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+              >
+                Cost of Living Map
+              </Link>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    return (
       <section className="border-b border-gray-300 pb-10">
         <SectionHeader
           title="Financial Summery"
-          subtitle="This is a quick summery of your use case finances that is helping you quickly see
+          subtitle="This is a quick summery of finances, for your usecase. This is helping you see
           what you'll be paying and what you'll be taking home in the first year of operation."
         />
         <Card
@@ -118,159 +300,10 @@ function ReportResult({
           currency={currency}
         />
       </section>
-      <section className="border-b border-gray-300 pb-10">
-        <SectionHeader
-          title="Step-by-Step Breakdown"
-          subtitle="This is a breakdown of your self-employment tax calculation. Use this detailed view to understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
-        />
-        {earners[0].length > 0 && (
-          <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
-            {earners.length > 1 && (
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 1</h4>
-            )}
+    );
+  }
 
-            <div className="space-y-4 my-2">
-              {earners[0].map((item) => (
-                <div
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
-                  key={`0${item.name}`}
-                >
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-700">{item.name}</p>
-                    <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
-                    {item.calc && <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>}
-                  </div>
-                  <div className="mt-2 sm:mt-0 text-right">
-                    <span className="font-semibold">Total: </span>
-                    <span className="font-bold text-blue-500">{item.total}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        {earners[1].length > 0 && (
-          <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-10">
-            <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 2</h4>
-            <div className="space-y-4 mb-2">
-              {earners[1].map((item) => (
-                <div
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
-                  key={`1${item.name}`}
-                >
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-700">{item.name}</p>
-                    <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
-                    {item.calc && <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>}
-                  </div>
-                  <div className="mt-2 sm:mt-0 text-right">
-                    <span className="font-semibold">Total: </span>
-                    <span className="font-bold text-blue-500">{item.total}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </section>
-      <section className="border-b border-gray-300 pb-10">
-        <SectionHeader
-          title="What's Next? 2-Year Forecast"
-          subtitle="Curious about what's ahead? This two-year forecast breaks down your estimated tax outlook,
-          highlighting how expiring reductions and allowances could affect your taxes in the coming
-          years."
-        />
-        {future.map((item) => (
-          <div key={`future${item.year}`} className="mb-6">
-            <h4 className="text-xl font-semibold text-gray-800 mb-2">{`Year ${item.year}`}</h4>
-            <Card
-              net={item.net}
-              cumulativeTax={item.cumulativeTax}
-              effectiveTax={item.effectiveTax}
-              currency={currency}
-              style="future"
-            />
-          </div>
-        ))}
-        <div className="space-y-4">
-          {displayMessages.map((item) => (
-            <DisplayBox
-              key={item.id}
-              title={item.title}
-              message={convertCurrencyInString(item.message, currencyIndex, currency)}
-            />
-          ))}
-        </div>
-      </section>
-      <section className="border-b border-gray-300 pb-10">
-        <SectionHeader
-          title="Other Relevant Taxes"
-          subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of Wealth Tax and Capital Gains Tax, which can create new financial obligations."
-        />
-        <div>
-          <OtherTaxes
-            regionName={regionsSpain[data.cityId]?.region}
-            capitalGainsData={capitalGains || []}
-          />
-          <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
-            <Link
-              to={`/taxes/${city?.country}?country=${city?.countriesId}`}
-              className="w-full block md:w-[300px] cursor-pointer bg-green-500 hover:bg-green-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
-            >
-              Check out other taxes in {city?.country}
-            </Link>
-          </div>
-        </div>
-      </section>
-      <section>
-        <SectionHeader
-          title="The Cost of Living"
-          subtitle={`We provide a practical comparison of your net income with the estimated cost of living in ${city?.name}. Use this information to better plan your budget and understand your financial comfort level in your new location.`}
-        />
-        <div className="rounded-xl space-y-10">
-          <div>
-            <BudgetPresentation
-              currency={currency}
-              costOfLiving={[
-                {
-                  name: 'Low Cost Scenario',
-                  description:
-                    'Represents the minimum cost required to cover essential necessities. It is budget-focused with limited non-essential spending.',
-                  num: data.expensesLow * currencyIndex,
-                },
-                {
-                  name: 'Comfortable Scenario',
-                  description:
-                    'It accounts for more than just the bare necessities, allowing for very good quality of life.',
-                  num: data.expensesComfort * currencyIndex,
-                },
-              ]}
-              netIncomeProjection={[
-                {
-                  name: 'Year 1',
-                  description: `Net ${data.expensesLow < data.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort < data.net ? 'higher then' : 'lower then'} comfortable scenario`,
-                  num: data.net * currencyIndex,
-                },
-                ...future.map((item) => ({
-                  name: `Year ${item.year}`,
-                  description: `Net ${data.expensesLow * currencyIndex < item.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort * currencyIndex < item.net ? 'higher then' : 'lower then'} comfortable scenario`,
-                  num: item.net,
-                })),
-              ]}
-            />
-          </div>
-          <div className="w-full mt-6 flex flex-col items-center justify-center">
-            <Link
-              to={mapCompass[city?.country || 'Spain']}
-              className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
-            >
-              Cost of living in {city?.country}
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="space-y-8">{getSection()}</div>;
 }
 
 export default ReportResult;

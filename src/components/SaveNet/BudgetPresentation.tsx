@@ -12,10 +12,12 @@ function BudgetPresentation({
   costOfLiving,
   netIncomeProjection,
   currency,
+  peopleTrack,
 }: {
   costOfLiving: BudgetCostData[];
   netIncomeProjection: BudgetCostData[];
   currency: CurrencyOptions;
+  peopleTrack: string;
 }) {
   // Check if data is available before rendering
   if (!costOfLiving || !netIncomeProjection) {
@@ -26,9 +28,12 @@ function BudgetPresentation({
     // Outer container with a soft, recessed background
     <div className="bg-gray-100 rounded-2xl shadow-inner px-4 py-6 mb-6">
       {/* Section 1: Annual Cost of Living */}
-      <div className="flex items-center space-x-3 text-blue-600 mb-4">
+      <div className="flex items-center space-x-3 text-blue-600 mb-2">
         <BanknotesIcon className="h-5 w-5" />
         <h3 className="text-xl font-semibold">Annual Cost of Living</h3>
+      </div>
+      <div className="flex items-center mb-4">
+        <p className="text-gray-800 font-semibold text-base">{peopleTrack}</p>
       </div>
 
       <div>

@@ -18,11 +18,21 @@ const ChildSchema = z.object({
   motherIsEarner: z.boolean().optional(),
 });
 
-const DependentSchema = z.object({
-  hasSpouse: z.boolean(),
-  spouseDependent: z.boolean().optional(),
-  children: z.array(ChildSchema),
-});
+const DependentSchema = z
+  .object({
+    hasSpouse: z.boolean(),
+    spouseDependent: z.boolean().optional(),
+    children: z.array(ChildSchema),
+  })
+  .superRefine((data, ctx) => {
+    if (data.spouseDependent && !data.hasSpouse) {
+      ctx.addIssue({
+        code: 'custom',
+        message: "You cannot have a dependent spouse if you don't have dependents.",
+        path: ['spouseDependent'],
+      });
+    }
+  });
 
 const EarnerSchema = z.object({
   income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
@@ -293,12 +303,18 @@ export default function SaveNetForm({
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    disabled={earnerFields.length > 1}
                     {...register('dependents.spouseDependent' as const)}
                     className="w-4 h-4"
                   />
                   Dependent spouse (financially dependent)
                 </label>
               </div>
+              {errors.dependents?.spouseDependent && (
+                <p className="text-xs text-red-500">
+                  {String(errors.dependents?.spouseDependent?.message)}
+                </p>
+              )}
 
               {/* Children management */}
               <div className="space-y-2">
