@@ -47,6 +47,28 @@ export const formatCurrency = (amount: number, currency: CurrencyOptions): strin
   }).format(amount);
 };
 
+export function formatNumber(num: number, decimalPlaces = 2) {
+  if (typeof num !== 'number' || isNaN(num)) {
+    return num;
+  }
+
+  const absNum = Math.abs(num);
+
+  if (absNum >= 1000000000) {
+    return (num / 1000000000).toFixed(decimalPlaces) + 'B';
+  }
+
+  if (absNum >= 1000000) {
+    return (num / 1000000).toFixed(decimalPlaces) + 'M';
+  }
+
+  if (absNum >= 1000) {
+    return (num / 1000).toFixed(decimalPlaces) + 'K';
+  }
+
+  return num.toFixed(decimalPlaces);
+}
+
 interface BreakdownItem {
   name: string;
   explain: string;

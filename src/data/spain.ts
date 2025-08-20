@@ -65,5 +65,5 @@ export const regionsSpain: Record<string, Regions> = {
 
 export const mapCompass: Record<string, string> = {
   Spain:
-    '/europe?layerTypeId=1&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Spain',
+    '/europe?layerTypeId=1&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
 };
