@@ -246,3 +246,8 @@ export interface ReportItem {
     country: string;
   };
 }
+
+export interface CardCity extends City {
+  costOfLiving: number;
+  safetyRating: CrimesSummary;
+}

@@ -2,6 +2,7 @@ import axios from 'axios';
 import type {
   Blog,
   Budget,
+  CardCity,
   City,
   CityContext,
   CityFeel,
@@ -228,6 +229,18 @@ export async function getTaxDefValues(countryId: number): Promise<FieldData[]> {
   try {
     const res = await axios.get(
       `${import.meta.env.VITE_API_URL}/def_value/by-field?field=tax&countryId=${countryId}&definitionId=33`
+    );
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function getCityCards(country: string, take: number): Promise<{ data: CardCity[] }> {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/cities/cards?country=${country}&take=${take}&sortBy=id&orderBy=asc`
     );
     return res.data;
   } catch (error) {
