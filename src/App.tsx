@@ -5,17 +5,18 @@ import { lazy, Suspense, useEffect } from 'react';
 import LoadingOverlay from './components/Basic/LoadingOverlay';
 import { initGA } from './utils/analytics';
 import NotFound from './pages/NotFound';
-import BlogPage from './pages/BlogPage';
 import ScrollTop from './components/Basic/ScrollTop';
-import HealthCarePage from './pages/HealthcarePage';
-import TaxesPage from './pages/TaxesPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AuthGuard from './components/AuthGuard';
-import NetSavePage from './pages/NetSavePage';
 
 const EuropeMap = lazy(() => import('./pages/EuropeMap'));
 const BudgetPlay = lazy(() => import('./pages/BudgetPlay'));
+const NetSavePage = lazy(() => import('./pages/NetSavePage'));
+const TaxesPage = lazy(() => import('./pages/TaxesPage'));
+const HealthCarePage = lazy(() => import('./pages/HealthcarePage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const CitiesPage = lazy(() => import('./pages/CitiesPage'));
 
 function App() {
   useEffect(() => {
@@ -84,6 +85,20 @@ function App() {
           }
         />
         <Route
+          path="/cities/:country"
+          element={
+            <Suspense
+              fallback={
+                <div>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
+              <CitiesPage />
+            </Suspense>
+          }
+        />
+        <Route
           path="/blog/:slug"
           element={
             <Suspense
@@ -94,6 +109,20 @@ function App() {
               }
             >
               <BlogPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/net-save"
+          element={
+            <Suspense
+              fallback={
+                <div>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
+              <NetSavePage />
             </Suspense>
           }
         />
@@ -113,20 +142,7 @@ function App() {
             </AuthGuard>
           }
         />
-        <Route
-          path="/net-save"
-          element={
-            <Suspense
-              fallback={
-                <div>
-                  <LoadingOverlay />
-                </div>
-              }
-            >
-              <NetSavePage />
-            </Suspense>
-          }
-        />
+
         <Route
           path="/dashboard"
           element={

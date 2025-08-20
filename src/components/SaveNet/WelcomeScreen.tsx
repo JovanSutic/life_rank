@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { trackEvent } from '../../utils/analytics';
-import { mapCompass } from '../../data/spain';
 import type { City } from '../../types/api.types';
 
 function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) {
@@ -50,10 +49,10 @@ function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) 
         Start Now
       </button>
       <Link
-        to={mapCompass[city?.country || 'Spain']}
+        to={`/cities/${city?.country}`}
         className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors mt-4"
       >
-        Back on the Map
+        Go to Cities
       </Link>
     </div>
   );
