@@ -107,7 +107,7 @@ function ReportResult({
   const { currency, currencyIndex } = useMapStore();
 
   const { cumulativeTax, effectiveTax, earners, future, displayMessages } = useMemo(() => {
-    return getEssentialReportData(data, currencyIndex, currency);
+    return getEssentialReportData(data, currencyIndex, currency, city?.country);
   }, [data, currencyIndex, currency]);
 
   function getSection() {
@@ -219,6 +219,7 @@ function ReportResult({
             <OtherTaxes
               regionName={regionsSpain[data.cityId]?.region}
               capitalGainsData={capitalGains || []}
+              country={city?.country || ''}
             />
             <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
               <Link
@@ -299,6 +300,13 @@ function ReportResult({
           effectiveTax={effectiveTax}
           currency={currency}
         />
+        <div className="mt-8">
+          <DisplayBox
+            title="Disclaimer: Important Information on Tax Calculations"
+            message="Provided tax calculations are designed to be highly accurate and give you a strong estimate of your financial outcome. However, it is essential to understand that they are for informational purposes only and cannot be considered definitive. Your actual tax situation can be influenced by a number of factors that a simple calculator cannot account for. While our numbers are very close to what you would realistically achieve, you should always expect some possible (not substantial) differences."
+            color="yellow"
+          />
+        </div>
       </section>
     );
   }

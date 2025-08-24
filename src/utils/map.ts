@@ -150,37 +150,37 @@ export const safetyTags = (safety: CrimesSummary) => {
     });
   }
 
-  if (safety.crimeEscalationIndicator >= 90) {
-    tags.push({
-      label: 'Crime Trend',
-      description: 'Rising Rapidly',
-      icon: '📈',
-    });
-  } else if (safety.crimeEscalationIndicator >= 75) {
-    tags.push({
-      label: 'Crime Trend',
-      description: 'Increasing',
-      icon: '📈',
-    });
-  } else if (safety.crimeEscalationIndicator >= 35) {
-    tags.push({
-      label: 'Crime Trend',
-      description: 'Slight Increase',
-      icon: '📊',
-    });
-  } else if (safety.crimeEscalationIndicator >= 25) {
-    tags.push({
-      label: 'Crime Trend',
-      description: 'Stable',
-      icon: '➖',
-    });
-  } else {
-    tags.push({
-      label: 'Crime Trend',
-      description: 'Declining',
-      icon: '📉',
-    });
-  }
+  // if (safety.crimeEscalationIndicator >= 90) {
+  //   tags.push({
+  //     label: 'Crime Trend',
+  //     description: 'Rising Rapidly',
+  //     icon: '📈',
+  //   });
+  // } else if (safety.crimeEscalationIndicator >= 75) {
+  //   tags.push({
+  //     label: 'Crime Trend',
+  //     description: 'Increasing',
+  //     icon: '📈',
+  //   });
+  // } else if (safety.crimeEscalationIndicator >= 35) {
+  //   tags.push({
+  //     label: 'Crime Trend',
+  //     description: 'Slight Increase',
+  //     icon: '📊',
+  //   });
+  // } else if (safety.crimeEscalationIndicator >= 25) {
+  //   tags.push({
+  //     label: 'Crime Trend',
+  //     description: 'Stable',
+  //     icon: '➖',
+  //   });
+  // } else {
+  //   tags.push({
+  //     label: 'Crime Trend',
+  //     description: 'Declining',
+  //     icon: '📉',
+  //   });
+  // }
 
   return tags;
 };
