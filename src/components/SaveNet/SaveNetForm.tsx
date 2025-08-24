@@ -1,57 +1,22 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import Tooltip from '../Basic/Tooltip';
 import type { ReportUserData } from '../../types/api.types';
-import { prepData } from '../../utils/saveNet';
+import Tooltip from '../Basic/Tooltip';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { getBaseData, getStepItems, prepData } from '../../utils/saveNet';
+import { getSchema } from '../../data/validation';
+import type { FormItem } from '../../types/city.types';
 
-// -----------------------------
-// Zod schema & Types
-// -----------------------------
-const currencyEnum = ['EUR', 'GBP', 'USD'] as const;
+// Define the component's props interface
+interface SaveNetFormProps {
+  sendData: (data: ReportUserData) => void;
+  cityId: number;
+  country: string;
+}
 
-const ChildSchema = z.object({
-  name: z.string().max(80).optional(),
-  age: z.number().min(1).max(20),
-  motherIsEarner: z.boolean().optional(),
-});
-
-const DependentSchema = z
-  .object({
-    hasSpouse: z.boolean(),
-    spouseDependent: z.boolean().optional(),
-    children: z.array(ChildSchema),
-  })
-  .superRefine((data, ctx) => {
-    if (data.spouseDependent && !data.hasSpouse) {
-      ctx.addIssue({
-        code: 'custom',
-        message: "You cannot have a dependent spouse if you don't have dependents.",
-        path: ['spouseDependent'],
-      });
-    }
-  });
-
-const EarnerSchema = z.object({
-  income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
-  currency: z.enum(currencyEnum),
-  accountantCost: z.number().min(80, { message: 'Monthly accountant costs must be at least 80' }),
-  expensesCost: z.number().min(100, { message: 'Monthly business expenses must be at least 100' }),
-  isUSCitizen: z.boolean(),
-});
-
-const FormSchema = z.object({
-  earners: z.array(EarnerSchema).min(1).max(2, 'We support up to two income earners'),
-  dependents: DependentSchema,
-});
-
-export type FormValues = z.infer<typeof FormSchema>;
-
-// -----------------------------
-// Helper components
-// -----------------------------
 const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total }) => {
   const pct = Math.round((step / total) * 100);
   return (
@@ -69,37 +34,31 @@ const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total 
 // -----------------------------
 // Main Component
 // -----------------------------
-export default function SaveNetForm({
-  sendData,
-  cityId,
-}: {
-  sendData: (data: ReportUserData) => void;
-  cityId: number;
-}) {
+
+function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const totalSteps = 3;
   const [step, setStep] = useState(1);
+
+  const schema = getSchema(country);
+
+  type FormValues = z.infer<typeof schema>;
+  const [step1] = getStepItems(country);
+  const { baseEarner } = getBaseData(country);
 
   const {
     register,
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
     trigger,
     reset,
   } = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
-    mode: 'onChange',
+    resolver: zodResolver(schema),
+    mode: 'all',
     defaultValues: {
-      earners: [
-        {
-          income: 0,
-          currency: 'EUR',
-          accountantCost: 120,
-          expensesCost: 350,
-          isUSCitizen: false,
-        },
-      ],
+      earners: [baseEarner],
       dependents: { hasSpouse: false, spouseDependent: false, children: [] },
     },
   });
@@ -125,7 +84,14 @@ export default function SaveNetForm({
   });
 
   const onNext = async () => {
-    const valid = await trigger();
+    let fieldsToValidate: (keyof FormValues)[] = [];
+    if (step === 1) {
+      fieldsToValidate = ['earners'];
+    } else if (step === 2) {
+      fieldsToValidate = ['dependents'];
+    }
+
+    const valid = await trigger(fieldsToValidate as any);
     if (!valid) return;
     setStep((s) => Math.min(totalSteps, s + 1));
   };
@@ -137,12 +103,97 @@ export default function SaveNetForm({
   const onSubmit = (data: FormValues) => {
     const fullData = prepData(data, cityId);
     reset();
-
     sendData(fullData);
   };
 
-  // UX helpers
   const canAddEarner = earnerFields.length < 2;
+  const hasSpouse = watch('dependents.hasSpouse');
+  const spouseDependent = watch('dependents.spouseDependent');
+
+  useEffect(() => {
+    trigger('dependents.spouseDependent');
+  }, [hasSpouse, trigger]);
+
+  useEffect(() => {
+    if (earnerFields.length > 1 && spouseDependent) {
+      setValue('dependents.spouseDependent', false, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [earnerFields.length, spouseDependent]);
+
+  // Helper function to render an individual field
+  const renderField = (item: FormItem, idx?: number) => {
+    const fieldName = idx !== undefined ? `earners[${idx}].${item.name}` : item.name;
+    const error =
+      idx !== undefined
+        ? (errors.earners as any)?.[idx]?.[item.name]?.message
+        : (errors.dependents as any)?.[item.name]?.message;
+
+    switch (item.type) {
+      case 'text':
+      case 'number':
+        return (
+          <div key={fieldName} className="flex-1">
+            <label className="block text-xs mb-1">
+              {item.label}
+              {item.tooltip && (
+                <Tooltip text={item.tooltip}>
+                  <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
+                </Tooltip>
+              )}
+            </label>
+            <input
+              type={item.type}
+              step="0.01"
+              {...register(fieldName as any, { valueAsNumber: item.type === 'number' })}
+              className="w-full p-2 border rounded"
+              placeholder={item.label}
+            />
+            {error && <p className="text-xs text-red-500">{String(error)}</p>}
+          </div>
+        );
+      case 'select':
+        return (
+          <div key={fieldName} className="flex-1">
+            <label className="block text-xs mb-1">
+              {item.label}
+              {item.tooltip && (
+                <Tooltip text={item.tooltip}>
+                  <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
+                </Tooltip>
+              )}
+            </label>
+            <select {...register(fieldName as any)} className="w-full p-2 border rounded">
+              {item.options?.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            {error && <p className="text-xs text-red-500">{String(error)}</p>}
+          </div>
+        );
+      case 'checkbox':
+        return (
+          <div key={fieldName} className="flex-1 flex items-end">
+            <label className="flex items-center gap-2 mr-2">
+              <input type="checkbox" {...register(fieldName as any)} className="w-4 h-4" />
+              <span>{item.label}</span>
+            </label>
+            {item.tooltip && (
+              <Tooltip text={item.tooltip}>
+                <InformationCircleIcon className="h-5 w- inline-block stroke-black" />
+              </Tooltip>
+            )}
+            {error && <p className="text-xs text-red-500">{String(error)}</p>}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="max-w-xl mx-auto">
@@ -155,94 +206,11 @@ export default function SaveNetForm({
             <p className="text-sm text-gray-600 mb-4">
               Tell us about the income. We'll use this to calculate taxes and convert if needed.
             </p>
-
             <div className="space-y-6">
               {earnerFields.map((f, idx) => (
                 <div key={f.id} className="p-4 rounded-lg bg-white shadow-md">
                   <div className="flex items-center justify-between mb-2">
                     <div className="font-medium">Earner {idx + 1}</div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs mb-1">Currency</label>
-                      <select
-                        {...register(`earners.${idx}.currency` as const)}
-                        className="w-full p-2 border rounded"
-                      >
-                        {currencyEnum.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs mb-1">Expected annual gross income</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        {...register(`earners.${idx}.income` as const, { valueAsNumber: true })}
-                        className="w-full p-2 border rounded"
-                        placeholder="0"
-                      />
-                      {errors.earners?.[idx]?.income && (
-                        <p className="text-xs text-red-500">
-                          {String(errors.earners?.[idx]?.income?.message)}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs mb-1">Monthly accounting expense</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        {...register(`earners.${idx}.accountantCost` as const, {
-                          valueAsNumber: true,
-                        })}
-                        className="w-full p-2 border rounded"
-                        placeholder="0"
-                      />
-                      {errors.earners?.[idx]?.accountantCost && (
-                        <p className="text-xs text-red-500">
-                          {String(errors.earners?.[idx]?.accountantCost?.message)}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs mb-1">Other monthly business expenses</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        {...register(`earners.${idx}.expensesCost` as const, {
-                          valueAsNumber: true,
-                        })}
-                        className="w-full p-2 border rounded"
-                        placeholder="0"
-                      />
-                      {errors.earners?.[idx]?.expensesCost && (
-                        <p className="text-xs text-red-500">
-                          {String(errors.earners?.[idx]?.expensesCost?.message)}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 mt-3">
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        {...register(`earners.${idx}.isUSCitizen` as const)}
-                        className="w-4 h-4"
-                      />
-                      <span>US citizen</span>
-                    </label>
-                    <Tooltip text="We use this to check if U.S. federal and self-employment taxes may apply to your income.">
-                      <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
-                    </Tooltip>
-
                     {earnerFields.length > 1 && (
                       <button
                         type="button"
@@ -253,22 +221,16 @@ export default function SaveNetForm({
                       </button>
                     )}
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {step1.map((item) => renderField(item, idx))}
+                  </div>
                 </div>
               ))}
-
               <div className="pt-2 flex justify-center">
                 <button
                   type="button"
                   disabled={!canAddEarner}
-                  onClick={() =>
-                    appendEarner({
-                      income: 0,
-                      accountantCost: 120,
-                      expensesCost: 350,
-                      currency: 'EUR',
-                      isUSCitizen: false,
-                    })
-                  }
+                  onClick={() => appendEarner(baseEarner)}
                   className={`w-full md:w-[300px] py-2 rounded-lg ${canAddEarner ? 'cursor-pointer bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
                   Add another earner
@@ -297,6 +259,11 @@ export default function SaveNetForm({
                   I have dependents
                 </label>
               </div>
+              {errors.dependents?.hasSpouse && (
+                <p className="text-xs text-red-500">
+                  {String(errors.dependents?.hasSpouse?.message)}
+                </p>
+              )}
 
               {/* Spouse */}
               <div>
@@ -434,7 +401,7 @@ export default function SaveNetForm({
                       <div>Children: {watch('dependents.children').length}</div>
                       {watch('dependents.children').map((c, i) => (
                         <div key={i} className="ml-2">
-                          Child {i + 1}: {c.age} yrs {c.motherIsEarner ? '· Mother is earner' : ''}
+                          Child {i + 1}: {c.age} yrs
                         </div>
                       ))}
                     </div>
@@ -475,7 +442,6 @@ export default function SaveNetForm({
                 Back
               </button>
             )}
-
             {step < totalSteps && (
               <button
                 type="button"
@@ -491,3 +457,5 @@ export default function SaveNetForm({
     </div>
   );
 }
+
+export default SaveNetForm;

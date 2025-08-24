@@ -49,3 +49,11 @@ export interface ReportEssentials {
   tax: number;
   effectiveTax: number;
 }
+
+export interface FormItem {
+  name: string;
+  label: string;
+  type: 'text' | 'number' | 'select' | 'checkbox';
+  options?: readonly string[];
+  tooltip?: string;
+}
