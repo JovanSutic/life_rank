@@ -1,7 +1,11 @@
+import type { DisplayItems } from '../types/flow.types';
+
 interface Regions {
   name: string;
   region: string;
 }
+
+export const currencyEnum = ['EUR', 'GBP', 'USD'] as const;
 
 export const regionalWealthTaxDetails: Record<string, string> = {
   Andalusia:
@@ -65,5 +69,75 @@ export const regionsSpain: Record<string, Regions> = {
 
 export const mapCompass: Record<string, string> = {
   Spain:
-    '/europe?layerTypeId=1&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
+    '/europe?layerTypeId=2&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
+  Portugal:
+    '/europe?layerTypeId=2&centerLat=37.88388&centerLng=-6.25122&north=45.10487&south=29.87915&east=12.50244&west=-25.00488&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
+};
+
+export const displayMessages: Record<string, DisplayItems[]> = {
+  spain: [
+    {
+      id: 1,
+      title: '20% Tax Base Reduction',
+      message:
+        'Every new self-employed individual in Spain receives a 20% reduction on their taxable base for the first two years. This important benefit lowers both your taxable base and your overall tax bill. Keep in mind that once this two-year period ends, your tax liability will increase, which will reduce your net income.',
+    },
+    {
+      id: 2,
+      title: '1st Year Flat Social Contributions',
+      message:
+        'The first year of self-employment utilizes the Tariffa Plana, a flat rate of €980 for annual social contributions. This benefit reduces costs significantly during the initial period. Following the first year, contributions are calculated on a variable basis, which affects the effective tax rate and net income.',
+    },
+  ],
+  portugal: [
+    {
+      id: 1,
+      title: 'First-Year Social Contributions Exemption',
+      message:
+        'New self-employed individuals are granted a full exemption from social security contributions for the first 12 months of activity. This measure is a key component of the Regime dos Trabalhadores Independentes (Independent Workers Regime), which aims to reduce the financial burden on new businesses. During this period, you are not required to make any payments, but you must still report your income to Segurança Social (Social Security) on a quarterly basis.',
+    },
+    {
+      id: 2,
+      title: 'Taxable base reduction for Young',
+      message:
+        'Young workers up to age 35 can benefit from the IRS Jovem scheme, which offers a progressive tax exemption for up to 10 years. This benefit, applicable to both independent and dependent work income, provides substantial financial relief to help young professionals start their careers. The financial relief is taxable income reduction that ranges from 25% up to 100% or applicable cash cap.',
+    },
+  ],
+};
+
+export const otherTaxesInitial: Record<string, DisplayItems[]> = {
+  Spain: [
+    {
+      id: 1,
+      title: '',
+      message:
+        "The Spanish Wealth Tax is an annual tax levied on the net value of a person's assets as of December 31st. Net worth is calculated by adding the value of all assets (e.g., real estate, investments, bank accounts) and then deducting any debts or liabilities (e.g., mortgages). Each Spanish region, or Autonomous Community, can set its own rules, rates, and exemptions, which can result in significant differences in tax liability depending on where you reside.",
+    },
+    {
+      id: 2,
+      title: 'The 60% Rule: The Tax Cap',
+      message:
+        'This rule caps your total tax burden. The combined amount of your income tax and wealth tax cannot exceed 60% of your taxable income for the year. This prevents a high wealth tax from becoming overwhelming, especially if your income is low.',
+    },
+    {
+      id: 3,
+      title: 'The 20% Rule: The Minimum Payment',
+      message:
+        "This rule is the flip side. While the 60% cap can reduce your wealth tax, it has a limit. You're always required to pay a minimum of 20% of your original wealth tax liability, even if the 60% cap would otherwise bring it lower or to zero.",
+    },
+  ],
+
+  Portugal: [
+    {
+      id: 1,
+      title: 'The NHR - IFICI',
+      message:
+        "The NHR (Non-Habitual Resident) regime in Portugal has been replaced by the new Tax Incentive for Scientific Research and Innovation (IFICI). This new program aims to attract highly qualified professionals in fields like technology, research, and innovation by offering significant tax benefits for a period of 10 years. The main benefit of the IFICI is a 20% flat personal income tax (IRS) rate on income from employment and self-employment earned in Portugal. This is a considerable reduction from the standard progressive rates. Additionally, foreign-sourced income such as salaries, dividends, and interest may be exempt from Portuguese taxation. It's important to note that the IFICI is more specific than the old NHR, targeting certain professions and roles within innovative companies, startups, and research entities.",
+    },
+  ],
+};
+
+export const otherTaxTitles: Record<string, string> = {
+  Spain: 'Wealth Tax',
+  Portugal: 'Special Tax Regimes',
 };

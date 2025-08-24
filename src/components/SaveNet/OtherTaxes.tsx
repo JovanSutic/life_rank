@@ -1,4 +1,4 @@
-import { regionalWealthTaxDetails } from '../../data/spain';
+import { otherTaxesInitial, otherTaxTitles, regionalWealthTaxDetails } from '../../data/spain';
 import { useMapStore } from '../../stores/mapStore';
 import type { DefValue } from '../../types/api.types';
 import { convertCurrencyInString } from '../../utils/city';
@@ -7,9 +7,11 @@ import DisplayBox from '../Basic/DisplayBox';
 const OtherTaxes = ({
   regionName,
   capitalGainsData,
+  country,
 }: {
   regionName: keyof typeof regionalWealthTaxDetails;
   capitalGainsData: DefValue[];
+  country: string;
 }) => {
   const { currency, currencyIndex } = useMapStore();
   const wealthTaxDetails =
@@ -36,34 +38,23 @@ const OtherTaxes = ({
   return (
     <div className="bg-white overflow-hidden space-y-6">
       <div className="">
-        <h2 className="text-lg font-semibold text-gray-800 mb-6">Wealth Tax ({regionName})</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-6">{otherTaxTitles[country]}</h2>
         <div className="flex flex-col md:flex-row items-start md:items-center">
           <div className="flex-1 space-y-4">
-            <DisplayBox
-              message="The Spanish Wealth Tax is an annual tax levied on the net value of a person's assets
-              as of December 31st. Net worth is calculated by adding the value of all assets (e.g.,
-              real estate, investments, bank accounts) and then deducting any debts or liabilities
-              (e.g., mortgages). Each Spanish region, or Autonomous Community, can set its own
-              rules, rates, and exemptions, which can result in significant differences in tax
-              liability depending on where you reside."
-              color="yellow"
-            />
-            <DisplayBox
-              message={convertCurrencyInString(wealthTaxDetails, currencyIndex, currency)}
-              color="yellow"
-            />
-            <DisplayBox
-              title={'The 60% Rule: The Tax Cap'}
-              message={
-                'This rule caps your total tax burden. The combined amount of your income tax and wealth tax cannot exceed 60% of your taxable income for the year. This prevents a high wealth tax from becoming overwhelming, especially if your income is low.'
-              }
-            />
-            <DisplayBox
-              title={'The 20% Rule: The Minimum Payment'}
-              message={
-                "This rule is the flip side. While the 60% cap can reduce your wealth tax, it has a limit. You're always required to pay a minimum of 20% of your original wealth tax liability, even if the 60% cap would otherwise bring it lower or to zero."
-              }
-            />
+            {wealthTaxDetails !== 'Details for this region are not available.' && (
+              <DisplayBox
+                message={convertCurrencyInString(wealthTaxDetails, currencyIndex, currency)}
+                color="yellow"
+              />
+            )}
+            {otherTaxesInitial[country].map((item) => (
+              <DisplayBox
+                key={item.id}
+                title={item.title}
+                message={item.message}
+                color={item.title ? 'gray' : 'yellow'}
+              />
+            ))}
           </div>
         </div>
       </div>

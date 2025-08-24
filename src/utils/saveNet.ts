@@ -1,16 +1,20 @@
-import type { FormValues } from '../components/SaveNet/SaveNetForm';
+import { currencyEnum, displayMessages } from '../data/spain';
 import type {
   CurrencyString,
   Dependents,
+  Earner,
   PersonalIncomes,
   ReportDto,
   ReportUserData,
+  TaxData,
 } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
+import type { FormItem } from '../types/city.types';
+import type { BreakdownItem, DisplayItems, Earners } from '../types/flow.types';
 
-export const flowCounties: string[] = ['Spain'];
+export const flowCounties: string[] = ['Spain', 'Portugal'];
 
-export const prepData = (data: FormValues, cityId: number): ReportUserData => {
+export const prepData = (data: TaxData, cityId: number): ReportUserData => {
   const dependents: Dependents[] = data.dependents.children.map((item) => ({
     type: 'kid',
     isDependent: true,
@@ -22,6 +26,7 @@ export const prepData = (data: FormValues, cityId: number): ReportUserData => {
     income: item.income,
     accountantCost: item.accountantCost * 12,
     expensesCost: item.expensesCost * 12,
+    ...(item.age ? { age: item.age } : {}),
   }));
 
   if (data.dependents.hasSpouse && data.dependents.spouseDependent) {
@@ -69,26 +74,88 @@ export function formatNumber(num: number, decimalPlaces = 2) {
   return num.toFixed(decimalPlaces);
 }
 
-interface BreakdownItem {
-  name: string;
-  explain: string;
-  calc: string;
-  total: string;
+const stepsMap: Record<string, FormItem> = {
+  income: {
+    name: 'income',
+    label: 'Expected annual gross income',
+    type: 'number',
+  },
+  currency: { name: 'currency', label: 'Currency', type: 'select', options: currencyEnum },
+  accountant: {
+    name: 'accountantCost',
+    label: 'Monthly accounting expense',
+    type: 'number',
+  },
+  expenses: {
+    name: 'expensesCost',
+    label: 'Other monthly business expenses',
+    type: 'number',
+  },
+  age: {
+    name: 'age',
+    label: 'Age of the earner',
+    type: 'number',
+  },
+  usCitizen: {
+    name: 'isUSCitizen',
+    label: 'Is a US Citizen',
+    type: 'checkbox',
+    tooltip: 'Check this box if you are a US citizen.',
+  },
+  spouse: { name: 'hasSpouse', label: 'Do you have a spouse?', type: 'checkbox' },
+  dependent: { name: 'spouseDependent', label: 'Is your spouse a dependent?', type: 'checkbox' },
+};
+
+export function getStepItems(country: string) {
+  const step1ItemsBase = [
+    stepsMap.currency,
+    stepsMap.income,
+    stepsMap.expenses,
+    stepsMap.accountant,
+  ];
+  const step2Items = [stepsMap.spouse, stepsMap.dependent];
+  if (country === 'Portugal') {
+    return [[...step1ItemsBase, stepsMap.age, stepsMap.usCitizen], step2Items];
+  }
+  return [[...step1ItemsBase, stepsMap.usCitizen], step2Items];
 }
 
-interface Earners {
-  length: number;
-  '0': BreakdownItem[];
-  '1': BreakdownItem[];
+export function getBaseData(country: string) {
+  const baseEarner: Earner = {
+    income: 0,
+    accountantCost: 120,
+    expensesCost: 350,
+    currency: 'EUR',
+    isUSCitizen: false,
+  };
+  const baseChild = { age: 1 };
+  if (country === 'Portugal') {
+    baseEarner.age = 18;
+  }
+  if (country === 'Spain') {
+    baseChild.age = 1;
+  }
+
+  return {
+    baseEarner,
+    baseChild,
+  };
 }
 
-interface DisplayItems {
-  id: number;
-  title: string;
-  message: string;
+function getDisplayMessages(country: string) {
+  if (country === 'Portugal') {
+    return displayMessages.portugal;
+  }
+
+  return displayMessages.spain;
 }
 
-export function getEssentialReportData(data: ReportDto, rate: number, currency: CurrencyOptions) {
+export function getEssentialReportData(
+  data: ReportDto,
+  rate: number,
+  currency: CurrencyOptions,
+  country?: string
+) {
   let cumulativeTax: number = 0;
   let mainGross = 0;
   const earners: Earners = {
@@ -109,6 +176,10 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
     let usTaxAmount = 0;
     let usSelf;
     let usSelfAmount = 0;
+
+    const dataHasSplitTax = data.costItems?.find(
+      (item) => item.type === 'income_tax' && item.label === 'Regional income tax'
+    );
 
     data.costItems?.forEach((cost) => {
       if (cost.incomeMaker === index) {
@@ -134,6 +205,12 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
           }
         }
 
+        if (cost.type === 'total_tax' && !dataHasSplitTax) {
+          if (cost.label === 'Total income tax') {
+            state = state + cost.amount;
+          }
+        }
+
         if (cost.type === 'us_income_tax') {
           usTax = cost.note;
           usTaxAmount = cost.amount;
@@ -147,6 +224,9 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
         if (cost.type === 'tax_credit') {
           if (cost.label !== 'Allowance tax credit') {
             credit = cost.amount;
+            if (!dataHasSplitTax) {
+              state = state + cost.amount;
+            }
           }
         }
       }
@@ -217,62 +297,58 @@ export function getEssentialReportData(data: ReportDto, rate: number, currency: 
     }
   });
 
-  let future2Tax = 0;
-  let future2Net = 0;
-  let future3Tax = 0;
-  let future3Net = 0;
+  interface FuturePrep {
+    net: number;
+    tax: number;
+  }
+
+  const futurePrep: Record<string, FuturePrep> = {};
 
   (data.costItems || []).forEach((item) => {
     if (item.type === 'total_tax' || item.type === 'social_contributions') {
       cumulativeTax = cumulativeTax + item.amount;
     }
 
-    if (item.type === 'additional_2nd') {
-      if (item.label === 'Total tax') {
-        future2Tax = future2Tax + item.amount;
-      } else {
-        future2Net = future2Net + item.amount;
-      }
-    }
+    (data.costItems || []).forEach((item) => {
+      // Use a regular expression to find the year number (e.g., '2', '3')
+      // and the suffix (e.g., 'nd', 'rd', 'th').
+      const match = item.type.match(/additional_(\d+)(nd|rd|th)/);
 
-    if (item.type === 'additional_3rd') {
-      if (item.label === 'Total tax') {
-        future3Tax = future3Tax + item.amount;
-      } else {
-        future3Net = future3Net + item.amount;
+      // Check if the regular expression found a match.
+      if (match) {
+        // The first captured group is the number (e.g., '2').
+        const yearNumber = match[1];
+        // The second captured group is the suffix (e.g., 'nd').
+        const yearSuffix = match[2];
+        // Combine them to create the dynamic key (e.g., '2nd').
+        const yearKey = `${yearNumber}${yearSuffix}`;
+
+        // If a key for this year doesn't exist yet, create it and initialize the values to 0.
+        if (!futurePrep[yearKey]) {
+          futurePrep[yearKey] = {
+            tax: 0,
+            net: 0,
+          };
+        }
+
+        // Now, update the correct property (tax or net) based on the item's label.
+        if (item.label.includes('tax')) {
+          futurePrep[yearKey].tax = item.amount;
+        } else {
+          futurePrep[yearKey].net = item.amount;
+        }
       }
-    }
+    });
   });
 
-  const future = [
-    {
-      year: 2,
-      net: future2Net * rate,
-      cumulativeTax: future2Tax * rate,
-      effectiveTax: future2Tax / mainGross,
-    },
-    {
-      year: 3,
-      net: future3Net * rate,
-      cumulativeTax: future3Tax * rate,
-      effectiveTax: future3Tax / mainGross,
-    },
-  ];
+  const future = Object.keys(futurePrep).map((key) => ({
+    year: key,
+    net: futurePrep[key].net * rate,
+    cumulativeTax: futurePrep[key].tax * rate,
+    effectiveTax: futurePrep[key].tax / mainGross,
+  }));
 
-  const displayMessages: DisplayItems[] = [
-    {
-      id: 1,
-      title: '20% Tax Base Reduction',
-      message:
-        'Every new self-employed individual in Spain receives a 20% reduction on their taxable base for the first two years. This important benefit lowers both your taxable base and your overall tax bill. Keep in mind that once this two-year period ends, your tax liability will increase, which will reduce your net income.',
-    },
-    {
-      id: 2,
-      title: '1st Year Flat Social Contributions',
-      message:
-        'The first year of self-employment utilizes the Tariffa Plana, a flat rate of €980 for annual social contributions. This benefit reduces costs significantly during the initial period. Following the first year, contributions are calculated on a variable basis, which affects the effective tax rate and net income.',
-    },
-  ];
+  const displayMessages: DisplayItems[] = getDisplayMessages(country!);
 
   if (data.userData.dependents.find((item) => (item.age || 4) < 3)) {
     displayMessages.push({

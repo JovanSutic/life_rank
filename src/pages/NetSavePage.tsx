@@ -107,7 +107,13 @@ function NetSavePage() {
           }}
         />
       );
-    return <SaveNetForm sendData={sendData} cityId={Number(cityId) || 0} />;
+    return (
+      <SaveNetForm
+        sendData={sendData}
+        cityId={Number(cityId) || 0}
+        country={cityData?.country || ''}
+      />
+    );
   }
 
   useEffect(() => {

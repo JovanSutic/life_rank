@@ -1,3 +1,5 @@
+import type { CurrencyOptions } from './budget.types';
+
 export interface City {
   id: number;
   name: string;
@@ -190,12 +192,39 @@ export interface PersonalIncomes {
   income: number;
   accountantCost: number;
   expensesCost: number;
+  age?: number;
+}
+
+export interface Child {
+  name?: string;
+  age: number;
+  motherIsEarner?: boolean;
+}
+
+export interface Earner {
+  isUSCitizen: boolean;
+  currency: CurrencyOptions;
+  income: number;
+  accountantCost: number;
+  expensesCost: number;
+  age?: number;
 }
 
 export interface Dependents {
   type: 'spouse' | 'kid';
   isDependent: boolean;
   age?: number;
+}
+
+interface DependentsForm {
+  hasSpouse: boolean;
+  spouseDependent?: boolean;
+  children: Child[];
+}
+
+export interface TaxData {
+  earners: Earner[];
+  dependents: DependentsForm;
 }
 
 export interface ReportUserData {
@@ -250,4 +279,8 @@ export interface ReportItem {
 export interface CardCity extends City {
   costOfLiving: number;
   safetyRating: CrimesSummary;
+}
+
+export interface CityCardsResponse {
+  data: CardCity[];
 }
