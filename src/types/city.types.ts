@@ -56,4 +56,9 @@ export interface FormItem {
   type: 'text' | 'number' | 'select' | 'checkbox';
   options?: readonly string[];
   tooltip?: string;
+  condition?: {
+    dependsOn: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    assertionFunction: (value: any) => boolean;
+  };
 }

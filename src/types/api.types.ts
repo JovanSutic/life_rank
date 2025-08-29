@@ -193,6 +193,9 @@ export interface PersonalIncomes {
   accountantCost: number;
   expensesCost: number;
   age?: number;
+  workType?: string;
+  isStartup?: boolean;
+  isSpecialist?: boolean;
 }
 
 export interface Child {
@@ -202,12 +205,15 @@ export interface Child {
 }
 
 export interface Earner {
-  isUSCitizen: boolean;
+  isUSCitizen?: boolean;
   currency: CurrencyOptions;
   income: number;
   accountantCost: number;
   expensesCost: number;
   age?: number;
+  workType?: string;
+  isStartup?: boolean;
+  isSpecialist?: boolean;
 }
 
 export interface Dependents {
