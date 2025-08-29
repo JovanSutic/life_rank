@@ -6,6 +6,7 @@ import { getCurrencyRate } from '../../utils/budget';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
 import Tabs from '../Basic/Tabs';
+import { Link } from 'react-router-dom';
 
 function TeaserScreen({
   city,
@@ -58,13 +59,20 @@ function TeaserScreen({
       </div>
       <div className="mb-8">
         <ReportResult data={data} city={city} capitalGains={capitalGains} activeTab={tab} />
-        <div className="w-full mt-10 flex flex-col items-center justify-center">
+        <div className="w-full mt-10 flex flex-col items-center justify-center gap-6">
           <button
             onClick={reset}
-            className="w-full block md:w-[300px] cursor-pointer font-semibold text-center py-2 px-6 rounded-lg border"
+            className="w-full block md:w-[300px] py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer"
           >
-            Back to the form
+            Reset calculator for {city?.name}
           </button>
+
+          <Link
+            to={`/cities/${city?.country}`}
+            className="cursor-pointer font-semibold text-center text-base text-gray-500 hover:underline "
+          >
+            Back to cities in {city?.country}
+          </Link>
         </div>
       </div>
     </div>

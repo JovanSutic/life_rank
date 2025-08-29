@@ -10,12 +10,29 @@ import { getBaseData, getStepItems, prepData } from '../../utils/saveNet';
 import { getSchema } from '../../data/validation';
 import type { FormItem } from '../../types/city.types';
 
-// Define the component's props interface
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
   cityId: number;
   country: string;
 }
+
+const getNestedValue = (obj: any, path: string) => {
+  // eslint-disable-next-line no-useless-escape
+  const parts = path.split(/[\.\[\]]/).filter(Boolean);
+  let current = obj;
+  for (const part of parts) {
+    if (current === undefined || current === null) {
+      return undefined;
+    }
+    const index = parseInt(part, 10);
+    if (!isNaN(index)) {
+      current = current[index];
+    } else {
+      current = current[part];
+    }
+  }
+  return current;
+};
 
 const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total }) => {
   const pct = Math.round((step / total) * 100);
@@ -73,6 +90,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   });
 
   const children = watch('dependents.children');
+  const watchedValues = watch();
 
   const {
     fields: childFields,
@@ -101,7 +119,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const onEditStep = (target: number) => setStep(target);
 
   const onSubmit = (data: FormValues) => {
-    const fullData = prepData(data, cityId);
+    const fullData = prepData(data, cityId, country);
     reset();
     sendData(fullData);
   };
@@ -125,7 +143,24 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
   // Helper function to render an individual field
   const renderField = (item: FormItem, idx?: number) => {
-    const fieldName = idx !== undefined ? `earners[${idx}].${item.name}` : item.name;
+    // New logic: Check if a condition exists and if it is met.
+    if (item.condition) {
+      const dependsOnPath =
+        idx !== undefined
+          ? `earners[${idx}].${item.condition.dependsOn}`
+          : item.condition.dependsOn;
+
+      // Use the new helper function to safely get the nested value
+      const dependsOnValue = getNestedValue(watchedValues, dependsOnPath);
+
+      // Call the assertion function to determine if the field should be rendered
+      if (!item.condition.assertionFunction(dependsOnValue)) {
+        return null; // Don't render if the assertion is false
+      }
+    }
+
+    const fieldName =
+      idx !== undefined ? `earners[${idx}].${item.name}` : `dependents.${item.name}`;
     const error =
       idx !== undefined
         ? (errors.earners as any)?.[idx]?.[item.name]?.message

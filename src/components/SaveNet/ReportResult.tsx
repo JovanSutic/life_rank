@@ -1,11 +1,6 @@
 import { ArrowTrendingUpIcon, BanknotesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import type { City, DefValue, ReportDto } from '../../types/api.types';
-import {
-  formatCurrency,
-  formatPercentage,
-  getEssentialReportData,
-  trackPeople,
-} from '../../utils/saveNet';
+import { formatCurrency, formatPercentage, trackPeople } from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
 import OtherTaxes from './OtherTaxes';
 import { mapCompass, regionsSpain } from '../../data/spain';
@@ -15,6 +10,7 @@ import { useMemo } from 'react';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
 import { convertCurrencyInString } from '../../utils/city';
+import { getEssentialReportData } from '../../utils/reports';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (

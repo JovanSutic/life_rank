@@ -1,11 +1,6 @@
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { trackPageview } from '../utils/analytics';
-import { useEffect } from 'react';
-import {
-  PencilSquareIcon,
-  CursorArrowRaysIcon,
-  DocumentTextIcon,
-} from '@heroicons/react/24/outline';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { mapCompass } from '../data/spain';
 import Newsletter from '../components/Basic/Newsletter';
@@ -21,6 +16,8 @@ function Index() {
     trackPageview('/');
   }, []);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const queries = useQueries({
     queries: flowCounties.map((country) => ({
       queryKey: ['GET_CITY_CARDS', `${country}-3`],
@@ -30,6 +27,15 @@ function Index() {
       staleTime: 60 * 60 * 1000,
     })),
   });
+
+  const handleScrollClick = () => {
+    if (contentRef.current) {
+      contentRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
   return (
     <>
@@ -64,67 +70,19 @@ function Index() {
               Live Better, Pay Less.
             </h1>
             <h2 className="mt-4 md:mt-2 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-yellow-300 text-shadow-lg">
-              A way to optime your finances through location arbitrage.
+              We help remote workers find their best tax residency
             </h2>
             <p className="mt-10 md:mt-14 text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed">
               Discover a place where your remote income goes further. Find the perfect balance of
               tax savings and cost of living to build your ideal financial future.
             </p>
-            <Link
-              to="/cities/Spain"
-              className="mt-8 md:mt-10 inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-blue-800 bg-white hover:bg-blue-50 transition-colors"
+            <button
+              onClick={handleScrollClick}
+              className="mt-8 md:mt-10 cursor-pointer inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-blue-800 bg-white hover:bg-blue-50 transition-colors"
             >
               Find Your Optimal Location
               <ChevronRightIcon className="ml-2 h-5 w-5" />
-            </Link>
-          </div>
-        </section>
-
-        {/* New Section: Your Journey to Financial Freedom */}
-        <section className="bg-gray-50 py-16 md:py-24">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Unlock Your Financial Potential with Our Data
-            </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              It's a simple, three-step process to get the clarity you need.
-            </p>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {/* Step 1 */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 text-center transition-transform transform hover:scale-105 duration-300">
-                <div className="p-4 bg-blue-100 rounded-full mb-4">
-                  <CursorArrowRaysIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <h4 className="text-xl font-semibold text-gray-800">1. Choose the City</h4>
-                <p className="mt-2 text-sm text-gray-600">
-                  Start by clicking on a city to select your desired location. Use our list or map
-                  display.
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 text-center transition-transform transform hover:scale-105 duration-300">
-                <div className="p-4 bg-blue-100 rounded-full mb-4">
-                  <PencilSquareIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <h4 className="text-xl font-semibold text-gray-800">2. Fill Out the Form</h4>
-                <p className="mt-2 text-sm text-gray-600">
-                  Input your gross income and basic details into our free, easy-to-use calculator.
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 text-center transition-transform transform hover:scale-105 duration-300">
-                <div className="p-4 bg-blue-100 rounded-full mb-4">
-                  <DocumentTextIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <h4 className="text-xl font-semibold text-gray-800">3. Get Your Report</h4>
-                <p className="mt-2 text-sm text-gray-600">
-                  Instantly receive a personalized report with a full breakdown of your net income,
-                  taxes, and cost of living.
-                </p>
-              </div>
-            </div>
+            </button>
           </div>
         </section>
 
@@ -132,41 +90,44 @@ function Index() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Discover Your Next City
+              Find out your net opportunities in different cities
             </h2>
             <p className="mt-4 text-lg text-gray-600 max-w-4xl mx-auto">
-              Click on a city below to get a comprehensive, free report tailored to your situation.
+              Click on any city to access our quick and reliable tax calculators. At the end you
+              will see your net earnings, local tax rates, and total financial impact. All for free.
             </p>
-            <div>
+            <div className="flex flex-col gap-6" id="cities-start" ref={contentRef}>
               {queries.map((query: UseQueryResult<CityCardsResponse>, index: number) => (
-                <AsyncStateWrapper
-                  isLoading={query.isFetching || query.isLoading}
-                  isError={query.isError}
-                  error={query.error}
-                >
-                  <div key={flowCounties[index]} className="mt-12">
-                    {/* Country Header Row */}
-                    <div className="flex flex-col items-center justify-center space-y-4 mb-8">
-                      <h3 className="text-3xl font-bold text-gray-800">{flowCounties[index]}</h3>
-                      <Link
-                        to={mapCompass[flowCounties[index]]}
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        See the Map
-                        <ChevronRightIcon className="ml-1 h-4 w-4" />
-                      </Link>
-                    </div>
-                    <CitiesList data={query.data?.data || []} />
-                  </div>
-
-                  <Link
-                    to={`/cities/${flowCounties[index]}`}
-                    className="mt-8 inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+                <div key={`cityGroup${index}`}>
+                  <AsyncStateWrapper
+                    isLoading={query.isFetching || query.isLoading}
+                    isError={query.isError}
+                    error={query.error}
                   >
-                    See All Cities
-                    <ChevronRightIcon className="ml-1 h-4 w-4" />
-                  </Link>
-                </AsyncStateWrapper>
+                    <div key={flowCounties[index]} className="mt-12">
+                      {/* Country Header Row */}
+                      <div className="flex flex-col items-center justify-center space-y-4 mb-8">
+                        <h3 className="text-3xl font-bold text-gray-800">{flowCounties[index]}</h3>
+                        <Link
+                          to={mapCompass[flowCounties[index]]}
+                          className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          Checkout the Map
+                          <ChevronRightIcon className="ml-1 h-4 w-4" />
+                        </Link>
+                      </div>
+                      <CitiesList data={query.data?.data || []} />
+                    </div>
+
+                    <Link
+                      to={`/cities/${flowCounties[index]}`}
+                      className="mt-8 inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+                    >
+                      See other cities in {flowCounties[index]}
+                      <ChevronRightIcon className="ml-1 h-4 w-4" />
+                    </Link>
+                  </AsyncStateWrapper>
+                </div>
               ))}
             </div>
           </div>
