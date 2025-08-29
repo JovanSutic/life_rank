@@ -69,9 +69,11 @@ export const regionsSpain: Record<string, Regions> = {
 
 export const mapCompass: Record<string, string> = {
   Spain:
-    '/europe?layerTypeId=2&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
+    '/europe?layerTypeId=2&centerLat=40.67267&centerLng=-3.86719&north=47.59167&south=32.95377&east=10.89844&west=-18.63281&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Spain',
   Portugal:
-    '/europe?layerTypeId=2&centerLat=37.88388&centerLng=-6.25122&north=45.10487&south=29.87915&east=12.50244&west=-25.00488&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false',
+    '/europe?layerTypeId=2&centerLat=37.88388&centerLng=-6.25122&north=45.10487&south=29.87915&east=12.50244&west=-25.00488&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Portugal',
+  Italy:
+    '/europe?layerTypeId=2&centerLat=42.31362&centerLng=13.33384&north=45.78260&south=38.64234&east=22.71067&west=3.95701&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Italy',
 };
 
 export const displayMessages: Record<string, DisplayItems[]> = {
@@ -101,6 +103,14 @@ export const displayMessages: Record<string, DisplayItems[]> = {
       title: 'Taxable base reduction for Young',
       message:
         'Young workers up to age 35 can benefit from the IRS Jovem scheme, which offers a progressive tax exemption for up to 10 years. This benefit, applicable to both independent and dependent work income, provides substantial financial relief to help young professionals start their careers. The financial relief is taxable income reduction that ranges from 25% up to 100% or applicable cash cap.',
+    },
+  ],
+  italy: [
+    {
+      id: 1,
+      title: 'Flat Tax',
+      message:
+        'If you are looking for the most simplified and predictable tax regime, you should consider Forfettario Regime. To qualify, you must have a gross annual revenue of less than €85,000. If your revenue exceeds this threshold, you will automatically be switched to a different tax regime the following year. There is a flat tax and no VAT. In general you do not need an accountant though it can help you navigate the Italian tax bureaucracy.',
     },
   ],
 };
@@ -135,9 +145,18 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         "The NHR (Non-Habitual Resident) regime in Portugal has been replaced by the new Tax Incentive for Scientific Research and Innovation (IFICI). This new program aims to attract highly qualified professionals in fields like technology, research, and innovation by offering significant tax benefits for a period of 10 years. The main benefit of the IFICI is a 20% flat personal income tax (IRS) rate on income from employment and self-employment earned in Portugal. This is a considerable reduction from the standard progressive rates. Additionally, foreign-sourced income such as salaries, dividends, and interest may be exempt from Portuguese taxation. It's important to note that the IFICI is more specific than the old NHR, targeting certain professions and roles within innovative companies, startups, and research entities.",
     },
   ],
+  Italy: [
+    {
+      id: 1,
+      title: '',
+      message:
+        "The **Tax on Foreign Financial Assets (IVAFE)** is an annual tax paid by Italian tax residents on the value of their financial assets held abroad. This tax is a flat rate (typically 0.2%) applied to the value of the assets, which include items like bank accounts, stocks, bonds, and investment funds. Its purpose is to monitor and tax a person's financial wealth outside of Italy, and it is reported annually in their tax declaration.",
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
   Spain: 'Wealth Tax',
   Portugal: 'Special Tax Regimes',
+  Italy: 'Tax on Foreign Financial Assets',
 };
