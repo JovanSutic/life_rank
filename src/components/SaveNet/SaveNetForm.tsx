@@ -62,6 +62,8 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const [step1] = getStepItems(country);
   const { baseEarner } = getBaseData(country);
 
+  console.log(baseEarner);
+
   const {
     register,
     control,
@@ -110,6 +112,8 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     }
 
     const valid = await trigger(fieldsToValidate as any);
+    console.log(valid);
+    console.log(errors);
     if (!valid) return;
     setStep((s) => Math.min(totalSteps, s + 1));
   };

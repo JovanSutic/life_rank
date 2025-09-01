@@ -43,17 +43,16 @@ function CitiesPage() {
         />
       </article>
       <div className="min-h-screen bg-gray-100 font-sans text-gray-800">
-        {/* Featured Cities Section */}
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Discover Your Next City
+              Find out your net opportunities
             </h2>
             <p className="mt-4 text-lg text-gray-600 max-w-4xl mx-auto">
-              Click on a city below to get a comprehensive, free report tailored to your situation.
+              Click on any city to access our quick and reliable tax calculators. At the end you
+              will see your net earnings, local tax rates, and total financial impact. All for free.
             </p>
 
-            {/* Loop through each country in the featuredCountries object */}
             <AsyncStateWrapper
               isLoading={spainIsFetching || spainIsLoading}
               isError={spainIsError}
@@ -68,7 +67,7 @@ function CitiesPage() {
                       to={mapCompass[country || '']}
                       className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      See the Map
+                      See {country} on the Map
                       <ChevronRightIcon className="ml-1 h-4 w-4" />
                     </Link>
                   </div>

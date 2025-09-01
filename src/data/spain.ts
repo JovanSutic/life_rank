@@ -74,6 +74,8 @@ export const mapCompass: Record<string, string> = {
     '/europe?layerTypeId=2&centerLat=37.88388&centerLng=-6.25122&north=45.10487&south=29.87915&east=12.50244&west=-25.00488&zoom=6&budget=7000&size=9007199254740991&sea=false&rank=false&country=Portugal',
   Italy:
     '/europe?layerTypeId=2&centerLat=42.31362&centerLng=13.33384&north=45.78260&south=38.64234&east=22.71067&west=3.95701&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Italy',
+  'Czech Republic':
+    '/europe?layerTypeId=2&centerLat=49.53505&centerLng=15.48565&north=52.56887&south=46.30050&east=24.86248&west=6.10882&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Czech+Republic',
 };
 
 export const displayMessages: Record<string, DisplayItems[]> = {
@@ -153,10 +155,25 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         "The **Tax on Foreign Financial Assets (IVAFE)** is an annual tax paid by Italian tax residents on the value of their financial assets held abroad. This tax is a flat rate (typically 0.2%) applied to the value of the assets, which include items like bank accounts, stocks, bonds, and investment funds. Its purpose is to monitor and tax a person's financial wealth outside of Italy, and it is reported annually in their tax declaration.",
     },
   ],
+  'Czech Republic': [
+    {
+      id: 1,
+      title: 'Combined income',
+      message:
+        'In the Czech Republic, your total taxable income is the sum of all earnings, including both your primary self-employment income and any investment and capital gains income you receive. This means that income from sources like dividends, interest, and bond yields is not taxed separately but is combined with your self-employed earnings. This consolidated figure serves as the basis for determining your annual tax liability, including whether you fall into the flat tax regime or a specific progressive tax bracket. Therefore, it is essential to account for all sources of income to ensure accurate tax calculations and compliance.',
+    },
+    {
+      id: 2,
+      title: 'VAT',
+      message:
+        "In the Czech Republic, the VAT threshold and the eligibility for the flat tax regime are directly linked. The current threshold for mandatory VAT registration is ~81K € of annual turnover in a 12-month period. If a self-employed individual's turnover exceeds this amount, they are required to register for VAT. Crucially, once you become a VAT eligible, you are automatically ineligible for the simplified flat tax regime.",
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
   Spain: 'Wealth Tax',
   Portugal: 'Special Tax Regimes',
   Italy: 'Tax on Foreign Financial Assets',
+  'Czech Republic': '',
 };

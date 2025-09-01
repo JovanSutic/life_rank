@@ -209,7 +209,7 @@ function ReportResult({
         <section className="border-b border-gray-300 pb-10">
           <SectionHeader
             title="Other Relevant Taxes"
-            subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of Wealth Tax and Capital Gains Tax, which can create new financial obligations."
+            subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of taxes which can create new financial obligations."
           />
           <div>
             <OtherTaxes
@@ -220,7 +220,7 @@ function ReportResult({
             <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
               <Link
                 to={`/taxes/${city?.country}?country=${city?.countriesId}`}
-                className="w-full block md:w-[300px] cursor-pointer bg-green-500 hover:bg-green-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+                className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
               >
                 Check out other taxes in {city?.country}
               </Link>

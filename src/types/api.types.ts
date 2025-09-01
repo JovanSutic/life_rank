@@ -191,7 +191,7 @@ export interface PersonalIncomes {
   currency: CurrencyString;
   income: number;
   accountantCost: number;
-  expensesCost: number;
+  expensesCost?: number;
   age?: number;
   workType?: string;
   isStartup?: boolean;
@@ -209,7 +209,7 @@ export interface Earner {
   currency: CurrencyOptions;
   income: number;
   accountantCost: number;
-  expensesCost: number;
+  expensesCost?: number;
   age?: number;
   workType?: string;
   isStartup?: boolean;

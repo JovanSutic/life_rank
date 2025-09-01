@@ -32,15 +32,33 @@ const EarnerSchema = z.object({
   income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
   currency: z.enum(currencyEnum),
   accountantCost: z.number().min(80, { message: 'Monthly accountant costs must be at least 80' }),
-  expensesCost: z.number().min(100, { message: 'Monthly business expenses must be at least 100' }),
+  expensesCost: z.number().optional(),
   isUSCitizen: z.boolean(),
 });
+
+const CzechEarnersSchema = z
+  .object({
+    income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
+    currency: z.enum(currencyEnum),
+    accountantCost: z.number(),
+    expensesCost: z.number().optional(),
+    isUSCitizen: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.income > 81000 && data.accountantCost < 80) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Monthly accountant costs must be at least 80',
+        path: ['accountantCost'],
+      });
+    }
+  });
 
 const PortugalEarnerSchema = z.object({
   income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
   currency: z.enum(currencyEnum),
   accountantCost: z.number().min(80, { message: 'Monthly accountant costs must be at least 80' }),
-  expensesCost: z.number().min(100, { message: 'Monthly business expenses must be at least 100' }),
+  expensesCost: z.number().optional(),
   isUSCitizen: z.boolean(),
   age: z
     .number()
@@ -53,9 +71,7 @@ const ItalyEarnerSchema = z
     income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
     currency: z.enum(currencyEnum),
     accountantCost: z.number().min(80, { message: 'Monthly accountant costs must be at least 80' }),
-    expensesCost: z
-      .number()
-      .min(100, { message: 'Monthly business expenses must be at least 100' }),
+    expensesCost: z.number().optional(),
     workType: z.string().optional(),
     isStartup: z.boolean().optional(),
     isSpecialist: z.boolean().optional(),
@@ -92,6 +108,11 @@ const SpainSchema = z.object({
   dependents: DependentSchema,
 });
 
+const CzechSchema = z.object({
+  earners: z.array(CzechEarnersSchema).min(1).max(2, 'We support up to two income earners'),
+  dependents: DependentSchema,
+});
+
 const PortugalSchema = z.object({
   earners: z.array(PortugalEarnerSchema).min(1).max(2, 'We support up to two income earners'),
   dependents: SimpleDependentSchema,
@@ -105,6 +126,7 @@ const ItalySchema = z.object({
 export const getSchema = (country: string) => {
   if (country === 'Spain') return SpainSchema;
   if (country === 'Italy') return ItalySchema;
+  if (country === 'Czech Republic') return CzechSchema;
 
   return PortugalSchema;
 };
