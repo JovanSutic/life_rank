@@ -10,7 +10,7 @@ import type {
 import type { CurrencyOptions } from '../types/budget.types';
 import type { FormItem } from '../types/city.types';
 
-export const flowCounties: string[] = ['Spain', 'Portugal', 'Italy'];
+export const flowCounties: string[] = ['Spain', 'Portugal', 'Italy', 'Czech Republic'];
 
 function getWorkType(type: string, country: string) {
   if (country === 'Italy') {
@@ -40,7 +40,7 @@ export const prepData = (data: TaxData, cityId: number, country = 'Spain'): Repo
     currency: item.currency.toLowerCase() as CurrencyString,
     income: item.income,
     accountantCost: item.accountantCost ? item.accountantCost * 12 : 0,
-    expensesCost: item.expensesCost * 12,
+    expensesCost: (item?.expensesCost || 0) * 12,
     ...(item.age ? { age: item.age } : {}),
     ...(item.workType ? { workType: getWorkType(item.workType, country) } : {}),
     ...(item.isStartup ? { isNew: item.isStartup } : {}),
@@ -170,6 +170,7 @@ export function getStepItems(country: string) {
     stepsMap.expenses,
     stepsMap.accountant,
   ];
+
   const step2Items = [stepsMap.spouse, stepsMap.dependent];
   if (country === 'Portugal') {
     return [[...step1ItemsBase, stepsMap.age, stepsMap.usCitizen], step2Items];

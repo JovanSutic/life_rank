@@ -112,7 +112,7 @@ function Index() {
                           to={mapCompass[flowCounties[index]]}
                           className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
                         >
-                          Checkout the Map
+                          Checkout {flowCounties[index]} on the Map
                           <ChevronRightIcon className="ml-1 h-4 w-4" />
                         </Link>
                       </div>

@@ -36,6 +36,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
     usSelfAmount,
     businessCost,
     net,
+    health,
   } = data;
   const res: BreakdownItem[] = [
     ...(usTax
@@ -151,6 +152,45 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         ]
       );
     }
+    if (regime === 'Flat Czech Regime') {
+      res[res.length - 2].explain = 'taxes and social contributions + business expenses';
+      res[res.length - 2].calc =
+        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)})`;
+      res.unshift({
+        name: 'Flat monthly payments',
+        explain: 'taxes + health insurance + social contributions in single monthly payment',
+        calc: `(12 * ${formatCurrency(taxes / 12, currency)})`,
+        total: formatCurrency(taxes * rate, currency),
+      });
+    }
+    if (regime === 'Progressive tax Czech Regime') {
+      res[res.length - 2].explain =
+        'taxes + business expenses + social contributions + health insurance';
+      res[res.length - 2].calc =
+        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)} + ${formatCurrency(health * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency((businessCost + health) * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency((businessCost + health) * rate, currency)})`;
+      res[res.length - 1].total = formatCurrency((net - health) * rate, currency);
+
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross income - lump sum reduction',
+            calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(reductions * rate, currency)})`,
+            total: formatCurrency((gross - reductions) * rate, currency),
+          },
+          {
+            name: 'Taxes',
+            explain: 'state tax - tax credit',
+            calc: `(${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+            total: formatCurrency(taxes * rate, currency),
+          },
+        ]
+      );
+    }
   }
 
   return res;
@@ -181,16 +221,16 @@ function getEarnersData(
     let usTaxAmount = 0;
     let usSelf;
     let usSelfAmount = 0;
-
-    const dataHasSplitTax = data.costItems?.find(
-      (item) => item.type === 'income_tax' && item.label === 'Regional income tax'
-    );
+    let health = 0;
 
     data.costItems?.forEach((cost) => {
       if (cost.incomeMaker === index) {
         if (cost.type === 'gross') {
           gross = cost.amount;
           mainGross = mainGross + cost.amount;
+        }
+        if (cost.type === 'health_insurance') {
+          health = cost.amount;
         }
         if (cost.type === 'expenses') {
           expenses = cost.amount;
@@ -227,9 +267,6 @@ function getEarnersData(
         if (cost.type === 'tax_credit') {
           if (cost.label !== 'Allowance tax credit') {
             credit = cost.amount;
-            if (!dataHasSplitTax) {
-              state = state + cost.amount;
-            }
           }
         }
       }
@@ -261,6 +298,7 @@ function getEarnersData(
         usSelfAmount,
         businessCost,
         net,
+        health,
       },
       data.costItems?.find((item) => item.type === 'tax_type')?.label
     );
@@ -294,40 +332,40 @@ export function getEssentialReportData(
   const futurePrep: Record<string, FuturePrep> = {};
 
   (data.costItems || []).forEach((item) => {
-    if (item.type === 'total_tax' || item.type === 'social_contributions') {
+    if (
+      item.type === 'total_tax' ||
+      item.type === 'social_contributions' ||
+      item.type === 'health_insurance'
+    ) {
       cumulativeTax = cumulativeTax + item.amount;
     }
 
-    (data.costItems || []).forEach((item) => {
-      // Use a regular expression to find the year number (e.g., '2', '3')
-      // and the suffix (e.g., 'nd', 'rd', 'th').
-      const match = item.type.match(/additional_(\d+)(nd|rd|th)/);
+    const match = item.type.match(/additional_(\d+)(nd|rd|th)/);
 
-      // Check if the regular expression found a match.
-      if (match) {
-        // The first captured group is the number (e.g., '2').
-        const yearNumber = match[1];
-        // The second captured group is the suffix (e.g., 'nd').
-        const yearSuffix = match[2];
-        // Combine them to create the dynamic key (e.g., '2nd').
-        const yearKey = `${yearNumber}${yearSuffix}`;
+    // Check if the regular expression found a match.
+    if (match) {
+      // The first captured group is the number (e.g., '2').
+      const yearNumber = match[1];
+      // The second captured group is the suffix (e.g., 'nd').
+      const yearSuffix = match[2];
+      // Combine them to create the dynamic key (e.g., '2nd').
+      const yearKey = `${yearNumber}${yearSuffix}`;
 
-        // If a key for this year doesn't exist yet, create it and initialize the values to 0.
-        if (!futurePrep[yearKey]) {
-          futurePrep[yearKey] = {
-            tax: 0,
-            net: 0,
-          };
-        }
-
-        // Now, update the correct property (tax or net) based on the item's label.
-        if (item.label.includes('tax')) {
-          futurePrep[yearKey].tax = item.amount;
-        } else {
-          futurePrep[yearKey].net = item.amount;
-        }
+      // If a key for this year doesn't exist yet, create it and initialize the values to 0.
+      if (!futurePrep[yearKey]) {
+        futurePrep[yearKey] = {
+          tax: 0,
+          net: 0,
+        };
       }
-    });
+
+      // Now, update the correct property (tax or net) based on the item's label.
+      if (item.label.includes('tax')) {
+        futurePrep[yearKey].tax = futurePrep[yearKey].tax + item.amount;
+      } else {
+        futurePrep[yearKey].net = futurePrep[yearKey].net + item.amount;
+      }
+    }
   });
 
   const future = Object.keys(futurePrep).map((key) => ({

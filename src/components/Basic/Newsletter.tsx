@@ -66,8 +66,7 @@ const Newsletter = () => {
         Subscribe To Our Newsletter
       </h3>
       <p className="mt-4 text-lg text-gray-600">
-        Get notified as we add new cities and calculators, so you always have access to the latest
-        data to find your next location.
+        Get notified about places with most friendly best taxes, cost of living and quality of life.
       </p>
 
       {/* Conditional rendering for success, error, and form */}
