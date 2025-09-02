@@ -1,4 +1,4 @@
-import { otherTaxesInitial, otherTaxTitles, regionalWealthTaxDetails } from '../../data/spain';
+import { otherTaxesInitial, otherTaxTitles, regionalWealthTaxDetails } from '../../data/taxes';
 import { useMapStore } from '../../stores/mapStore';
 import type { DefValue } from '../../types/api.types';
 import { convertCurrencyInString } from '../../utils/city';
