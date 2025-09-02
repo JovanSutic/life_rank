@@ -3,7 +3,7 @@ import type { City, DefValue, ReportDto } from '../../types/api.types';
 import { formatCurrency, formatPercentage, trackPeople } from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
 import OtherTaxes from './OtherTaxes';
-import { mapCompass, regionsSpain } from '../../data/spain';
+import { mapCompass, regionsSpain } from '../../data/taxes';
 import BudgetPresentation from './BudgetPresentation';
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';

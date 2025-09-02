@@ -1,4 +1,4 @@
-import type { DisplayItems } from '../types/flow.types';
+import type { DisplayItems, FaqItem } from '../types/flow.types';
 
 interface Regions {
   name: string;
@@ -177,3 +177,42 @@ export const otherTaxTitles: Record<string, string> = {
   Italy: 'Tax on Foreign Financial Assets',
   'Czech Republic': '',
 };
+
+export const faqData: FaqItem[] = [
+  {
+    question: 'How can changing my tax residency help me increase my net income?',
+    answer:
+      "Changing your tax residency to a country with lower income tax and social contributions can significantly increase your take-home pay. You can use tax friendlier jurisdictions, lower tax regimes, tax reductions and credits that some countries offer. Use our tax calculators that will show you exactly how much you'd net in different countries after taxes — helping you make an informed decision.",
+  },
+  {
+    question: 'How accurate are you calculators?',
+    answer:
+      'Our calculators are highly accurate and built to reflect the key components of each country’s tax system — including income tax rates, social contributions, and other relevant deductions. While we account for all major tax variables, there are always some personal or situational factors that can affect your final tax outcome. So while minor differences may occur, our tools are designed to give you a very real and reliable picture of your potential net income and tax exposure in each country.',
+  },
+  {
+    question: 'What is the difference between tax residency and citizenship?',
+    answer:
+      "Tax residency is determined by where you live and pay taxes, not where you hold a passport. Many remote workers remain citizens of one country while legally becoming tax residents in another with lower or no income tax. Countries define tax residency based on physical presence (usually 183 days), center of life, or other criteria — and it's essential to meet their legal requirements to qualify.",
+  },
+  {
+    question: 'What are the risks of not properly changing my tax residency?',
+    answer:
+      'Staying in the “gray zone” can lead to double taxation, tax audits, or even legal penalties. Many countries still consider you a resident if you don’t formally exit their tax system. If you start earning abroad but don’t establish a new tax residency, you could end up liable for taxes in both places.',
+  },
+  {
+    question: 'Do I need a visa or residency permit to change my tax residency?',
+    answer:
+      'In most cases, yes. Establishing tax residency typically requires legal presence through a long-term visa, digital nomad visa, or residency permit. Many countries now offer specific remote work visas that make this process easier.',
+  },
+  {
+    question: 'How does cost of living affect the value of my take-home pay?',
+    answer:
+      "A lower tax rate means more money in your pocket, but if you're spending it all on rent and groceries, you may not come out ahead. That’s why our platform combines net income calculators with cost of living data — so you can see where your money will go further.",
+  },
+  {
+    question:
+      'Can I maintain my current citizenship while being a tax resident in another country?',
+    answer:
+      'Yes — you can usually retain your original citizenship while changing your tax residency. However, some countries (like the U.S.) tax based on citizenship, not residency. Most other countries allow you to legally exit their tax system without giving up citizenship.',
+  },
+];
