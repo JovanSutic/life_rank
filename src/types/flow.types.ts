@@ -16,3 +16,8 @@ export interface DisplayItems {
   title: string;
   message: string;
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}

@@ -2,7 +2,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { trackPageview } from '../utils/analytics';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { mapCompass } from '../data/spain';
+import { faqData, mapCompass } from '../data/taxes';
 import Newsletter from '../components/Basic/Newsletter';
 import { getCityCards } from '../utils/apiCalls';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
@@ -10,6 +10,8 @@ import AsyncStateWrapper from '../components/AsyncWrapper';
 import CitiesList from '../components/Cities/CitiesList';
 import { flowCounties } from '../utils/saveNet';
 import type { CityCardsResponse } from '../types/api.types';
+import FlagElement from '../components/Basic/FlagElement';
+import FaqElement from '../components/Basic/Faq';
 
 function Index() {
   useEffect(() => {
@@ -107,7 +109,13 @@ function Index() {
                     <div key={flowCounties[index]} className="mt-12">
                       {/* Country Header Row */}
                       <div className="flex flex-col items-center justify-center space-y-4 mb-8">
-                        <h3 className="text-3xl font-bold text-gray-800">{flowCounties[index]}</h3>
+                        <div className="flex gap-2 items-center">
+                          <FlagElement country={flowCounties[index] || ''} />
+                          <h3 className="text-3xl font-bold text-gray-800">
+                            {flowCounties[index]}
+                          </h3>
+                        </div>
+
                         <Link
                           to={mapCompass[flowCounties[index]]}
                           className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
@@ -137,24 +145,18 @@ function Index() {
           <Newsletter />
         </section>
 
-        {/* Final Call to Action Section */}
-        {/* <section className="bg-gray-50 py-16 md:py-24">
+        <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 max-w-3xl mx-auto">
-              Ready to See Your Financial Future?
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+              Frequently Asked Questions
             </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Your personalized financial report is just a few clicks away.
+            <p className="mt-4 mb-6 text-lg text-gray-600 max-w-2xl mx-auto">
+              Some questions remote workers have about tax residency, income optimization, and
+              relocation.
             </p>
-            <a
-              href="#" // A placeholder for the link to the calculator
-              className="mt-8 inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-gray-700 hover:bg-gray-600 transition-colors"
-            >
-              Start Calculating Now
-              <ChevronRightIcon className="ml-2 h-5 w-5" />
-            </a>
+            <FaqElement data={faqData} />
           </div>
-        </section> */}
+        </section>
       </div>
     </>
   );

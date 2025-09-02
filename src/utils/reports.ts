@@ -1,4 +1,4 @@
-import { displayMessages } from '../data/spain';
+import { displayMessages } from '../data/taxes';
 import type { ReportDto } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
 import type { BreakdownItem, DisplayItems, Earners } from '../types/flow.types';

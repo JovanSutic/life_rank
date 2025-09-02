@@ -89,63 +89,39 @@ export const safetyTags = (safety: CrimesSummary) => {
   if (safety.personalSafetyScore >= 70) {
     tags.push({
       label: 'Personal Safety',
-      description: 'Very Safe',
+      description: 'Feels Very Safe',
       icon: '🛡️',
-    });
-  } else if (safety.personalSafetyScore >= 60) {
-    tags.push({
-      label: 'Personal Safety',
-      description: 'Safe',
-      icon: '✅',
     });
   } else if (safety.personalSafetyScore >= 40) {
     tags.push({
       label: 'Personal Safety',
-      description: 'Moderate',
-      icon: '⚠️',
-    });
-  } else if (safety.personalSafetyScore >= 20) {
-    tags.push({
-      label: 'Personal Safety',
-      description: 'Risky',
-      icon: '⚠️',
+      description: 'Generally Comfortable',
+      icon: '✅',
     });
   } else {
     tags.push({
       label: 'Personal Safety',
-      description: 'Unsafe',
-      icon: '🚨',
+      description: 'Some Caution Advised',
+      icon: '⚠️',
     });
   }
 
-  if (safety.overallCrimeConcernIndex >= 75) {
+  if (safety.overallCrimeConcernIndex >= 70) {
     tags.push({
       label: 'Crime Level',
-      description: 'Very High Crime',
-      icon: '🔴',
-    });
-  } else if (safety.overallCrimeConcernIndex >= 60) {
-    tags.push({
-      label: 'Crime Level',
-      description: 'High Crime',
+      description: 'Some Safety Concerns',
       icon: '🟠',
     });
-  } else if (safety.overallCrimeConcernIndex >= 40) {
+  } else if (safety.overallCrimeConcernIndex >= 35) {
     tags.push({
       label: 'Crime Level',
-      description: 'Moderate Crime',
+      description: 'Moderate Crime Presence',
       icon: '🟡',
-    });
-  } else if (safety.overallCrimeConcernIndex >= 25) {
-    tags.push({
-      label: 'Crime Level',
-      description: 'Low Crime',
-      icon: '🟢',
     });
   } else {
     tags.push({
       label: 'Crime Level',
-      description: 'Very Low Crime',
+      description: 'Generally Low Concern',
       icon: '🟢',
     });
   }

@@ -37,7 +37,7 @@ function CitiesList({ data }: { data: CardCity[] }) {
                 </span>
               </div>
             </div>
-            <div className="w-full flex flex-col border-t border-gray-100 pt-6">
+            <div className="w-full flex flex-col border-t border-gray-100 pt-2">
               <div className="flex flex-col items-start gap-2">
                 <p className="text-base text-gray-400">Monthly cost of living</p>
                 <div className="flex gap-2 items-end justify-center">
@@ -49,14 +49,14 @@ function CitiesList({ data }: { data: CardCity[] }) {
               </div>
             </div>
           </div>
-          <div className="mt-2 w-full border-t border-gray-100 pt-6 space-y-3 text-left">
+          <div className="mt-2 w-full border-t border-gray-100 pt-2 space-y-3 text-left">
             <div className="flex flex-col gap-2">
               {safetyTags(city.safetyRating).map((tag, idx) => (
-                <div key={idx} className={`flex justify-between`}>
-                  <span className="text-base font-base text-gray-500">{tag.label}:</span>
-                  <span className="text-base font-semibold text-gray-700">
+                <div key={idx} className={`flex flex-col items-start gap-1 ${idx === 0 && 'mb-2'}`}>
+                  <p className="text-base font-base text-gray-500">{tag.label}</p>
+                  <p className="text-base font-semibold text-gray-700">
                     {tag.icon} {tag.description}
-                  </span>
+                  </p>
                 </div>
               ))}
             </div>

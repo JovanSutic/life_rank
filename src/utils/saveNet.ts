@@ -1,4 +1,4 @@
-import { currencyEnum } from '../data/spain';
+import { currencyEnum } from '../data/taxes';
 import type {
   CurrencyString,
   Dependents,
