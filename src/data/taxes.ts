@@ -76,6 +76,8 @@ export const mapCompass: Record<string, string> = {
     '/europe?layerTypeId=2&centerLat=42.31362&centerLng=13.33384&north=45.78260&south=38.64234&east=22.71067&west=3.95701&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Italy',
   'Czech Republic':
     '/europe?layerTypeId=2&centerLat=49.53505&centerLng=15.48565&north=52.56887&south=46.30050&east=24.86248&west=6.10882&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Czech+Republic',
+  Bulgaria:
+    '/europe?layerTypeId=2&centerLat=42.05438&centerLng=26.25393&north=45.53809&south=38.36857&east=35.63077&west=16.87710&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Bulgaria',
 };
 
 export const displayMessages: Record<string, DisplayItems[]> = {
@@ -91,6 +93,12 @@ export const displayMessages: Record<string, DisplayItems[]> = {
       title: '1st Year Flat Social Contributions',
       message:
         'The first year of self-employment utilizes the Tariffa Plana, a flat rate of €980 for annual social contributions. This benefit reduces costs significantly during the initial period. Following the first year, contributions are calculated on a variable basis, which affects the effective tax rate and net income.',
+    },
+    {
+      id: 3,
+      title: 'Children Below 3 Years of Age',
+      message:
+        'Spain tax authorities are giving additional allowance for families or single parents that have children below 3 years of age. Also, working mothers (for example also as self-employed) are rewarded with additional maternity tax credit. Both of these rewards will affect the effective tax rate and net income. When child turns 3 these rewards are canceled.',
     },
   ],
   portugal: [
@@ -169,6 +177,14 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         "In the Czech Republic, the VAT threshold and the eligibility for the flat tax regime are directly linked. The current threshold for mandatory VAT registration is ~81K € of annual turnover in a 12-month period. If a self-employed individual's turnover exceeds this amount, they are required to register for VAT. Crucially, once you become a VAT eligible, you are automatically ineligible for the simplified flat tax regime.",
     },
   ],
+  Bulgaria: [
+    {
+      id: 1,
+      title: 'Tax exemption for investments in EEA',
+      message:
+        "If you invest in stocks traded on any regulated stock exchange within the European Economic Area (EEA), your capital gains are completely tax-exempt. That means you pay 0% tax on your profits. The best part? There’s no minimum holding period, so whether you sell after a month or a year, your gains are still tax-free. It's an incredible advantage for long-term investors and active traders alike. This benefit is a game-changer for anyone looking to build wealth in EU markets.",
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
@@ -176,6 +192,7 @@ export const otherTaxTitles: Record<string, string> = {
   Portugal: 'Special Tax Regimes',
   Italy: 'Tax on Foreign Financial Assets',
   'Czech Republic': '',
+  Bulgaria: '',
 };
 
 export const faqData: FaqItem[] = [

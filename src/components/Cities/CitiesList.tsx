@@ -53,7 +53,7 @@ function CitiesList({ data }: { data: CardCity[] }) {
             <div className="flex flex-col gap-2">
               {safetyTags(city.safetyRating).map((tag, idx) => (
                 <div key={idx} className={`flex flex-col items-start gap-1 ${idx === 0 && 'mb-2'}`}>
-                  <p className="text-base font-base text-gray-500">{tag.label}</p>
+                  <p className="text-sm font-base text-gray-500">{tag.label}</p>
                   <p className="text-base font-semibold text-gray-700">
                     {tag.icon} {tag.description}
                   </p>
