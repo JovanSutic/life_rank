@@ -52,7 +52,7 @@ function TeaserScreen({
       </div>
       <div className="mb-4">
         <Tabs
-          tabs={['Summery', 'Breakdown', 'Forecast', 'Other Taxes', 'Cost of Living']}
+          tabs={['Summery', 'Breakdown', 'Cost of Living', 'Other Taxes']}
           activeTab={tab}
           onTabClick={(tab: string) => setTab(tab)}
         />

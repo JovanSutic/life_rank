@@ -62,8 +62,6 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const [step1] = getStepItems(country);
   const { baseEarner } = getBaseData(country);
 
-  console.log(baseEarner);
-
   const {
     register,
     control,
@@ -332,6 +330,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                 <div className="space-y-3">
                   {childFields.map((c, i) => {
                     const ageVal = children?.[i]?.age;
+                    console.log(childFields);
                     return (
                       <div key={c.id} className="p-3 border rounded-lg bg-white">
                         <div className="flex items-center justify-between">
@@ -356,18 +355,21 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                         />
 
                         {/* Only show mother question if age < 3 */}
-                        {typeof ageVal === 'number' && ageVal < 3 && ageVal > 0 && (
-                          <div className="mt-3">
-                            <label className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                {...register(`dependents.children.${i}.motherIsEarner` as const)}
-                                className="w-4 h-4"
-                              />
-                              Is the mother one of the income earners?
-                            </label>
-                          </div>
-                        )}
+                        {country === 'Spain' &&
+                          typeof ageVal === 'number' &&
+                          ageVal < 3 &&
+                          ageVal > 0 && (
+                            <div className="mt-3">
+                              <label className="flex items-center gap-2 text-sm">
+                                <input
+                                  type="checkbox"
+                                  {...register(`dependents.children.${i}.motherIsEarner` as const)}
+                                  className="w-4 h-4"
+                                />
+                                Is the mother one of the income earners?
+                              </label>
+                            </div>
+                          )}
 
                         {errors.dependents?.children?.[i]?.age && (
                           <p className="text-xs text-red-500">
