@@ -10,7 +10,7 @@ import type {
 import type { CurrencyOptions } from '../types/budget.types';
 import type { FormItem } from '../types/city.types';
 
-export const flowCounties: string[] = ['Spain', 'Portugal', 'Italy', 'Czech Republic'];
+export const flowCounties: string[] = ['Spain', 'Portugal', 'Italy', 'Czech Republic', 'Bulgaria'];
 
 function getWorkType(type: string, country: string) {
   if (country === 'Italy') {

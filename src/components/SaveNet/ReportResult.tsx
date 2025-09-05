@@ -106,6 +106,8 @@ function ReportResult({
     return getEssentialReportData(data, currencyIndex, currency, city?.country);
   }, [data, currencyIndex, currency]);
 
+  console.log(displayMessages);
+
   function getSection() {
     if (activeTab === 'Breakdown') {
       return (
@@ -172,36 +174,7 @@ function ReportResult({
     }
 
     if (activeTab === 'Forecast') {
-      return (
-        <section className="border-b border-gray-300 pb-10">
-          <SectionHeader
-            title="What's Next? 2-Year Forecast"
-            subtitle="Curious about what's ahead? This two-year forecast breaks down your estimated tax outlook,
-          highlighting how expiring reductions and allowances could affect your taxes in the coming
-          years."
-          />
-          {future.map((item) => (
-            <div key={`future${item.year}`} className="mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{`Year ${item.year}`}</h4>
-              <Card
-                net={item.net}
-                cumulativeTax={item.cumulativeTax}
-                effectiveTax={item.effectiveTax}
-                currency={currency}
-              />
-            </div>
-          ))}
-          <div className="space-y-4">
-            {displayMessages.map((item) => (
-              <DisplayBox
-                key={item.id}
-                title={item.title}
-                message={convertCurrencyInString(item.message, currencyIndex, currency)}
-              />
-            ))}
-          </div>
-        </section>
-      );
+      return <section className="border-b border-gray-300 pb-10"></section>;
     }
 
     if (activeTab === 'Other Taxes') {
@@ -296,6 +269,36 @@ function ReportResult({
           effectiveTax={effectiveTax}
           currency={currency}
         />
+
+        <div className="mt-8">
+          <SectionHeader
+            title="What's Next?"
+            subtitle="Curious about what's ahead? This forecast breaks down your estimated tax outlook,
+          highlighting how expiring reductions and allowances could affect your taxes in the coming
+          years."
+          />
+          {future.map((item) => (
+            <div key={`future${item.year}`} className="mb-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">{`${item.year} year`}</h4>
+              <Card
+                net={item.net}
+                cumulativeTax={item.cumulativeTax}
+                effectiveTax={item.effectiveTax}
+                currency={currency}
+              />
+            </div>
+          ))}
+          <div className="space-y-4">
+            {displayMessages.map((item) => (
+              <DisplayBox
+                key={item.id}
+                title={item.title}
+                message={convertCurrencyInString(item.message, currencyIndex, currency)}
+              />
+            ))}
+          </div>
+        </div>
+
         <div className="mt-8">
           <DisplayBox
             title="Disclaimer: Important Information on Tax Calculations"

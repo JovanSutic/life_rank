@@ -12,7 +12,11 @@ function getDisplayMessages(country: string) {
     return displayMessages.italy;
   }
 
-  return displayMessages.spain;
+  if (country === 'Spain') {
+    return displayMessages.spain;
+  }
+
+  return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,6 +41,9 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
     businessCost,
     net,
     health,
+    dividend,
+    corporate,
+    grossSalary,
   } = data;
   const res: BreakdownItem[] = [
     ...(usTax
@@ -172,7 +179,6 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
 
       res[res.length - 1].calc =
         `(${formatCurrency(gross * rate, currency)} - ${formatCurrency((businessCost + health) * rate, currency)})`;
-      res[res.length - 1].total = formatCurrency((net - health) * rate, currency);
 
       res.unshift(
         ...[
@@ -190,6 +196,75 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
           },
         ]
       );
+    }
+    if (regime === 'EOOD SINGLE') {
+      const bulgariaTax = corporate + dividend;
+      const businessCost = bulgariaTax + expenses + social;
+
+      res[res.length - 2].calc =
+        `(${formatCurrency(bulgariaTax * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency(businessCost * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(businessCost * rate, currency)})`;
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross income - business expenses - social contributions',
+            calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(social * rate, currency)})`,
+            total: formatCurrency(firstBase * rate, currency),
+          },
+          {
+            name: 'Taxes',
+            explain: 'corporate tax + dividend (withholding) tax',
+            calc: `(${formatCurrency(corporate * rate, currency)} + ${formatCurrency(dividend * rate, currency)})`,
+            total: formatCurrency(bulgariaTax * rate, currency),
+          },
+        ]
+      );
+    }
+    if (regime === 'EOOD DOUBLE') {
+      if (corporate === 0) {
+        const monthlySalary = net / 12;
+
+        res[res.length - 2].name = 'Spouse salary contributions';
+        res[res.length - 2].explain = 'taxes + social contributions';
+        res[res.length - 2].calc =
+          `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(social * rate, currency)})`;
+        res[res.length - 2].total = formatCurrency((taxes + social) * rate, currency);
+
+        res[res.length - 1].explain = 'spouse net salary';
+        res[res.length - 1].calc = `(12 * ${formatCurrency(monthlySalary * rate, currency)})`;
+      } else {
+        const bulgariaTax = corporate + dividend;
+        const businessCost = bulgariaTax + expenses + social + grossSalary;
+
+        res[res.length - 2].explain =
+          'taxes + business expenses + social contributions + spouse gross salary';
+        res[res.length - 2].calc =
+          `(${formatCurrency(bulgariaTax * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)} + ${formatCurrency(grossSalary * rate, currency)})`;
+        res[res.length - 2].total = formatCurrency(businessCost * rate, currency);
+
+        res[res.length - 1].calc =
+          `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(businessCost * rate, currency)})`;
+        res.unshift(
+          ...[
+            {
+              name: 'Taxable base',
+              explain: 'gross income - business expenses - social contributions',
+              calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(social * rate, currency)})`,
+              total: formatCurrency(firstBase * rate, currency),
+            },
+            {
+              name: 'Taxes',
+              explain: 'corporate tax + dividend (withholding) tax',
+              calc: `(${formatCurrency(corporate * rate, currency)} + ${formatCurrency(dividend * rate, currency)})`,
+              total: formatCurrency(bulgariaTax * rate, currency),
+            },
+          ]
+        );
+      }
     }
   }
 
@@ -222,6 +297,10 @@ function getEarnersData(
     let usSelf;
     let usSelfAmount = 0;
     let health = 0;
+    let dividend = 0;
+    let corporate = 0;
+    let grossSalary = 0;
+    let initialNet = 0;
 
     data.costItems?.forEach((cost) => {
       if (cost.incomeMaker === index) {
@@ -231,6 +310,9 @@ function getEarnersData(
         }
         if (cost.type === 'health_insurance') {
           health = cost.amount;
+        }
+        if (cost.type === 'gross_salary') {
+          grossSalary = cost.amount;
         }
         if (cost.type === 'expenses') {
           expenses = cost.amount;
@@ -252,6 +334,13 @@ function getEarnersData(
           if (cost.label === 'Regional income tax') {
             regional = cost.amount;
           }
+          if (cost.label === 'Corporate income tax') {
+            corporate = cost.amount;
+          }
+        }
+
+        if (cost.type === 'dividend_tax') {
+          dividend = cost.amount;
         }
 
         if (cost.type === 'us_income_tax') {
@@ -269,14 +358,18 @@ function getEarnersData(
             credit = cost.amount;
           }
         }
+
+        if (cost.type === 'net') {
+          initialNet = cost.amount;
+        }
       }
     });
 
     const firstBase = gross - expenses - social;
     const secondBase = firstBase - reductions;
-    const taxes = regional + state - credit;
+    const taxes = Math.max(0, regional + state - credit);
     const businessCost = taxes + expenses + social;
-    const net = gross - businessCost;
+    const net = initialNet;
 
     const result: BreakdownItem[] = getBreakdown(
       {
@@ -299,6 +392,9 @@ function getEarnersData(
         businessCost,
         net,
         health,
+        dividend,
+        corporate,
+        grossSalary,
       },
       data.costItems?.find((item) => item.type === 'tax_type')?.label
     );
@@ -376,15 +472,6 @@ export function getEssentialReportData(
   }));
 
   const displayMessages: DisplayItems[] = getDisplayMessages(country!);
-
-  if (data.userData.dependents.find((item) => (item.age || 4) < 3)) {
-    displayMessages.push({
-      id: 3,
-      title: 'Children Below 3 Years of Age',
-      message:
-        'Spain tax authorities are giving additional allowance for families or single parents that have children below 3 years of age. Also, working mothers (for example also as self-employed) are rewarded with additional maternity tax credit. Both of these rewards will affect the effective tax rate and net income. When child turns 3 these rewards are canceled.',
-    });
-  }
 
   return {
     cumulativeTax: rate * cumulativeTax,
