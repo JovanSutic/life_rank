@@ -15,8 +15,8 @@ import { getEssentialReportData } from '../../utils/reports';
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="space-y-6 mb-8">
-      <h3 className="text-lg font-bold mb-4 text-gray-800">{title}</h3>
-      <p className="font-base text-gray-500 mb-8">{subtitle}</p>
+      <h2 className="text-lg font-semibold mb-3">{title}</h2>
+      <p className="text-sm text-gray-600 mb-4">{subtitle}</p>
     </div>
   );
 }
@@ -106,8 +106,6 @@ function ReportResult({
     return getEssentialReportData(data, currencyIndex, currency, city?.country);
   }, [data, currencyIndex, currency]);
 
-  console.log(displayMessages);
-
   function getSection() {
     if (activeTab === 'Breakdown') {
       return (
@@ -171,10 +169,6 @@ function ReportResult({
           )}
         </section>
       );
-    }
-
-    if (activeTab === 'Forecast') {
-      return <section className="border-b border-gray-300 pb-10"></section>;
     }
 
     if (activeTab === 'Other Taxes') {

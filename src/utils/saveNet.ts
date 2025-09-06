@@ -116,7 +116,7 @@ const stepsMap: Record<string, FormItem> = {
   },
   workType: {
     name: 'workType',
-    label: 'What is your type of work',
+    label: 'Your type of work',
     type: 'select',
     options: [
       '',
@@ -136,7 +136,7 @@ const stepsMap: Record<string, FormItem> = {
     label: 'Starting totally new work?',
     type: 'checkbox',
     tooltip:
-      'If you are starting to work on something totally new you should check this. Continuing your previous work, even it it is for a different company would not count.',
+      'Check this box if you are starting to work on something totally new you should check this. Continuing your previous work, even it it is for a different company would not count.',
     condition: {
       dependsOn: 'income',
       assertionFunction: (value) => value < 85000.01,
@@ -147,7 +147,7 @@ const stepsMap: Record<string, FormItem> = {
     label: 'Are you a certified specialist?',
     type: 'checkbox',
     tooltip:
-      'You have university degree, relevant certificate or you have 5 years of relevant experience or you have 3 year experience in ICT career.',
+      'Check this box if you have university degree, relevant certificate or you have 5 years of relevant experience or you have 3 year experience in ICT career.',
     condition: {
       dependsOn: 'income',
       assertionFunction: (value) => value > 85000,

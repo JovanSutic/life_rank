@@ -123,6 +123,14 @@ export const displayMessages: Record<string, DisplayItems[]> = {
         'If you are looking for the most simplified and predictable tax regime, you should consider Forfettario Regime. To qualify, you must have a gross annual revenue of less than €85,000. If your revenue exceeds this threshold, you will automatically be switched to a different tax regime the following year. There is a flat tax and no VAT. In general you do not need an accountant though it can help you navigate the Italian tax bureaucracy.',
     },
   ],
+  bulgaria: [
+    {
+      id: 1,
+      title: 'Tax Strategy in Bulgaria',
+      message:
+        "For our tax calculations in Bulgaria, we are focused on a single legal structure: the EOOD. This is a Limited Liability Company designed for a single owner, offering the most efficient and streamlined way to manage your taxes. For a single person, the tax calculation is straightforward and optimized around the EOOD's 10% corporate tax rate. For couples, we have developed a unique strategy that provides the best effective tax rate. Instead of two separate companies, the setup uses a single EOOD where one person is the owner and the other is employed on a minimal wage. This structure is more advantageous than having two separate EOODs, as it significantly reduces the overall social security and health insurance contributions, which are a key part of the total effective tax rate. This streamlined approach allows the couple to achieve a more favorable tax outcome.",
+    },
+  ],
 };
 
 export const otherTaxesInitial: Record<string, DisplayItems[]> = {
@@ -154,6 +162,12 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
       message:
         "The NHR (Non-Habitual Resident) regime in Portugal has been replaced by the new Tax Incentive for Scientific Research and Innovation (IFICI). This new program aims to attract highly qualified professionals in fields like technology, research, and innovation by offering significant tax benefits for a period of 10 years. The main benefit of the IFICI is a 20% flat personal income tax (IRS) rate on income from employment and self-employment earned in Portugal. This is a considerable reduction from the standard progressive rates. Additionally, foreign-sourced income such as salaries, dividends, and interest may be exempt from Portuguese taxation. It's important to note that the IFICI is more specific than the old NHR, targeting certain professions and roles within innovative companies, startups, and research entities.",
     },
+    {
+      id: 2,
+      title: 'VAT Registration Threshold',
+      message:
+        "For most self-employed individuals and businesses in Portugal, the threshold for mandatory VAT registration is €12,500 in taxable turnover during the previous calendar year. Once you cross this threshold, you must register for VAT and begin charging it on your invoices. You will also be able to deduct the VAT you've paid on your business expenses.",
+    },
   ],
   Italy: [
     {
@@ -161,6 +175,12 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
       title: '',
       message:
         "The **Tax on Foreign Financial Assets (IVAFE)** is an annual tax paid by Italian tax residents on the value of their financial assets held abroad. This tax is a flat rate (typically 0.2%) applied to the value of the assets, which include items like bank accounts, stocks, bonds, and investment funds. Its purpose is to monitor and tax a person's financial wealth outside of Italy, and it is reported annually in their tax declaration.",
+    },
+    {
+      id: 2,
+      title: 'VAT Registration Threshold',
+      message:
+        "For most self-employed individuals and small businesses, the primary threshold for the flat-rate tax regime (known as the Regime Forfettario) is €85,000 in revenue per year. Under this regime, you are exempt from charging VAT on your invoices and don't need to file VAT returns. Once your annual revenue from the previous year exceeds €85,000, you are required to transition to the standard VAT regime, which involves charging and remitting VAT to the tax authorities. For most businesses, it's not a question of when you get into the VAT system, as you are typically required to obtain a VAT number (Partita IVA) from the start. However, the Regime Forfettario allows you to operate as if you are outside the VAT system until you reach that revenue threshold.",
     },
   ],
   'Czech Republic': [
@@ -172,9 +192,9 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
     },
     {
       id: 2,
-      title: 'VAT',
+      title: 'VAT Registration Threshold',
       message:
-        "In the Czech Republic, the VAT threshold and the eligibility for the flat tax regime are directly linked. The current threshold for mandatory VAT registration is ~81K € of annual turnover in a 12-month period. If a self-employed individual's turnover exceeds this amount, they are required to register for VAT. Crucially, once you become a VAT eligible, you are automatically ineligible for the simplified flat tax regime.",
+        'For most businesses in the Czech Republic, the threshold for mandatory VAT registration is 2,000,000 CZK (~€82,000) in taxable turnover over a period of 12 consecutive months. If your turnover exceeds this amount, you are legally obligated to register for VAT with the tax authorities within 15 days of the month-end in which you crossed the threshold. After registering, you must begin charging VAT on your goods and services. Like in other countries, it is also possible for businesses to register for VAT voluntarily, even if they have not reached the threshold.',
     },
   ],
   Bulgaria: [
@@ -183,6 +203,12 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
       title: 'Tax exemption for investments in EEA',
       message:
         "If you invest in stocks traded on any regulated stock exchange within the European Economic Area (EEA), your capital gains are completely tax-exempt. That means you pay 0% tax on your profits. The best part? There’s no minimum holding period, so whether you sell after a month or a year, your gains are still tax-free. It's an incredible advantage for long-term investors and active traders alike. This benefit is a game-changer for anyone looking to build wealth in EU markets.",
+    },
+    {
+      id: 2,
+      title: 'VAT Registration Threshold',
+      message:
+        "For a business to be required to register for VAT in Bulgaria, its total taxable turnover must exceed 50,000 BGN (~€25,655) over any consecutive 12-month period. This means that as soon as your taxable turnover reaches that amount within a continuous one-year timeframe, you are legally obligated to register for VAT with the National Revenue Agency within 7 days. Once registered, you must begin charging and remitting VAT on your sales. It's also possible for a business to register for VAT voluntarily, even if its turnover is below this threshold.",
     },
   ],
 };
