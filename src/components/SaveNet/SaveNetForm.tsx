@@ -6,9 +6,10 @@ import * as z from 'zod';
 import type { ReportUserData } from '../../types/api.types';
 import Tooltip from '../Basic/Tooltip';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { getBaseData, getStepItems, prepData } from '../../utils/saveNet';
+import { getBaseData, getStepItems, prepData, formatCurrency } from '../../utils/saveNet';
 import { getSchema } from '../../data/validation';
 import type { FormItem } from '../../types/city.types';
+import { currencyMap } from '../../utils/budgetMaps';
 
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
@@ -110,8 +111,6 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     }
 
     const valid = await trigger(fieldsToValidate as any);
-    console.log(valid);
-    console.log(errors);
     if (!valid) return;
     setStep((s) => Math.min(totalSteps, s + 1));
   };
@@ -143,19 +142,15 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     }
   }, [earnerFields.length, spouseDependent]);
 
-  // Helper function to render an individual field
   const renderField = (item: FormItem, idx?: number) => {
-    // New logic: Check if a condition exists and if it is met.
     if (item.condition) {
       const dependsOnPath =
         idx !== undefined
           ? `earners[${idx}].${item.condition.dependsOn}`
           : item.condition.dependsOn;
 
-      // Use the new helper function to safely get the nested value
       const dependsOnValue = getNestedValue(watchedValues, dependsOnPath);
 
-      // Call the assertion function to determine if the field should be rendered
       if (!item.condition.assertionFunction(dependsOnValue)) {
         return null; // Don't render if the assertion is false
       }
@@ -181,13 +176,20 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                 </Tooltip>
               )}
             </label>
-            <input
-              type={item.type}
-              step="0.01"
-              {...register(fieldName as any, { valueAsNumber: item.type === 'number' })}
-              className="w-full p-2 border rounded"
-              placeholder={item.label}
-            />
+            <div className="relative w-full">
+              <input
+                type={item.type}
+                step="0.01"
+                {...register(fieldName as any, { valueAsNumber: item.type === 'number' })}
+                className="w-full p-2 pr-10 border rounded appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                placeholder={item.label}
+              />
+              {item.name !== 'age' && (
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+                  {currencyMap[watchedValues.earners[idx || 0].currency]}
+                </span>
+              )}
+            </div>
             {error && <p className="text-xs text-red-500">{String(error)}</p>}
           </div>
         );
@@ -214,16 +216,28 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
         );
       case 'checkbox':
         return (
-          <div key={fieldName} className="flex-1 flex items-end">
-            <label className="flex items-center gap-2 mr-2">
-              <input type="checkbox" {...register(fieldName as any)} className="w-4 h-4" />
-              <span>{item.label}</span>
-            </label>
-            {item.tooltip && (
-              <Tooltip text={item.tooltip}>
-                <InformationCircleIcon className="h-5 w- inline-block stroke-black" />
-              </Tooltip>
-            )}
+          <div key={fieldName} className="flex-1 flex">
+            <div className="w-full min-h-[40px] flex items-center self-end rounded-sm">
+              <input
+                type="checkbox"
+                id={`earners[${idx}].${item.name}`}
+                {...register(fieldName as any)}
+                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
+              />
+              <label
+                htmlFor={`earners[${idx}].${item.name}`}
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+              >
+                {item.label}
+              </label>
+              {item.tooltip && (
+                <div className="flex self-start">
+                  <Tooltip text={item.tooltip}>
+                    <InformationCircleIcon className="h-5 w-5 inline-block stroke-black" />
+                  </Tooltip>
+                </div>
+              )}
+            </div>
             {error && <p className="text-xs text-red-500">{String(error)}</p>}
           </div>
         );
@@ -238,14 +252,19 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {step === 1 && (
-          <section className="pb-12 md:pb-0">
-            <h2 className="text-lg font-semibold mb-3">Income earner(s)</h2>
+          <section className="pb-12 md:pb-0 mb-10 md:mb-2">
+            <h2 className="text-lg font-semibold mb-3">Tell us about your income</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Tell us about the income. We'll use this to calculate taxes and convert if needed.
+              We only ask for the tax relevant information necessary to perform on-the-fly tax
+              calculations for {country}. You have full privacy and none of this information will be
+              saved or stored.
             </p>
             <div className="space-y-6">
               {earnerFields.map((f, idx) => (
-                <div key={f.id} className="p-4 rounded-lg bg-white shadow-md">
+                <div
+                  key={f.id}
+                  className="p-4 rounded-lg bg-white shadow-md border border-gray-200"
+                >
                   <div className="flex items-center justify-between mb-2">
                     <div className="font-medium">Earner {idx + 1}</div>
                     {earnerFields.length > 1 && (
@@ -258,19 +277,23 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {step1.map((item) => renderField(item, idx))}
                   </div>
                 </div>
               ))}
-              <div className="pt-2 flex justify-center">
+              <div className="pt-2 flex flex-col items-center justify-center gap-4">
+                <p className="text-gray-500 text-sm text-center">
+                  Are you calculating for a couple or family? You can add a second income earner
+                  below.
+                </p>
                 <button
                   type="button"
                   disabled={!canAddEarner}
                   onClick={() => appendEarner(baseEarner)}
                   className={`w-full md:w-[300px] py-2 rounded-lg ${canAddEarner ? 'cursor-pointer bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
-                  Add another earner
+                  Add second earner
                 </button>
               </div>
             </div>
@@ -279,60 +302,67 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
         {step === 2 && (
           <section>
-            <h2 className="text-lg font-semibold mb-3">Dependents</h2>
+            <h2 className="text-lg font-semibold mb-3">Tell us about your dependents</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Tell us who depends on the income — spouse, kids. We only ask for ages (not full DOB)
-              to determine eligibility for age-based benefits.
+              Your dependent information is essential for calculating potential tax reliefs,
+              deductions, and credits that could significantly lower your tax liability. You have
+              full privacy and none of this information will be saved or stored.
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <label className="flex items-center gap-2">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
                   <input
+                    id="hasSpouse"
                     type="checkbox"
                     {...register('dependents.hasSpouse' as const)}
-                    className="w-4 h-4"
+                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
                   />
-                  I have dependents
-                </label>
-              </div>
-              {errors.dependents?.hasSpouse && (
-                <p className="text-xs text-red-500">
-                  {String(errors.dependents?.hasSpouse?.message)}
-                </p>
-              )}
+                  <label
+                    htmlFor="hasSpouse"
+                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+                  >
+                    I have dependents
+                  </label>
+                </div>
+                {errors.dependents?.hasSpouse && (
+                  <p className="text-xs text-red-500">
+                    {String(errors.dependents?.hasSpouse?.message)}
+                  </p>
+                )}
 
-              {/* Spouse */}
-              <div>
-                <label className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <input
+                    id="spouseDependent"
                     type="checkbox"
-                    disabled={earnerFields.length > 1}
                     {...register('dependents.spouseDependent' as const)}
-                    className="w-4 h-4"
+                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
                   />
-                  Dependent spouse (financially dependent)
-                </label>
+                  <label
+                    htmlFor="spouseDependent"
+                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+                  >
+                    Dependent spouse (financially dependent)
+                  </label>
+                </div>
+                {errors.dependents?.spouseDependent && (
+                  <p className="text-xs text-red-500">
+                    {String(errors.dependents?.spouseDependent?.message)}
+                  </p>
+                )}
               </div>
-              {errors.dependents?.spouseDependent && (
-                <p className="text-xs text-red-500">
-                  {String(errors.dependents?.spouseDependent?.message)}
-                </p>
-              )}
 
-              {/* Children management */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-medium">Children</div>
-                  <div className="text-xs text-gray-500">Add dependent children (ages)</div>
+                  <div className="text-base font-medium">Children</div>
+                  <div className="text-sm text-gray-500">Add dependent children (ages)</div>
                 </div>
 
                 <div className="space-y-3">
                   {childFields.map((c, i) => {
                     const ageVal = children?.[i]?.age;
-                    console.log(childFields);
                     return (
-                      <div key={c.id} className="p-3 border rounded-lg bg-white">
+                      <div key={c.id} className="p-3 border border-gray-400 rounded-lg bg-white">
                         <div className="flex items-center justify-between">
                           <div className="font-medium">Child {i + 1}</div>
                           <button
@@ -354,13 +384,13 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                           className="w-28 p-2 border rounded"
                         />
 
-                        {/* Only show mother question if age < 3 */}
                         {country === 'Spain' &&
                           typeof ageVal === 'number' &&
                           ageVal < 3 &&
                           ageVal > 0 && (
                             <div className="mt-3">
                               <label className="flex items-center gap-2 text-sm">
+                                number
                                 <input
                                   type="checkbox"
                                   {...register(`dependents.children.${i}.motherIsEarner` as const)}
@@ -384,7 +414,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                     <button
                       type="button"
                       onClick={() => appendChild({ name: '', age: 0 })}
-                      className="px-3 py-2 cursor-pointer rounded bg-gray-100"
+                      className="mt-4 px-3 py-2 cursor-pointer rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
                     >
                       Add child
                     </button>
@@ -404,14 +434,15 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
             </p>
 
             <div className="space-y-4">
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border border-gray-400 rounded-lg">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-medium">Income earner(s)</div>
                     <div className="mt-2 text-sm text-gray-700">
                       {watch('earners').map((e, i) => (
                         <div key={i} className="mb-1">
-                          <strong>{`Person ${i + 1}`}</strong> — {e.income} {e.currency}{' '}
+                          <strong>{`Person ${i + 1}`}</strong> —{' '}
+                          {formatCurrency(e.income, e.currency)}
                           {e.isUSCitizen ? '· US citizen' : ''}
                         </div>
                       ))}
@@ -430,7 +461,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                 </div>
               </div>
 
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border border-gray-400 rounded-lg">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-medium">Dependents</div>
@@ -472,13 +503,13 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
           </section>
         )}
 
-        <div className="fixed left-0 right-0 bottom-0 py-4 px-4 md:px-0 bg-white border-t sm:static sm:bg-transparent sm:border-0">
-          <div className="max-w-xl mx-auto flex md:justify-center gap-3">
+        <div className="fixed left-0 right-0 bottom-0 py-4 px-4 md:px-0 bg-white sm:static sm:bg-transparent">
+          <div className="max-w-xl mx-auto flex md:justify-center gap-3 pt-6 border-t border-gray-300">
             {step > 1 && (
               <button
                 type="button"
                 onClick={onBack}
-                className="flex-1 py-2 rounded-lg border cursor-pointer"
+                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[300px]'} py-2 rounded-lg border cursor-pointer`}
               >
                 Back
               </button>
@@ -489,7 +520,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                 onClick={onNext}
                 className={`${step > 1 ? 'flex-1' : 'w-full md:w-[300px]'} py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
               >
-                Next
+                Next step
               </button>
             )}
           </div>

@@ -28,7 +28,7 @@ function TeaserScreen({
 
   return (
     <div className="w-full py-6 bg-white rounded-xl pt-6">
-      <h1 className="text-xl md:text-2xl text-center font-bold text-blue-500 mb-8">
+      <h1 className="text-xl md:text-2xl text-center font-bold text-blue-500 mb-6 md:mb-8">
         Your Net Report for {city?.name}
       </h1>
       <div className="flex flex-col mb-4">
