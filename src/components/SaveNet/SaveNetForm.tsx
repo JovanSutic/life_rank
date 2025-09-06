@@ -222,11 +222,11 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                 type="checkbox"
                 id={`earners[${idx}].${item.name}`}
                 {...register(fieldName as any)}
-                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
+                className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
               />
               <label
                 htmlFor={`earners[${idx}].${item.name}`}
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+                className="ms-2 text-sm font-medium text-gray-900 mr-2"
               >
                 {item.label}
               </label>
@@ -316,11 +316,11 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                     id="hasSpouse"
                     type="checkbox"
                     {...register('dependents.hasSpouse' as const)}
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
+                    className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2"
                   />
                   <label
                     htmlFor="hasSpouse"
-                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+                    className="ms-2 text-sm font-medium text-gray-900 mr-2"
                   >
                     I have dependents
                   </label>
@@ -336,11 +336,11 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                     id="spouseDependent"
                     type="checkbox"
                     {...register('dependents.spouseDependent' as const)}
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 dark:bg-gray-700"
+                    className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
                   />
                   <label
                     htmlFor="spouseDependent"
-                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2"
+                    className="ms-2 text-sm font-medium text-gray-900 mr-2"
                   >
                     Dependent spouse (financially dependent)
                   </label>
