@@ -15,14 +15,16 @@ function FaqElement({ data }: { data: FaqItem[] }) {
         <div key={index} className="border-b border-gray-300 pb-4">
           <button
             onClick={() => toggle(index)}
-            className="flex justify-between cursor-pointer w-full text-left text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            className="flex justify-between items-center cursor-pointer w-full text-left text-lg font-medium text-gray-700 hover:text-blue-600 transition"
           >
             <span>{item.question}</span>
-            {openIndex === index ? (
-              <ChevronDownIcon className="w-5 h-5 text-gray-500" />
-            ) : (
-              <PlusIcon className="w-5 h-5 text-gray-500" />
-            )}
+            <span className="text-lg">
+              {openIndex === index ? (
+                <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+              ) : (
+                <PlusIcon className="w-5 h-5 text-gray-500" />
+              )}
+            </span>
           </button>
 
           {openIndex === index && (
