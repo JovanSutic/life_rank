@@ -26,7 +26,7 @@ const OtherTaxes = ({
           .map((item) => (
             <div key={item.id} className="bg-white p-4 rounded-xl shadow-md border border-gray-200">
               <p className="text-lg font-bold text-blue-500">{item.value}</p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm md:text-base text-gray-600 mt-1">
                 {convertCurrencyInString(item.comment || '', currencyIndex, currency)}
               </p>
             </div>
@@ -75,8 +75,8 @@ const OtherTaxes = ({
                     key={detail.id}
                     className="bg-white p-5 rounded-xl shadow-md border border-gray-200"
                   >
-                    <p className="font-bold text-gray-800 mb-1">{detail.note}</p>
-                    <p className="text-gray-600 text-sm">{detail.comment}</p>
+                    <p className="font-bold md:text-lg text-gray-800 mb-1">{detail.note}</p>
+                    <p className="text-gray-600 text-sm md:text-base">{detail.comment}</p>
                   </div>
                 ))}
             </div>
