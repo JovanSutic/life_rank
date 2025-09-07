@@ -1,4 +1,9 @@
-import { ArrowTrendingUpIcon, BanknotesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowTrendingUpIcon,
+  BanknotesIcon,
+  ChartBarIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline';
 import type { City, DefValue, ReportDto } from '../../types/api.types';
 import { formatCurrency, formatPercentage, trackPeople } from '../../utils/saveNet';
 import DisplayBox from '../Basic/DisplayBox';
@@ -11,12 +16,13 @@ import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
 import { convertCurrencyInString } from '../../utils/city';
 import { getEssentialReportData } from '../../utils/reports';
+import Tooltip from '../Basic/Tooltip';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="space-y-6 mb-8">
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
-      <p className="text-sm text-gray-600 mb-4">{subtitle}</p>
+      <p className="text-sm md:text-base text-gray-600 mb-4">{subtitle}</p>
     </div>
   );
 }
@@ -35,9 +41,10 @@ function Card({
   style?: 'normal' | 'future';
 }) {
   return (
-    <div className="flex justify-center items-center font-sans">
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl border border-gray-100 shadow-md transition-all duration-300 transform hover:scale-105">
+    <div className="w-full grid grid-cols-2 gap-4 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
+      <div className="flex flex-col items-center">
+        <p className="text-gray-400 mt-2 text-sm md:text-base">Annual Period</p>
+        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
           <div
             className={`p-3 mb-4 rounded-full ${style === 'normal' ? 'bg-blue-50' : 'bg-gray-50'}`}
           >
@@ -45,44 +52,59 @@ function Card({
               className={`${style === 'normal' ? 'text-blue-600' : 'text-gray-600'} w-8 h-8`}
             />
           </div>
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
-            Annual Net Income
-          </span>
+          <div>
+            <span className="text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">
+              Net Income
+            </span>
+          </div>
           <span className="mt-2 text-2xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
             {formatCurrency(net, currency)}
           </span>
         </div>
+      </div>
 
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl border border-gray-100 shadow-md transition-all duration-300 transform hover:scale-105">
-          <div
-            className={`p-3 mb-4 rounded-full ${style === 'normal' ? 'bg-purple-50' : 'bg-gray-50'}`}
-          >
-            <ChartBarIcon
-              className={`${style === 'normal' ? 'text-purple-600' : 'text-gray-600'} w-8 h-8`}
-            />
+      <div className="flex flex-col gap-1">
+        <div className="">
+          <div className="relative flex flex-col items-center px-4 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+            <div className={`p-1 rounded-full`}>
+              <ChartBarIcon
+                className={`${style === 'normal' ? 'text-purple-600' : 'text-gray-600'} w-5 h-5`}
+              />
+            </div>
+            <div className="ml-[-12px]">
+              <Tooltip text="This is the total annual amount of all mandatory payments you would make to the government. It includes  taxes and all required social contributions for unemployment, health care, and pension.">
+                <InformationCircleIcon className="h-5 w-5 inline-block stroke-black align-bottom" />
+              </Tooltip>
+              <span className="ml-1 text-sm md:text-base font-base text-gray-500 tracking-wider text-center">
+                Taxes
+              </span>
+            </div>
+
+            <span className="mt-1 text-xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
+              {formatCurrency(cumulativeTax, currency)}
+            </span>
           </div>
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
-            Taxes & Contributions
-          </span>
-          <span className="mt-2 text-2xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
-            {formatCurrency(cumulativeTax, currency)}
-          </span>
         </div>
 
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl border border-gray-100 shadow-md transition-all duration-300 transform hover:scale-105">
-          <div
-            className={`p-3 mb-4 rounded-full ${style === 'normal' ? 'bg-green-50' : 'bg-gray-50'}`}
-          >
-            <ArrowTrendingUpIcon
-              className={`${style === 'normal' ? 'text-green-600' : 'text-gray-600'} w-8 h-8`}
-            />
+        <div className="">
+          <div className="relative flex flex-col items-center px-4 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+            <div className={`p-1 rounded-full`}>
+              <ArrowTrendingUpIcon
+                className={`${style === 'normal' ? 'text-green-600' : 'text-gray-600'} w-5 h-5`}
+              />
+            </div>
+            <div className="ml-[-12px]">
+              <Tooltip text="This percentage shows the effective tax rate. It is calculated by dividing your total annual tax and social contributions by your gross annual income, providing a clear picture of your total tax burden.">
+                <InformationCircleIcon className="h-5 w-5 inline-block stroke-black align-bottom" />
+              </Tooltip>
+              <span className="ml-1 text-sm md:text-base font-base text-gray-500 tracking-wider text-center">
+                Tax Rate
+              </span>
+            </div>
+            <span className="mt-1 text-xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
+              {formatPercentage(effectiveTax * 100)}
+            </span>
           </div>
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
-            Effective Tax Rate
-          </span>
-          <span className="mt-2 text-2xl font-bold text-gray-900 animate-fade-in truncate w-full text-center">
-            {formatPercentage(effectiveTax * 100)}
-          </span>
         </div>
       </div>
     </div>
@@ -112,7 +134,7 @@ function ReportResult({
         <section className="border-b border-gray-300 pb-10">
           <SectionHeader
             title="Step-by-Step Breakdown"
-            subtitle="This is a breakdown of your self-employment tax calculation. Use this detailed view to understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
+            subtitle="It is good to know how your tax figures are calculated. This information helps you understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
           />
           {earners[0].length > 0 && (
             <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
@@ -127,15 +149,17 @@ function ReportResult({
                     key={`0${item.name}`}
                   >
                     <div className="flex-1">
-                      <p className="font-medium text-gray-700">{item.name}</p>
-                      <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
+                      <p className="font-medium md:text-lg text-gray-700">{item.name}</p>
+                      <p className="text-sm md:text-base text-gray-500 mt-1 pr-4">{item.explain}</p>
                       {item.calc && (
-                        <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>
+                        <p className="text-sm md:text-base  text-gray-500 mt-1 italic">
+                          {item.calc}
+                        </p>
                       )}
                     </div>
                     <div className="mt-2 sm:mt-0 text-right">
-                      <span className="font-semibold">Total: </span>
-                      <span className="font-bold text-blue-500">{item.total}</span>
+                      <span className="font-semibold md:text-lg">Total: </span>
+                      <span className="font-bold md:text-lg text-blue-500">{item.total}</span>
                     </div>
                   </div>
                 ))}
@@ -176,7 +200,7 @@ function ReportResult({
         <section className="border-b border-gray-300 pb-10">
           <SectionHeader
             title="Other Relevant Taxes"
-            subtitle="We outline other taxes that may be relevant to your financial situation. Take a look at brief explanation of taxes which can create new financial obligations."
+            subtitle="Outline of other taxes that may be relevant to your financial situation. This information helps you see be aware of other taxes which can potentially create new financial obligations for you."
           />
           <div>
             <OtherTaxes
@@ -202,13 +226,14 @@ function ReportResult({
         <section className="border-b border-gray-300 pb-10">
           <SectionHeader
             title="The Cost of Living"
-            subtitle={`We provide a practical comparison of your net income with the estimated cost of living in ${city?.name}. Use this information to better plan your budget and understand your financial comfort level in your new location.`}
+            subtitle={`Practical comparison of your net income with the estimated cost of living in ${city?.name}. This information helps you plan your budget and understand your lifestyle comfort level.`}
           />
           <div className="rounded-xl space-y-10">
             <div>
               <BudgetPresentation
                 currency={currency}
                 peopleTrack={trackPeople(data.userData)}
+                city={city?.name || ''}
                 costOfLiving={[
                   {
                     name: 'Low Cost Scenario',
@@ -217,7 +242,7 @@ function ReportResult({
                     num: data.expensesLow * currencyIndex,
                   },
                   {
-                    name: 'Comfortable Scenario',
+                    name: 'Comfort Scenario',
                     description:
                       'It accounts for more than just the bare necessities, allowing for very good quality of life.',
                     num: data.expensesComfort * currencyIndex,
@@ -225,12 +250,12 @@ function ReportResult({
                 ]}
                 netIncomeProjection={[
                   {
-                    name: 'Year 1',
+                    name: '1st year',
                     description: `Net ${data.expensesLow < data.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort < data.net ? 'higher then' : 'lower then'} comfortable scenario`,
                     num: data.net * currencyIndex,
                   },
                   ...future.map((item) => ({
-                    name: `Year ${item.year}`,
+                    name: `${item.year} year`,
                     description: `Net ${data.expensesLow * currencyIndex < item.net ? 'higher then' : 'lower then'} low cost scenario & ${data.expensesComfort * currencyIndex < item.net ? 'higher then' : 'lower then'} comfortable scenario`,
                     num: item.net,
                   })),
@@ -254,32 +279,35 @@ function ReportResult({
       <section className="border-b border-gray-300 pb-10">
         <SectionHeader
           title="Financial Summery"
-          subtitle="This is a quick summery of finances, for your usecase. This is helping you see
-          what you'll be paying and what you'll be taking home in the first year of operation."
+          subtitle="Quick financial summery that presents most important income features. This information helps you see
+          what you'll be paying and what you'll be taking home."
         />
-        <Card
-          net={data.net * currencyIndex}
-          cumulativeTax={cumulativeTax}
-          effectiveTax={effectiveTax}
-          currency={currency}
-        />
+        <div className="flex flex-col">
+          <h4 className="text-xl font-semibold text-gray-800 mb-4">{`1st year`}</h4>
+          <Card
+            net={data.net * currencyIndex}
+            cumulativeTax={cumulativeTax}
+            effectiveTax={effectiveTax}
+            currency={currency}
+          />
+        </div>
 
         <div className="mt-8">
           <SectionHeader
             title="What's Next?"
-            subtitle="Curious about what's ahead? This forecast breaks down your estimated tax outlook,
-          highlighting how expiring reductions and allowances could affect your taxes in the coming
-          years."
+            subtitle="Your finances are evolving, as some reductions and reliefs can change with time. This information helps you see how your taxes and net will develop in the near future."
           />
           {future.map((item) => (
-            <div key={`future${item.year}`} className="mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{`${item.year} year`}</h4>
-              <Card
-                net={item.net}
-                cumulativeTax={item.cumulativeTax}
-                effectiveTax={item.effectiveTax}
-                currency={currency}
-              />
+            <div key={`future${item.year}`} className="mb-8">
+              <h4 className="text-xl font-semibold text-gray-800 mb-4">{`${item.year} year`}</h4>
+              <div className="flex">
+                <Card
+                  net={item.net}
+                  cumulativeTax={item.cumulativeTax}
+                  effectiveTax={item.effectiveTax}
+                  currency={currency}
+                />
+              </div>
             </div>
           ))}
           <div className="space-y-4">
