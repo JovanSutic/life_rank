@@ -43,9 +43,13 @@ function DisplayBox({
   };
   return (
     <div className={`border p-4 rounded-lg ${colorMap[color].box}`}>
-      {title && <h4 className={`font-semibold text-lg ${colorMap[color].title} mb-2`}>{title}</h4>}
+      {title && (
+        <h4 className={`font-semibold text-lg md:text-xl ${colorMap[color].title} mb-2`}>
+          {title}
+        </h4>
+      )}
 
-      <p className={`text-sm ${colorMap[color].message} leading-relaxed`}>{message}</p>
+      <p className={`text-sm md:text-base ${colorMap[color].message} leading-relaxed`}>{message}</p>
     </div>
   );
 }

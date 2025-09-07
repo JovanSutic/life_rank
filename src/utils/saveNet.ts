@@ -220,7 +220,7 @@ export function trackPeople(userData: ReportUserData) {
   let adults = 1;
   let kids = 0;
 
-  if (userData.incomes.length > 1) {
+  if (userData.incomes.length > 1 || userData.dependents.find((item) => item.type === 'spouse')) {
     adults = 2;
   }
 

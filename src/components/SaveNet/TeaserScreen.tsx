@@ -29,12 +29,12 @@ function TeaserScreen({
   return (
     <div className="w-full py-6 bg-white rounded-xl pt-6">
       <h1 className="text-xl md:text-2xl text-center font-bold text-blue-500 mb-6 md:mb-8">
-        Your Net Report for {city?.name}
+        Your Net Calculation for {city?.name}
       </h1>
       <div className="flex flex-col mb-4">
         <p className="text-base text-gray-500 mb-1 text-sm">Change display currency:</p>
         <select
-          className="border border-gray-300 rounded px-2 py-1"
+          className="border border-gray-300 rounded px-2 py-1 w-full lg:w-[240px]"
           value={currency.toLowerCase()}
           onChange={(e) => {
             const rate = getCurrencyRate(
