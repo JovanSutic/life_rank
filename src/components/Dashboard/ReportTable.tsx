@@ -100,6 +100,7 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
         <select
           className="border border-gray-300 rounded px-2 py-1"
           value={currency}
+          name="currency-selector"
           onChange={(e) => setCurrency(e.target.value as CurrencyString)}
         >
           <option value="eur">Euro (€)</option>
@@ -291,7 +292,7 @@ function ReportTable({ report }: { report: ReportDto | undefined; cityName: stri
       <div className="flex justify-center mt-4 mb-4">
         <Link
           to="/dashboard"
-          className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors mt-4"
+          className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors mt-4"
         >
           Back to the Dashboard
         </Link>

@@ -39,7 +39,7 @@ function CitiesList({ data }: { data: CardCity[] }) {
             </div>
             <div className="w-full flex flex-col border-t border-gray-100 pt-2">
               <div className="flex flex-col items-start gap-2">
-                <p className="text-base text-gray-400">Monthly cost of living</p>
+                <p className="text-sm font-base text-gray-500">Monthly cost of living</p>
                 <div className="flex gap-2 items-end justify-center">
                   <span className="text-base font-semibold text-gray-800">from</span>
                   <span className="text-3xl font-bold text-blue-600">
@@ -50,9 +50,9 @@ function CitiesList({ data }: { data: CardCity[] }) {
             </div>
           </div>
           <div className="mt-2 w-full border-t border-gray-100 pt-2 space-y-3 text-left">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               {safetyTags(city.safetyRating).map((tag, idx) => (
-                <div key={idx} className={`flex flex-col items-start gap-1 ${idx === 0 && 'mb-2'}`}>
+                <div key={idx} className={`flex flex-col items-start gap-1 ${idx === 0 && 'mb-1'}`}>
                   <p className="text-sm font-base text-gray-500">{tag.label}</p>
                   <p className="text-base font-semibold text-gray-700">
                     {tag.icon} {tag.description}
@@ -68,7 +68,7 @@ function CitiesList({ data }: { data: CardCity[] }) {
                            overflow-hidden text-ellipsis whitespace-nowrap"
             title={`Calculate for ${city.name}`}
           >
-            Calculate your tax rate
+            Check Your Net Income Here
           </Link>
         </div>
       ))}

@@ -22,7 +22,6 @@ function BudgetPresentation({
   currency: CurrencyOptions;
   peopleTrack: string;
 }) {
-  // Check if data is available before rendering
   if (!costOfLiving || !netIncomeProjection) {
     return null;
   }
@@ -68,7 +67,7 @@ function BudgetPresentation({
           {netIncomeProjection.map((item, index) => (
             <div
               key={index}
-              className={`bg-white p-6 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 gap-4 items-center ${index !== netIncomeProjection.length - 1 ? 'border-b border-gray-300 mb-3' : ''}`}
+              className={`bg-white px-4 py-6 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 gap-4 items-center ${index !== netIncomeProjection.length - 1 ? 'border-b border-gray-300 mb-3' : ''}`}
             >
               <div className="w-full flex flex-col gap-1">
                 <div className="w-full flex gap-6 items-center">
@@ -85,8 +84,8 @@ function BudgetPresentation({
                 {costOfLiving.map((itemC, indexC) => (
                   <div className="flex flex-col items-start gap-1" key={indexC}>
                     <div className="flex flex-col gap-1">
-                      <p className="text-base font-semibold">{itemC.name}</p>
-                      <p className="text-gray-500 text-sm md:text-base">{`(${formatCurrency(item.num, currency)} - ${formatCurrency(itemC.num, currency)})`}</p>
+                      <p className="text-sm md:text-base font-semibold">{itemC.name}</p>
+                      <p className="text-gray-500 text-xs md:text-base">{`(${formatCurrency(item.num, currency)} - ${formatCurrency(itemC.num, currency)})`}</p>
                     </div>
                     <div className="flex flex-col mt-4">
                       <p

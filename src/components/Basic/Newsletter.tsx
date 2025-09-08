@@ -66,7 +66,8 @@ const Newsletter = () => {
         Subscribe To Our Newsletter
       </h3>
       <p className="mt-4 text-lg text-gray-600">
-        Get notified about places with most friendly best taxes, cost of living and quality of life.
+        Get exclusive insights on where remote workers can earn more and spend less. All in one
+        email.
       </p>
 
       {/* Conditional rendering for success, error, and form */}
