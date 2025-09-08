@@ -36,6 +36,7 @@ function TeaserScreen({
         <select
           className="border border-gray-300 rounded px-2 py-1 w-full lg:w-[240px]"
           value={currency.toLowerCase()}
+          name="currency-selector"
           onChange={(e) => {
             const rate = getCurrencyRate(
               data!.userData!.rates!,
@@ -62,7 +63,7 @@ function TeaserScreen({
         <div className="w-full mt-10 flex flex-col items-center justify-center gap-6">
           <button
             onClick={reset}
-            className="w-full block md:w-[300px] py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer"
+            className="w-full block md:w-[320px] py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer"
           >
             Reset calculator for {city?.name}
           </button>

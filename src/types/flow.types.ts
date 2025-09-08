@@ -21,3 +21,14 @@ export interface FaqItem {
   question: string;
   answer: string;
 }
+
+export interface TaxRegime {
+  country: string;
+  regime: string;
+  description: string;
+}
+export interface RegimeItem {
+  id: number;
+  regime: string;
+  description: string;
+}

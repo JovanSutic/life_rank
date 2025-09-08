@@ -1,7 +1,7 @@
-import { displayMessages } from '../data/taxes';
+import { displayMessages, taxRegimes } from '../data/taxes';
 import type { ReportDto } from '../types/api.types';
 import type { CurrencyOptions } from '../types/budget.types';
-import type { BreakdownItem, DisplayItems, Earners } from '../types/flow.types';
+import type { BreakdownItem, DisplayItems, Earners, RegimeItem } from '../types/flow.types';
 import { formatCurrency } from './saveNet';
 
 function getDisplayMessages(country: string) {
@@ -266,6 +266,24 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         );
       }
     }
+    if (regime === 'Freelancer') {
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross * 75%',
+            calc: `(${formatCurrency(gross * rate, currency)} * 0.75})`,
+            total: formatCurrency(gross * 0.75 * rate, currency),
+          },
+          {
+            name: 'Taxes - State Income Tax',
+            explain: 'taxable base * 10%',
+            calc: `(${formatCurrency(gross * 0.75 * rate, currency)} * 0.1)`,
+            total: formatCurrency(gross * 0.75 * 0.1 * rate, currency),
+          },
+        ]
+      );
+    }
   }
 
   return res;
@@ -480,4 +498,92 @@ export function getEssentialReportData(
     future,
     displayMessages,
   };
+}
+
+export function getRegime(data: ReportDto, country: string) {
+  const result: RegimeItem[] = [];
+
+  if (country === 'Spain') {
+    const regime = taxRegimes.spain_autonomo;
+    data.userData.incomes.forEach((_, index) => {
+      result.push({
+        id: index,
+        regime: regime.regime,
+        description: regime.description,
+      });
+    });
+  } else {
+    data.costItems
+      ?.filter((item) => item.type === 'tax_type')
+      .forEach((cost, index) => {
+        if (country === 'Portugal') {
+          if (cost.label === 'Simplified') {
+            result.push({
+              id: index,
+              regime: taxRegimes.portugal_simplified.regime,
+              description: taxRegimes.portugal_simplified.description,
+            });
+          } else {
+            result.push({
+              id: index,
+              regime: taxRegimes.portugal_organized.regime,
+              description: taxRegimes.portugal_organized.description,
+            });
+          }
+        }
+        if (country === 'Italy') {
+          if (cost.label === 'Ordinary Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.italy_ordinario.regime,
+              description: taxRegimes.italy_ordinario.description,
+            });
+          } else if (cost.label === 'Impatriate Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.italy_regime_impatriati.regime,
+              description: taxRegimes.italy_regime_impatriati.description,
+            });
+          } else {
+            result.push({
+              id: index,
+              regime: taxRegimes.italy_forfettario.regime,
+              description: taxRegimes.italy_forfettario.description,
+            });
+          }
+        }
+        if (country === 'Czech Republic') {
+          if (cost.label === 'Flat Czech Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.czech_flat_tax.regime,
+              description: taxRegimes.czech_flat_tax.description,
+            });
+          } else {
+            result.push({
+              id: index,
+              regime: taxRegimes.czech_regular_self_employed.regime,
+              description: taxRegimes.czech_regular_self_employed.description,
+            });
+          }
+        }
+        if (country === 'Bulgaria') {
+          if (cost.label === 'Freelancer') {
+            result.push({
+              id: index,
+              regime: taxRegimes.bulgaria_self_employed.regime,
+              description: taxRegimes.bulgaria_self_employed.description,
+            });
+          } else {
+            result.push({
+              id: index,
+              regime: taxRegimes.bulgaria_eood.regime,
+              description: taxRegimes.bulgaria_eood.description,
+            });
+          }
+        }
+      });
+  }
+
+  return result;
 }
