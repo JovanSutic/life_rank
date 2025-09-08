@@ -15,7 +15,7 @@ import { useMemo } from 'react';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
 import { convertCurrencyInString } from '../../utils/city';
-import { getEssentialReportData } from '../../utils/reports';
+import { getEssentialReportData, getRegime } from '../../utils/reports';
 import Tooltip from '../Basic/Tooltip';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
@@ -126,7 +126,9 @@ function ReportResult({
 
   const { cumulativeTax, effectiveTax, earners, future, displayMessages } = useMemo(() => {
     return getEssentialReportData(data, currencyIndex, currency, city?.country);
-  }, [data, currencyIndex, currency]);
+  }, [data.net, currencyIndex, currency]);
+
+  const regimes = getRegime(data, city?.country || '');
 
   function getSection() {
     if (activeTab === 'Breakdown') {
@@ -137,59 +139,75 @@ function ReportResult({
             subtitle="It is good to know how your tax figures are calculated. This information helps you understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
           />
           {earners[0].length > 0 && (
-            <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
-              {earners.length > 1 && (
-                <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 1</h4>
-              )}
+            <>
+              <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4 mb-4">
+                {earners.length > 1 && (
+                  <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 1</h4>
+                )}
 
-              <div className="space-y-4 my-2">
-                {earners[0].map((item) => (
-                  <div
-                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
-                    key={`0${item.name}`}
-                  >
-                    <div className="flex-1">
-                      <p className="font-medium md:text-lg text-gray-700">{item.name}</p>
-                      <p className="text-sm md:text-base text-gray-500 mt-1 pr-4">{item.explain}</p>
-                      {item.calc && (
-                        <p className="text-sm md:text-base  text-gray-500 mt-1 italic">
-                          {item.calc}
+                <div className="space-y-4 my-2">
+                  {earners[0].map((item) => (
+                    <div
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
+                      key={`0${item.name}`}
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium md:text-lg text-gray-700">{item.name}</p>
+                        <p className="text-sm md:text-base text-gray-500 mt-1 pr-4">
+                          {item.explain}
                         </p>
-                      )}
+                        {item.calc && (
+                          <p className="text-sm md:text-base  text-gray-500 mt-1 italic">
+                            {item.calc}
+                          </p>
+                        )}
+                      </div>
+                      <div className="mt-2 sm:mt-0 text-right">
+                        <span className="font-semibold md:text-lg">Total: </span>
+                        <span className="font-bold md:text-lg text-blue-500">{item.total}</span>
+                      </div>
                     </div>
-                    <div className="mt-2 sm:mt-0 text-right">
-                      <span className="font-semibold md:text-lg">Total: </span>
-                      <span className="font-bold md:text-lg text-blue-500">{item.total}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+              <DisplayBox
+                title={`${city?.country || ''} - ${regimes[0].regime}`}
+                message={regimes[0].description}
+                color="blue"
+              />
+            </>
           )}
           {earners[1].length > 0 && (
-            <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-10">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 2</h4>
-              <div className="space-y-4 mb-2">
-                {earners[1].map((item) => (
-                  <div
-                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
-                    key={`1${item.name}`}
-                  >
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-700">{item.name}</p>
-                      <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
-                      {item.calc && (
-                        <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>
-                      )}
+            <>
+              <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-10 mb-4">
+                <h4 className="text-xl font-semibold text-gray-800 mb-2">Income earner 2</h4>
+                <div className="space-y-4 mb-2">
+                  {earners[1].map((item) => (
+                    <div
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-md border border-gray-200"
+                      key={`1${item.name}`}
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-700">{item.name}</p>
+                        <p className="text-sm text-gray-500 mt-1 pr-4">{item.explain}</p>
+                        {item.calc && (
+                          <p className="text-sm text-gray-500 mt-1 italic">{item.calc}</p>
+                        )}
+                      </div>
+                      <div className="mt-2 sm:mt-0 text-right">
+                        <span className="font-semibold">Total: </span>
+                        <span className="font-bold text-blue-500">{item.total}</span>
+                      </div>
                     </div>
-                    <div className="mt-2 sm:mt-0 text-right">
-                      <span className="font-semibold">Total: </span>
-                      <span className="font-bold text-blue-500">{item.total}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+              <DisplayBox
+                title={`${city?.country || ''} - ${regimes[1].regime}`}
+                message={regimes[1].description}
+                color="blue"
+              />
+            </>
           )}
         </section>
       );
@@ -211,7 +229,7 @@ function ReportResult({
             <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
               <Link
                 to={`/taxes/${city?.country}?country=${city?.countriesId}`}
-                className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+                className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
               >
                 Check out other taxes in {city?.country}
               </Link>
@@ -265,7 +283,7 @@ function ReportResult({
             <div className="w-full mt-6 flex flex-col items-center justify-center">
               <Link
                 to={mapCompass[city?.country || 'Spain']}
-                className="w-full block md:w-[300px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+                className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
               >
                 Cost of Living Map
               </Link>

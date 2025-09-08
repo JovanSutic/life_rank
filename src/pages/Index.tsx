@@ -68,21 +68,23 @@ function Index() {
             </svg>
           </div>
           <div className="container w-full lg:w-[844px] mx-auto px-4 relative z-10 text-center">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-sm text-shadow-lg">
-              Live Better, Pay Less.
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-sm text-shadow-lg mb-6">
+              Pay Less. Live More Fully.
             </h1>
-            <h2 className="mt-4 md:mt-2 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-yellow-300 text-shadow-lg">
-              We help remote workers find their best tax residency
+            <h2 className="mt-4 md:mt-2 text-3xl md:text-[40px] font-extrabold tracking-tight leading-tight text-yellow-300 text-shadow-lg">
+              We help remote workers legally reduce costs by choosing the right place to live.
             </h2>
             <p className="mt-10 md:mt-14 text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed">
-              Discover a place where your remote income goes further. Find the perfect balance of
-              tax savings and cost of living to build your ideal financial future.
+              You work remotely — you should live where your income goes the furthest. We compare
+              tax rates and cost of living across countries so you can maximize what you keep.
+              Whether you're freelancing or running your own business, we’ll help you find your best
+              move.
             </p>
             <button
               onClick={handleScrollClick}
               className="mt-8 md:mt-10 cursor-pointer inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-blue-800 bg-white hover:bg-blue-50 transition-colors"
             >
-              Find Your Optimal Location
+              See Where You Pay the Least
               <ChevronRightIcon className="ml-2 h-5 w-5" />
             </button>
           </div>
@@ -92,11 +94,12 @@ function Index() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Find out your net opportunities in different cities
+              Compare Net Earnings Across Cities
             </h2>
             <p className="mt-4 text-lg text-gray-600 max-w-4xl mx-auto">
-              Click on any city to access our quick and reliable tax calculators. At the end you
-              will see your net earnings, local tax rates, and total financial impact. All for free.
+              Explore real tax rates and cost of living to see where your remote income goes the
+              furthest. Click any city below to get a free, detailed breakdown of your take-home
+              pay.
             </p>
             <div className="flex flex-col gap-6" id="cities-start" ref={contentRef}>
               {queries.map((query: UseQueryResult<CityCardsResponse>, index: number) => (

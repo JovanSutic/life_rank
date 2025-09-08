@@ -1,4 +1,4 @@
-import type { DisplayItems, FaqItem } from '../types/flow.types';
+import type { DisplayItems, FaqItem, TaxRegime } from '../types/flow.types';
 
 interface Regions {
   name: string;
@@ -84,51 +84,54 @@ export const displayMessages: Record<string, DisplayItems[]> = {
   spain: [
     {
       id: 1,
-      title: '20% Tax Base Reduction',
+      title: '20% Tax Base Reduction (First 2 Years)',
       message:
-        'Every new self-employed individual in Spain receives a 20% reduction on their taxable base for the first two years. This important benefit lowers both your taxable base and your overall tax bill. Keep in mind that once this two-year period ends, your tax liability will increase, which will reduce your net income.',
+        'Newly registered self-employed individuals in Spain benefit from a 20% reduction on their taxable base during the first two years. This significantly lowers your income tax in the early phase. After this period, your tax burden will increase — which means lower net income unless offset by other deductions.',
     },
     {
       id: 2,
-      title: '1st Year Flat Social Contributions',
+      title: 'Flat Social Security Contributions (Year 1)',
       message:
-        'The first year of self-employment utilizes the Tariffa Plana, a flat rate of €980 for annual social contributions. This benefit reduces costs significantly during the initial period. Following the first year, contributions are calculated on a variable basis, which affects the effective tax rate and net income.',
+        'In your first year, Spain applies the "Tarifa Plana" — a flat €980 annual social security fee. This is a major cost saving compared to variable rates in later years, which are income-based and can increase your total tax burden significantly.',
     },
     {
       id: 3,
-      title: 'Children Below 3 Years of Age',
+      title: 'Child-Related Tax Credits (Under Age 3)',
       message:
-        'Spain tax authorities are giving additional allowance for families or single parents that have children below 3 years of age. Also, working mothers (for example also as self-employed) are rewarded with additional maternity tax credit. Both of these rewards will affect the effective tax rate and net income. When child turns 3 these rewards are canceled.',
+        'If you have children under 3, Spain offers both a tax allowance and a specific maternity tax credit (for working mothers, including self-employed). These reduce your effective tax rate but expire once your child turns 3, so plan accordingly.',
     },
   ],
+
   portugal: [
     {
       id: 1,
-      title: 'First-Year Social Contributions Exemption',
+      title: '12-Month Social Security Exemption',
       message:
-        'New self-employed individuals are granted a full exemption from social security contributions for the first 12 months of activity. This measure is a key component of the Regime dos Trabalhadores Independentes (Independent Workers Regime), which aims to reduce the financial burden on new businesses. During this period, you are not required to make any payments, but you must still report your income to Segurança Social (Social Security) on a quarterly basis.',
+        'New freelancers in Portugal enjoy a full exemption from social security contributions for the first 12 months. This drastically boosts net income early on — but note: income must still be reported quarterly to Segurança Social.',
     },
     {
       id: 2,
-      title: 'Taxable base reduction for Young',
+      title: 'IRS Jovem: Tax Relief for Under 35',
       message:
-        'Young workers up to age 35 can benefit from the IRS Jovem scheme, which offers a progressive tax exemption for up to 10 years. This benefit, applicable to both independent and dependent work income, provides substantial financial relief to help young professionals start their careers. The financial relief is taxable income reduction that ranges from 25% up to 100% or applicable cash cap.',
+        'If you’re under 35, the IRS Jovem program offers progressive income tax exemptions (25% to 100%) for up to 10 years. This applies to both freelance and salaried income, giving young professionals substantial early-career tax savings.',
     },
   ],
+
   italy: [
     {
       id: 1,
-      title: 'Flat Tax',
+      title: 'Italy’s Forfettario Regime (Flat Tax)',
       message:
-        'If you are looking for the most simplified and predictable tax regime, you should consider Forfettario Regime. To qualify, you must have a gross annual revenue of less than €85,000. If your revenue exceeds this threshold, you will automatically be switched to a different tax regime the following year. There is a flat tax and no VAT. In general you do not need an accountant though it can help you navigate the Italian tax bureaucracy.',
+        'Italy’s Forfettario regime offers a flat tax on gross income (no VAT, minimal paperwork) for individuals earning under €85,000 annually. If you exceed this, you’ll automatically shift to the standard regime next year. Ideal for solo professionals seeking low taxes and simplicity.',
     },
   ],
+
   bulgaria: [
     {
       id: 1,
-      title: 'Tax Strategy in Bulgaria',
+      title: 'EOOD: Bulgaria’s Optimal Tax Setup',
       message:
-        "For our tax calculations in Bulgaria, we are focused on a single legal structure: the EOOD. This is a Limited Liability Company designed for a single owner, offering the most efficient and streamlined way to manage your taxes. For a single person, the tax calculation is straightforward and optimized around the EOOD's 10% corporate tax rate. For couples, we have developed a unique strategy that provides the best effective tax rate. Instead of two separate companies, the setup uses a single EOOD where one person is the owner and the other is employed on a minimal wage. This structure is more advantageous than having two separate EOODs, as it significantly reduces the overall social security and health insurance contributions, which are a key part of the total effective tax rate. This streamlined approach allows the couple to achieve a more favorable tax outcome.",
+        'In Bulgaria, we use the EOOD structure — a single-owner LLC — to optimize for the 10% corporate tax rate. For couples, the most efficient setup is one EOOD (owned by one person) with the partner on a minimum salary. This approach significantly lowers social and health contributions compared to owning two separate companies.',
     },
   ],
 };
@@ -137,78 +140,81 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
   Spain: [
     {
       id: 1,
-      title: '',
+      title: 'Wealth Tax (Impuesto sobre el Patrimonio)',
       message:
-        "The Spanish Wealth Tax is an annual tax levied on the net value of a person's assets as of December 31st. Net worth is calculated by adding the value of all assets (e.g., real estate, investments, bank accounts) and then deducting any debts or liabilities (e.g., mortgages). Each Spanish region, or Autonomous Community, can set its own rules, rates, and exemptions, which can result in significant differences in tax liability depending on where you reside.",
+        'Spain imposes an annual tax on your global net assets. This includes real estate, investments, and bank balances, minus debts like mortgages. The rules, rates, and exemptions vary by region — so where you live in Spain can significantly impact what you owe.',
     },
     {
       id: 2,
-      title: 'The 60% Rule: The Tax Cap',
+      title: '60% Rule: Total Tax Cap',
       message:
-        'This rule caps your total tax burden. The combined amount of your income tax and wealth tax cannot exceed 60% of your taxable income for the year. This prevents a high wealth tax from becoming overwhelming, especially if your income is low.',
+        'Spain caps your total combined income and wealth tax at 60% of your annual taxable income. If your wealth is high but income is low, this rule protects you from excessive taxation. It ensures your overall tax burden remains proportionate to your income.',
     },
     {
       id: 3,
-      title: 'The 20% Rule: The Minimum Payment',
+      title: '20% Rule: Minimum Wealth Tax Payment',
       message:
-        "This rule is the flip side. While the 60% cap can reduce your wealth tax, it has a limit. You're always required to pay a minimum of 20% of your original wealth tax liability, even if the 60% cap would otherwise bring it lower or to zero.",
+        'Even if the 60% rule reduces your liability, Spain still requires you to pay at least 20% of your original wealth tax. This ensures everyone contributes a baseline amount, regardless of how the cap affects your calculation.',
     },
   ],
 
   Portugal: [
     {
       id: 1,
-      title: 'The NHR - IFICI',
+      title: 'IFICI – New NHR Replacement',
       message:
-        "The NHR (Non-Habitual Resident) regime in Portugal has been replaced by the new Tax Incentive for Scientific Research and Innovation (IFICI). This new program aims to attract highly qualified professionals in fields like technology, research, and innovation by offering significant tax benefits for a period of 10 years. The main benefit of the IFICI is a 20% flat personal income tax (IRS) rate on income from employment and self-employment earned in Portugal. This is a considerable reduction from the standard progressive rates. Additionally, foreign-sourced income such as salaries, dividends, and interest may be exempt from Portuguese taxation. It's important to note that the IFICI is more specific than the old NHR, targeting certain professions and roles within innovative companies, startups, and research entities.",
+        'Portugal has replaced the NHR regime with IFICI — a 10-year tax incentive targeting highly skilled professionals in science, tech, and innovation. You get a flat 20% income tax rate on Portuguese earnings, plus potential exemptions on foreign income. It’s selective, but incredibly valuable if you qualify.',
     },
     {
       id: 2,
-      title: 'VAT Registration Threshold',
+      title: 'VAT Threshold: €12,500',
       message:
-        "For most self-employed individuals and businesses in Portugal, the threshold for mandatory VAT registration is €12,500 in taxable turnover during the previous calendar year. Once you cross this threshold, you must register for VAT and begin charging it on your invoices. You will also be able to deduct the VAT you've paid on your business expenses.",
+        "If your annual revenue exceeds €12,500, you're required to register for VAT in Portugal. This means charging VAT on invoices and submitting returns. Below this threshold, you're VAT-exempt — a financial and administrative advantage for early-stage freelancers and small earners.",
     },
   ],
+
   Italy: [
     {
       id: 1,
-      title: '',
+      title: 'IVAFE – Tax on Foreign Financial Assets',
       message:
-        "The **Tax on Foreign Financial Assets (IVAFE)** is an annual tax paid by Italian tax residents on the value of their financial assets held abroad. This tax is a flat rate (typically 0.2%) applied to the value of the assets, which include items like bank accounts, stocks, bonds, and investment funds. Its purpose is to monitor and tax a person's financial wealth outside of Italy, and it is reported annually in their tax declaration.",
+        "As a tax resident in Italy, you're required to pay IVAFE — a 0.2% annual tax on foreign-held financial assets (like overseas bank accounts, stocks, or funds). This applies to your global portfolio and must be reported in your annual tax return.",
     },
     {
       id: 2,
-      title: 'VAT Registration Threshold',
+      title: 'Forfettario VAT Exemption',
       message:
-        "For most self-employed individuals and small businesses, the primary threshold for the flat-rate tax regime (known as the Regime Forfettario) is €85,000 in revenue per year. Under this regime, you are exempt from charging VAT on your invoices and don't need to file VAT returns. Once your annual revenue from the previous year exceeds €85,000, you are required to transition to the standard VAT regime, which involves charging and remitting VAT to the tax authorities. For most businesses, it's not a question of when you get into the VAT system, as you are typically required to obtain a VAT number (Partita IVA) from the start. However, the Regime Forfettario allows you to operate as if you are outside the VAT system until you reach that revenue threshold.",
+        "Under the Forfettario regime, you're exempt from charging VAT until your revenue exceeds €85,000/year. If you go over, you must switch to the standard VAT system the next year — which adds compliance and reduces net income. Until then, you operate VAT-free with simplified rules.",
     },
   ],
+
   'Czech Republic': [
     {
       id: 1,
-      title: 'Combined income',
+      title: 'Combined Income Taxation',
       message:
-        'In the Czech Republic, your total taxable income is the sum of all earnings, including both your primary self-employment income and any investment and capital gains income you receive. This means that income from sources like dividends, interest, and bond yields is not taxed separately but is combined with your self-employed earnings. This consolidated figure serves as the basis for determining your annual tax liability, including whether you fall into the flat tax regime or a specific progressive tax bracket. Therefore, it is essential to account for all sources of income to ensure accurate tax calculations and compliance.',
+        'In the Czech Republic, self-employment income and investment gains are combined into one taxable base. This means your capital gains, dividends, and interest can push you into a higher tax bracket or make you ineligible for the flat tax — so full income transparency is key to accurate planning.',
     },
     {
       id: 2,
-      title: 'VAT Registration Threshold',
+      title: 'VAT Threshold: CZK 2,000,000 (~€82,000)',
       message:
-        'For most businesses in the Czech Republic, the threshold for mandatory VAT registration is 2,000,000 CZK (~€82,000) in taxable turnover over a period of 12 consecutive months. If your turnover exceeds this amount, you are legally obligated to register for VAT with the tax authorities within 15 days of the month-end in which you crossed the threshold. After registering, you must begin charging VAT on your goods and services. Like in other countries, it is also possible for businesses to register for VAT voluntarily, even if they have not reached the threshold.',
+        'If your 12-month turnover exceeds CZK 2 million (~€82,000), VAT registration becomes mandatory. You must register within 15 days after month-end. Voluntary registration is also possible, which may be beneficial depending on your business model and expenses.',
     },
   ],
+
   Bulgaria: [
     {
       id: 1,
-      title: 'Tax exemption for investments in EEA',
+      title: '0% Capital Gains Tax in EEA',
       message:
-        "If you invest in stocks traded on any regulated stock exchange within the European Economic Area (EEA), your capital gains are completely tax-exempt. That means you pay 0% tax on your profits. The best part? There’s no minimum holding period, so whether you sell after a month or a year, your gains are still tax-free. It's an incredible advantage for long-term investors and active traders alike. This benefit is a game-changer for anyone looking to build wealth in EU markets.",
+        "Profits from selling stocks on any EEA-regulated exchange are completely tax-free in Bulgaria. There's no holding period requirement — sell in a week or a year, and you still pay 0%. It’s a major advantage for investors focused on EU markets.",
     },
     {
       id: 2,
-      title: 'VAT Registration Threshold',
+      title: 'VAT Threshold: BGN 50,000 (~€25,655)',
       message:
-        "For a business to be required to register for VAT in Bulgaria, its total taxable turnover must exceed 50,000 BGN (~€25,655) over any consecutive 12-month period. This means that as soon as your taxable turnover reaches that amount within a continuous one-year timeframe, you are legally obligated to register for VAT with the National Revenue Agency within 7 days. Once registered, you must begin charging and remitting VAT on your sales. It's also possible for a business to register for VAT voluntarily, even if its turnover is below this threshold.",
+        'If your turnover exceeds BGN 50,000 in any 12-month period, VAT registration is mandatory in Bulgaria. You must register within 7 days of passing the limit. Voluntary VAT registration is also allowed and can benefit some businesses by allowing expense-based deductions.',
     },
   ],
 };
@@ -225,22 +231,22 @@ export const faqData: FaqItem[] = [
   {
     question: 'How can changing my tax residency help me increase my net income?',
     answer:
-      "Changing your tax residency to a country with lower income tax and social contributions can significantly increase your take-home pay. You can use tax friendlier jurisdictions, lower tax regimes, tax reductions and credits that some countries offer. Use our tax calculators that will show you exactly how much you'd net in different countries after taxes — helping you make an informed decision.",
+      'By relocating to a country with lower income taxes or favorable tax treaties, you can legally reduce your tax burden and retain more of your earnings — sometimes by tens of thousands of dollars per year. Our tool shows you the impact based on your specific income and lifestyle.',
   },
   {
     question: 'How accurate are you calculators?',
     answer:
-      'Our calculators are highly accurate and built to reflect the key components of each country’s tax system — including income tax rates, social contributions, and other relevant deductions. While we account for all major tax variables, there are always some personal or situational factors that can affect your final tax outcome. So while minor differences may occur, our tools are designed to give you a very real and reliable picture of your potential net income and tax exposure in each country.',
+      'Our calculators use up-to-date tax data, cost of living indexes, and purchasing power metrics from trusted international sources. They’re designed to give you a realistic estimate, not a legal or financial guarantee — but they’re a solid first step in your decision-making.',
   },
   {
     question: 'What is the difference between tax residency and citizenship?',
     answer:
-      "Tax residency is determined by where you live and pay taxes, not where you hold a passport. Many remote workers remain citizens of one country while legally becoming tax residents in another with lower or no income tax. Countries define tax residency based on physical presence (usually 183 days), center of life, or other criteria — and it's essential to meet their legal requirements to qualify.",
+      'Your citizenship doesn’t change unless you go through a legal process to renounce it. Your tax residency, however, can change when you meet certain criteria in another country (like number of days, center of economic interest, etc.). Many remote workers keep their citizenship but shift tax residency for financial optimization.',
   },
   {
     question: 'What are the risks of not properly changing my tax residency?',
     answer:
-      'Staying in the “gray zone” can lead to double taxation, tax audits, or even legal penalties. Many countries still consider you a resident if you don’t formally exit their tax system. If you start earning abroad but don’t establish a new tax residency, you could end up liable for taxes in both places.',
+      'If you don’t follow the correct procedures, you may be taxed by both your home country and your new one — or be penalized for tax evasion. We help you understand the steps to take so you stay compliant while optimizing your finances.',
   },
   {
     question: 'Do I need a visa or residency permit to change my tax residency?',
@@ -250,12 +256,93 @@ export const faqData: FaqItem[] = [
   {
     question: 'How does cost of living affect the value of my take-home pay?',
     answer:
-      "A lower tax rate means more money in your pocket, but if you're spending it all on rent and groceries, you may not come out ahead. That’s why our platform combines net income calculators with cost of living data — so you can see where your money will go further.",
+      'A $100,000 salary in a high-cost city like San Francisco doesn’t go nearly as far as in a tax-friendly, low-cost city like Lisbon or Tbilisi. Our rankings help you compare purchasing power, not just tax rates.',
   },
   {
     question:
       'Can I maintain my current citizenship while being a tax resident in another country?',
     answer:
-      'Yes — you can usually retain your original citizenship while changing your tax residency. However, some countries (like the U.S.) tax based on citizenship, not residency. Most other countries allow you to legally exit their tax system without giving up citizenship.',
+      "Yes, absolutely. Most people who optimize for tax still keep their original citizenship. It's about where you are legally considered a tax resident, not your passport.",
+  },
+  {
+    question: 'What’s the first step to relocating for tax benefits?',
+    answer:
+      'Use our free tool to see how different locations affect your finances. From there, you can research other important topics like visa options, city feel, lifestyle possibilities, healthcare etc. Very soon we will be able to help you with all those aspects.',
+  },
+  {
+    question: 'Can I optimize my taxes even if I have a partner or family?',
+    answer:
+      'Yes. Many countries offer favorable tax treatment for families or couples, and we help you compare scenarios for solo moves vs. moving as a household. You can select your life setup in the tool.',
   },
 ];
+
+export const taxRegimes: Record<string, TaxRegime> = {
+  spain_autonomo: {
+    country: 'Spain',
+    regime: 'Autónomo',
+    description:
+      "You're seeing calculations based on the Autónomo (self-employed) regime in Spain. This includes mandatory contributions to the Spanish Social Security system (RETA) and progressive income tax (IRPF). Special first-year reductions may apply.",
+  },
+
+  portugal_simplified: {
+    country: 'Portugal',
+    regime: 'Simplified Regime',
+    description:
+      'This result uses the Simplified Tax Regime in Portugal, commonly chosen by freelancers and self-employed professionals. A fixed percentage of income is assumed as expenses, which reduces your taxable base automatically.',
+  },
+
+  portugal_organized: {
+    country: 'Portugal',
+    regime: 'Organized Regime',
+    description:
+      "You're viewing results for the Organized Accounting Regime in Portugal. This regime allows you to deduct real business expenses but requires proper bookkeeping. It may be optimal for higher-income or expense-heavy profiles.",
+  },
+
+  italy_ordinario: {
+    country: 'Italy',
+    regime: 'Ordinario Regime',
+    description:
+      'These figures are based on Italy’s Ordinario regime, the standard taxation method with progressive income tax and detailed expense reporting. Suitable for individuals with complex income and high costs.',
+  },
+
+  italy_forfettario: {
+    country: 'Italy',
+    regime: 'Forfettario Regime',
+    description:
+      'This uses Italy’s Forfettario regime, a simplified flat-tax regime for small business earners. It applies a fixed cost coefficient to determine taxable income, often resulting in very low effective tax rates.',
+  },
+
+  italy_regime_impatriati: {
+    country: 'Italy',
+    regime: 'Regime Impatriati',
+    description:
+      "You're seeing results under Italy’s Regime Impatriati — a favorable regime for individuals relocating to Italy. It can exclude a large portion of foreign income from taxation for several years.",
+  },
+
+  czech_flat_tax: {
+    country: 'Czech Republic',
+    regime: 'Flat Tax',
+    description:
+      'This uses the Flat Tax Regime in the Czech Republic. It offers simplified administration and a predictable tax burden for qualifying self-employed individuals.',
+  },
+
+  czech_regular_self_employed: {
+    country: 'Czech Republic',
+    regime: 'Regular Self-Employed',
+    description:
+      "You're seeing results under the Regular Self-Employed regime in the Czech Republic, with income tax, social security, and health insurance calculated from real or estimated income.",
+  },
+
+  bulgaria_eood: {
+    country: 'Bulgaria',
+    regime: 'EOOD (Single-Person LLC.)',
+    description:
+      'This calculation is based on operating through an EOOD (Single-Person Ltd.) in Bulgaria. It includes corporate tax, dividend distribution, and social security contributions typically used by remote workers for tax efficiency.',
+  },
+  bulgaria_self_employed: {
+    country: 'Bulgaria',
+    regime: 'Self-Employed (Freelancer)',
+    description:
+      'This calculation is based on registering as a self-employed individual in Bulgaria. It includes a 25% reduction in the taxable base, 10% personal income tax, and mandatory social security contributions, which can be declared within a legal income base range. This setup offers simplicity and flexibility for high-earning freelancers while maintaining full compliance with Bulgarian tax laws.',
+  },
+};

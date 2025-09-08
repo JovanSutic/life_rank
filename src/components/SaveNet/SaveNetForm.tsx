@@ -291,7 +291,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                   type="button"
                   disabled={!canAddEarner}
                   onClick={() => appendEarner(baseEarner)}
-                  className={`w-full md:w-[300px] py-2 rounded-lg ${canAddEarner ? 'cursor-pointer bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+                  className={`w-full md:w-[320px] py-2 rounded-lg ${canAddEarner ? 'cursor-pointer bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
                   Add second earner
                 </button>
@@ -390,7 +390,6 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                           ageVal > 0 && (
                             <div className="mt-3">
                               <label className="flex items-center gap-2 text-sm">
-                                number
                                 <input
                                   type="checkbox"
                                   {...register(`dependents.children.${i}.motherIsEarner` as const)}
@@ -509,7 +508,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
               <button
                 type="button"
                 onClick={onBack}
-                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[300px]'} py-2 rounded-lg border cursor-pointer`}
+                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[320px]'} py-2 rounded-lg border cursor-pointer`}
               >
                 Back
               </button>
@@ -518,7 +517,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
               <button
                 type="button"
                 onClick={onNext}
-                className={`${step > 1 ? 'flex-1' : 'w-full md:w-[300px]'} py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
+                className={`${step > 1 ? 'flex-1' : 'w-full md:w-[320px]'} py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
               >
                 Next step
               </button>
