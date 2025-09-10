@@ -346,3 +346,11 @@ export const taxRegimes: Record<string, TaxRegime> = {
       'This calculation is based on registering as a self-employed individual in Bulgaria. It includes a 25% reduction in the taxable base, 10% personal income tax, and mandatory social security contributions, which can be declared within a legal income base range. This setup offers simplicity and flexibility for high-earning freelancers while maintaining full compliance with Bulgarian tax laws.',
   },
 };
+
+export const countryTaxHeadline: Record<string, string> = {
+  Spain: '~19.5%',
+  Portugal: '~10%',
+  Italy: '~21%',
+  'Czech Republic': '~12%',
+  Bulgaria: '~15%',
+};

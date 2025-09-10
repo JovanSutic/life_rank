@@ -7,6 +7,7 @@ interface BudgetCostData {
   name: string;
   description: string;
   num: number;
+  savings?: string;
 }
 
 function BudgetPresentation({
@@ -67,12 +68,12 @@ function BudgetPresentation({
           {netIncomeProjection.map((item, index) => (
             <div
               key={index}
-              className={`bg-white px-4 py-6 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 gap-4 items-center ${index !== netIncomeProjection.length - 1 ? 'border-b border-gray-300 mb-3' : ''}`}
+              className={`bg-white px-4 py-6 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 gap-2 items-center ${index !== netIncomeProjection.length - 1 ? 'border-b border-gray-300 mb-3' : ''}`}
             >
               <div className="w-full flex flex-col gap-1">
                 <div className="w-full flex gap-6 items-center">
-                  <p className="font-medium text-blue-700 text-base md:text-lg">{item.name}</p>
-                  <p className="font-bold text-gray-800 text-lg md:text-xl">
+                  <p className="font-medium text-gray-500 text-xl md:text-2xl">{item.name}</p>
+                  <p className="font-bold text-gray-800 text-base md:text-lg">
                     Net: {formatCurrency(item.num, currency)}
                   </p>
                 </div>
@@ -80,16 +81,18 @@ function BudgetPresentation({
                   <p className="text-sm md:text-base text-gray-500 italic">{item.description}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-2 gap-2 mt-2">
                 {costOfLiving.map((itemC, indexC) => (
-                  <div className="flex flex-col items-start gap-1" key={indexC}>
+                  <div
+                    className={`flex flex-col items-center gap-1 p-2 border rounded-lg ${indexC === 0 ? 'border-blue-300' : 'border-green-300'}`}
+                    key={indexC}
+                  >
                     <div className="flex flex-col gap-1">
-                      <p className="text-sm md:text-base font-semibold">{itemC.name}</p>
-                      <p className="text-gray-500 text-xs md:text-base">{`(${formatCurrency(item.num, currency)} - ${formatCurrency(itemC.num, currency)})`}</p>
+                      <p className="text-sm md:text-base font-base text-center">{itemC.savings}</p>
                     </div>
-                    <div className="flex flex-col mt-4">
+                    <div className="flex flex-col mt-2">
                       <p
-                        className={`text-xl font-bold ${item.num - itemC.num < 0 ? 'text-red-500' : 'text-green-600'}`}
+                        className={`text-xl font-bold ${item.num - itemC.num < 0 ? 'text-red-500' : indexC === 0 ? 'text-blue-600' : 'text-green-600'}`}
                       >
                         {formatCurrency(item.num - itemC.num, currency)}
                       </p>

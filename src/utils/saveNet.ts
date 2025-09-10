@@ -194,20 +194,25 @@ export function getBaseData(country: string) {
   const baseEarner: Earner = {
     income: 0,
     accountantCost: 120,
-    expensesCost: 350,
+    expensesCost: 0,
     currency: 'EUR',
     isUSCitizen: false,
   };
   const baseChild = { age: 1 };
   if (country === 'Portugal') {
     baseEarner.age = 18;
+    baseEarner.accountantCost = 150;
   }
   if (country === 'Spain') {
     baseChild.age = 1;
+    baseEarner.accountantCost = 180;
   }
   if (country === 'Italy') {
+    baseEarner.accountantCost = 150;
+  }
+
+  if (country === 'Bulgaria') {
     baseEarner.accountantCost = 100;
-    baseEarner.expensesCost = 300;
   }
 
   return {

@@ -41,7 +41,7 @@ function Card({
   style?: 'normal' | 'future';
 }) {
   return (
-    <div className="w-full grid grid-cols-2 gap-4 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
+    <div className="w-full grid grid-cols-2 gap-2 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
       <div className="flex flex-col items-center">
         <p className="text-gray-400 mt-2 text-sm md:text-base">Annual Period</p>
         <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
@@ -65,7 +65,7 @@ function Card({
 
       <div className="flex flex-col gap-1">
         <div className="">
-          <div className="relative flex flex-col items-center px-4 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="relative flex flex-col items-center px-2 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
             <div className={`p-1 rounded-full`}>
               <ChartBarIcon
                 className={`${style === 'normal' ? 'text-purple-600' : 'text-gray-600'} w-5 h-5`}
@@ -254,16 +254,18 @@ function ReportResult({
                 city={city?.name || ''}
                 costOfLiving={[
                   {
-                    name: 'Low Cost Scenario',
+                    name: 'Low Cost Budget',
                     description:
                       'Represents the minimum cost required to cover essential necessities. It is budget-focused with limited non-essential spending.',
                     num: data.expensesLow * currencyIndex,
+                    savings: 'Saving potential on Low Cost Budget',
                   },
                   {
-                    name: 'Comfort Scenario',
+                    name: 'Comfort Budget',
                     description:
-                      'It accounts for more than just the bare necessities, allowing for very good quality of life.',
+                      'Represents spending needed for very good quality of life at this particular destination.',
                     num: data.expensesComfort * currencyIndex,
+                    savings: 'Saving potential on Comfort Budget',
                   },
                 ]}
                 netIncomeProjection={[
@@ -342,7 +344,7 @@ function ReportResult({
         <div className="mt-8">
           <DisplayBox
             title="Disclaimer: Important Information on Tax Calculations"
-            message="Provided tax calculations are designed to be highly accurate and give you a strong estimate of your financial outcome. However, it is essential to understand that they are for informational purposes only and cannot be considered definitive. Your actual tax situation can be influenced by a number of factors that a simple calculator cannot account for. While our numbers are very close to what you would realistically achieve, you should always expect some possible (not substantial) differences."
+            message="These tax calculations are based on reliable data sources and give a strong, realistic estimate of your net income. However, individual outcomes may vary slightly depending on your personal circumstances"
             color="yellow"
           />
         </div>
