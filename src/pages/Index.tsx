@@ -2,7 +2,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { trackPageview } from '../utils/analytics';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { faqData, mapCompass } from '../data/taxes';
+import { countryTaxHeadline, faqData, mapCompass } from '../data/taxes';
 import Newsletter from '../components/Basic/Newsletter';
 import { getCityCards } from '../utils/apiCalls';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
@@ -75,10 +75,7 @@ function Index() {
               We help remote workers legally reduce costs by choosing the right place to live.
             </h2>
             <p className="mt-10 md:mt-14 text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed">
-              You work remotely — you should live where your income goes the furthest. We compare
-              tax rates and cost of living across countries so you can maximize what you keep.
-              Whether you're freelancing or running your own business, we’ll help you find your best
-              move.
+              You are remote — live where your income goes furthest
             </p>
             <button
               onClick={handleScrollClick}
@@ -111,7 +108,7 @@ function Index() {
                   >
                     <div key={flowCounties[index]} className="mt-12">
                       {/* Country Header Row */}
-                      <div className="flex flex-col items-center justify-center space-y-4 mb-8">
+                      <div className="flex flex-col items-center justify-center space-y-4 mb-6">
                         <div className="flex gap-2 items-center">
                           <FlagElement country={flowCounties[index] || ''} />
                           <h3 className="text-3xl font-bold text-gray-800">
@@ -126,6 +123,14 @@ function Index() {
                           Checkout {flowCounties[index]} on the Map
                           <ChevronRightIcon className="ml-1 h-4 w-4" />
                         </Link>
+                      </div>
+                      <div className="mb-4">
+                        <p className="text-xl text-black text-center font-bold">
+                          {countryTaxHeadline[flowCounties[index]]}
+                        </p>
+                        <p className="text-base text-gray-500 text-center">
+                          Optimal effective tax rate (3 year average)
+                        </p>
                       </div>
                       <CitiesList data={query.data?.data || []} />
                     </div>
