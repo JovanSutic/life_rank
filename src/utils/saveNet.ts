@@ -10,7 +10,14 @@ import type {
 import type { CurrencyOptions } from '../types/budget.types';
 import type { FormItem } from '../types/city.types';
 
-export const flowCounties: string[] = ['Spain', 'Portugal', 'Italy', 'Czech Republic', 'Bulgaria'];
+export const flowCounties: string[] = [
+  'Spain',
+  'Portugal',
+  'Italy',
+  'Czech Republic',
+  'Bulgaria',
+  'Serbia',
+];
 
 function getWorkType(type: string, country: string) {
   if (country === 'Italy') {
@@ -45,6 +52,7 @@ export const prepData = (data: TaxData, cityId: number, country = 'Spain'): Repo
     ...(item.workType ? { workType: getWorkType(item.workType, country) } : {}),
     ...(item.isStartup ? { isNew: item.isStartup } : {}),
     ...(item.isSpecialist ? { isSpecialist: item.isSpecialist } : {}),
+    ...(item.isIndependent ? { isIndependent: item.isIndependent } : {}),
   }));
 
   if (data.dependents.hasSpouse && data.dependents.spouseDependent) {
@@ -142,6 +150,13 @@ const stepsMap: Record<string, FormItem> = {
       assertionFunction: (value) => value < 85000.01,
     },
   },
+  isIndependent: {
+    name: 'isIndependent',
+    label: 'Are you an independent contractor?',
+    type: 'checkbox',
+    tooltip:
+      'Check this box if you are working with multiple clients, set your own hours, use your own tools, and are not treated as an employee by a single company. Required to comply with Serbia independence test for self-employed individuals.',
+  },
   isSpecialist: {
     name: 'isSpecialist',
     label: 'Are you a certified specialist?',
@@ -187,6 +202,12 @@ export function getStepItems(country: string) {
       step2Items,
     ];
   }
+  if (country === 'Serbia') {
+    return [
+      [...step1ItemsBase, stepsMap.age, stepsMap.isIndependent, stepsMap.usCitizen],
+      step2Items,
+    ];
+  }
   return [[...step1ItemsBase, stepsMap.usCitizen], step2Items];
 }
 
@@ -213,6 +234,10 @@ export function getBaseData(country: string) {
 
   if (country === 'Bulgaria') {
     baseEarner.accountantCost = 100;
+  }
+
+  if (country === 'Serbia') {
+    baseEarner.age = 18;
   }
 
   return {

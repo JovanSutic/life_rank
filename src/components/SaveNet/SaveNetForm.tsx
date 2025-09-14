@@ -110,6 +110,8 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
       fieldsToValidate = ['dependents'];
     }
 
+    console.log(errors);
+
     const valid = await trigger(fieldsToValidate as any);
     if (!valid) return;
     setStep((s) => Math.min(totalSteps, s + 1));

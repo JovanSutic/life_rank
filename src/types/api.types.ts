@@ -196,6 +196,7 @@ export interface PersonalIncomes {
   workType?: string;
   isStartup?: boolean;
   isSpecialist?: boolean;
+  isIndependent?: boolean;
 }
 
 export interface Child {
@@ -214,6 +215,7 @@ export interface Earner {
   workType?: string;
   isStartup?: boolean;
   isSpecialist?: boolean;
+  isIndependent?: boolean;
 }
 
 export interface Dependents {

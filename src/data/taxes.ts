@@ -78,6 +78,8 @@ export const mapCompass: Record<string, string> = {
     '/europe?layerTypeId=2&centerLat=49.53505&centerLng=15.48565&north=52.56887&south=46.30050&east=24.86248&west=6.10882&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Czech+Republic',
   Bulgaria:
     '/europe?layerTypeId=2&centerLat=42.05438&centerLng=26.25393&north=45.53809&south=38.36857&east=35.63077&west=16.87710&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Bulgaria',
+  Serbia:
+    '/europe?layerTypeId=2&centerLat=44.27530&centerLng=20.79809&north=47.69368&south=40.64585&east=23.07226&west=18.52392&zoom=7&budget=7000&size=9007199254740991&sea=false&rank=false&country=Serbia',
 };
 
 export const displayMessages: Record<string, DisplayItems[]> = {
@@ -217,6 +219,27 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         'If your turnover exceeds BGN 50,000 in any 12-month period, VAT registration is mandatory in Bulgaria. You must register within 7 days of passing the limit. Voluntary VAT registration is also allowed and can benefit some businesses by allowing expense-based deductions.',
     },
   ],
+
+  Serbia: [
+    {
+      id: 1,
+      title: 'VAT',
+      message:
+        "Value Added Tax (VAT) in Serbia is 20% and applies to most goods and services sold within the country, but it's generally not charged on income from foreign clients (export of services), which is considered VAT-exempt. Businesses working with foreign clients can still be VAT-registered, but they typically apply a 0% rate on exported services, meaning no VAT is charged to those clients.",
+    },
+    {
+      id: 2,
+      title: 'Additional high earnings tax',
+      message:
+        'Serbia applies an additional annual personal income tax (“porez na dohodak građana”) on individuals whose total yearly income exceeds a certain threshold set by the government. This surtax is calculated progressively and paid on top of regular taxes, typically affecting high earners, including entrepreneurs and company owners.',
+    },
+    {
+      id: 3,
+      title: 'Serbia - U.S. tax treaty',
+      message:
+        'Serbia does not have a double taxation treaty with the United States, which means that U.S. require careful tax planning and extra effort for being compliant with IRS obligations. Also, the lack of this treaty can result in more tax costs for investment incomes like bond coupons and stock dividends.',
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
@@ -225,6 +248,7 @@ export const otherTaxTitles: Record<string, string> = {
   Italy: 'Tax on Foreign Financial Assets',
   'Czech Republic': '',
   Bulgaria: '',
+  Serbia: '',
 };
 
 export const faqData: FaqItem[] = [
@@ -344,6 +368,24 @@ export const taxRegimes: Record<string, TaxRegime> = {
     regime: 'Self-Employed (Freelancer)',
     description:
       'This calculation is based on registering as a self-employed individual in Bulgaria. It includes a 25% reduction in the taxable base, 10% personal income tax, and mandatory social security contributions, which can be declared within a legal income base range. This setup offers simplicity and flexibility for high-earning freelancers while maintaining full compliance with Bulgarian tax laws.',
+  },
+  serbia_llc: {
+    country: 'Serbia',
+    regime: 'Serbian LLC - Društvo sa ograničenom odgovornošću',
+    description:
+      'This calculation is based on registering a company as LLC, a legal entity where the owner’s liability is limited to the invested capital. It involves full bookkeeping, 15% corporate income tax on profit, and 15% tax on dividends, but allows for broader business activities, expense deductions, and scalability for growing operations.',
+  },
+  serbia_flat: {
+    country: 'Serbia',
+    regime: 'Flat Rate Tax - Paušalni porez',
+    description:
+      'This calculation is based on registering as flat-rate tax, that is a tax system where taxes are pre-calculated by the tax authority based on the type of activity and location, not on actual income. It offers simplified (almost none) accounting and predictable monthly costs, making it attractive for entrepreneurs with lower yearly incomes.',
+  },
+  serbia_bookkeeping: {
+    country: 'Serbia',
+    regime: 'Self employed with bookkeeping',
+    description:
+      'This calculation is based on registering as self employed with mandatory bookkeeping (not simplified) that allows you to pay yourself a minimal salary with income tax and complete social contributions and withdraw your profits with paying profit tax that is significantly lower that total of income tax and complete social contributions.',
   },
 };
 
