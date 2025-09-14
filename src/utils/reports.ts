@@ -44,6 +44,8 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
     dividend,
     corporate,
     grossSalary,
+    salaryContributions,
+    additionalTax,
   } = data;
   const res: BreakdownItem[] = [
     ...(usTax
@@ -159,7 +161,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         ]
       );
     }
-    if (regime === 'Flat Czech Regime') {
+    if (regime === 'Flat Czech Regime' || regime === 'Flat Serbian Regime') {
       res[res.length - 2].explain = 'taxes and social contributions + business expenses';
       res[res.length - 2].calc =
         `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)})`;
@@ -284,6 +286,65 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         ]
       );
     }
+    if (regime === 'LLC Regime') {
+      const serbianTax = corporate + dividend + additionalTax;
+      const businessCost = serbianTax + expenses + salaryContributions;
+      const taxableBase = gross - expenses - grossSalary;
+
+      res[res.length - 2].explain =
+        'taxes + business expenses + gross salary tax and contributions';
+      res[res.length - 2].calc =
+        `(${formatCurrency(serbianTax * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(salaryContributions * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency(businessCost * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(businessCost * rate, currency)})`;
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross income - business expenses - mandatory gross salary',
+            calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(grossSalary * rate, currency)})`,
+            total: formatCurrency(taxableBase * rate, currency),
+          },
+          {
+            name: 'Taxes',
+            explain: 'corporate tax + dividend (withholding) tax + high earnings tax',
+            calc: `(${formatCurrency(corporate * rate, currency)} + ${formatCurrency(dividend * rate, currency)} + ${formatCurrency(additionalTax * rate, currency)})`,
+            total: formatCurrency(serbianTax * rate, currency),
+          },
+        ]
+      );
+    }
+    if (regime === 'Bookkeeping Regime') {
+      const businessCost = taxes + expenses + salaryContributions;
+      const taxableBase = gross - expenses - grossSalary;
+
+      res[res.length - 2].explain =
+        'taxes + business expenses + gross salary tax and contributions';
+      res[res.length - 2].calc =
+        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(salaryContributions * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency(businessCost * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(businessCost * rate, currency)})`;
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross income - business expenses - mandatory gross salary',
+            calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(grossSalary * rate, currency)})`,
+            total: formatCurrency(taxableBase * rate, currency),
+          },
+          {
+            name: 'Taxes',
+            explain: 'state income tax + high earnings tax',
+            calc: `(${formatCurrency(state * rate, currency)} + ${formatCurrency(additionalTax * rate, currency)})`,
+            total: formatCurrency(taxes * rate, currency),
+          },
+        ]
+      );
+    }
   }
 
   return res;
@@ -319,9 +380,14 @@ function getEarnersData(
     let corporate = 0;
     let grossSalary = 0;
     let initialNet = 0;
+    let salaryContributions = 0;
+    let additionalTax = 0;
 
     data.costItems?.forEach((cost) => {
       if (cost.incomeMaker === index) {
+        if (cost.label === 'Yearly salary contributions') {
+          salaryContributions = cost.amount;
+        }
         if (cost.type === 'gross') {
           gross = cost.amount;
           mainGross = mainGross + cost.amount;
@@ -329,7 +395,7 @@ function getEarnersData(
         if (cost.type === 'health_insurance') {
           health = cost.amount;
         }
-        if (cost.type === 'gross_salary') {
+        if (cost.type === 'gross_salary' || cost.label === 'Yearly salary') {
           grossSalary = cost.amount;
         }
         if (cost.type === 'expenses') {
@@ -380,12 +446,16 @@ function getEarnersData(
         if (cost.type === 'net') {
           initialNet = cost.amount;
         }
+
+        if (country === 'Serbia' && cost.label === 'Additional income tax') {
+          additionalTax = cost.amount;
+        }
       }
     });
 
     const firstBase = gross - expenses - social;
     const secondBase = firstBase - reductions;
-    const taxes = Math.max(0, regional + state - credit);
+    const taxes = Math.max(0, regional + additionalTax + state - credit);
     const businessCost = taxes + expenses + social;
     const net = initialNet;
 
@@ -413,6 +483,8 @@ function getEarnersData(
         dividend,
         corporate,
         grossSalary,
+        salaryContributions,
+        additionalTax,
       },
       data.costItems?.find((item) => item.type === 'tax_type')?.label
     );
@@ -579,6 +651,29 @@ export function getRegime(data: ReportDto, country: string) {
               id: index,
               regime: taxRegimes.bulgaria_eood.regime,
               description: taxRegimes.bulgaria_eood.description,
+            });
+          }
+        }
+        if (country === 'Serbia') {
+          if (cost.label === 'Bookkeeping Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.serbia_bookkeeping.regime,
+              description: taxRegimes.serbia_bookkeeping.description,
+            });
+          }
+          if (cost.label === 'Flat Serbian Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.serbia_flat.regime,
+              description: taxRegimes.serbia_flat.description,
+            });
+          }
+          if (cost.label === 'LLC Regime') {
+            result.push({
+              id: index,
+              regime: taxRegimes.serbia_llc.regime,
+              description: taxRegimes.serbia_llc.description,
             });
           }
         }

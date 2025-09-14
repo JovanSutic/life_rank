@@ -218,7 +218,7 @@ function ReportResult({
         <section className="border-b border-gray-300 pb-10">
           <SectionHeader
             title="Other Relevant Taxes"
-            subtitle="Outline of other taxes that may be relevant to your financial situation. This information helps you see be aware of other taxes which can potentially create new financial obligations for you."
+            subtitle="Outline of other taxes that may be relevant to your financial situation. This information helps you be aware of other taxes which can potentially create new financial obligations for you."
           />
           <div>
             <OtherTaxes
