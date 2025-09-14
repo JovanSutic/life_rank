@@ -11,7 +11,6 @@ const ChildSchema = BaseChildSchema.extend({
   motherIsEarner: z.boolean().optional(),
 });
 
-// The Zod union of the two schemas
 const ChildUnionSchema = z.union([ChildSchema, BaseChildSchema]);
 const BaseEarnerSchema = z.object({
   income: z.number().min(15000, { message: 'Income must be at least 15,000' }),
@@ -72,6 +71,14 @@ const ItalyEarnerSchema = BaseEarnerSchema.extend({
   }
 });
 
+const SerbianEarnersSchema = BaseEarnerSchema.extend({
+  age: z
+    .number()
+    .min(18, { message: 'Can not be younger than 18' })
+    .max(70, { message: 'Can not be older than 70' }),
+  isIndependent: z.boolean().optional(),
+});
+
 const SpainSchema = z.object({
   earners: z.array(SpainEarnerSchema).min(1).max(2, 'We support up to two income earners'),
   dependents: BaseDependentSchema.extend({
@@ -81,6 +88,13 @@ const SpainSchema = z.object({
 
 const BulgariaSchema = z.object({
   earners: z.array(SpainEarnerSchema).min(1).max(2, 'We support up to two income earners'),
+  dependents: BaseDependentSchema.extend({
+    children: z.array(BaseChildSchema),
+  }),
+});
+
+const SerbianSchema = z.object({
+  earners: z.array(SerbianEarnersSchema).min(1).max(2, 'We support up to two income earners'),
   dependents: BaseDependentSchema.extend({
     children: z.array(BaseChildSchema),
   }),
@@ -112,5 +126,6 @@ export const getSchema = (country: string) => {
   if (country === 'Spain') return SpainSchema;
   if (country === 'Italy') return ItalySchema;
   if (country === 'Czech Republic') return CzechSchema;
+  if (country === 'Serbia') return SerbianSchema;
   return PortugalSchema;
 };
