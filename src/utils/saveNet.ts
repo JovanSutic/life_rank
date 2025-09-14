@@ -152,9 +152,10 @@ const stepsMap: Record<string, FormItem> = {
   },
   isIndependent: {
     name: 'isIndependent',
-    label: 'Independent contractor?',
+    label: 'Are you an independent contractor?',
     type: 'checkbox',
-    tooltip: 'Are you an independent contractor.',
+    tooltip:
+      'Check this box if you are working with multiple clients, set your own hours, use your own tools, and are not treated as an employee by a single company. Required to comply with Serbia independence test for self-employed individuals.',
   },
   isSpecialist: {
     name: 'isSpecialist',
