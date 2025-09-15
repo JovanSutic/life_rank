@@ -4,14 +4,15 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { countryTaxHeadline, faqData, mapCompass } from '../data/taxes';
 import Newsletter from '../components/Basic/Newsletter';
-import { getCityCards } from '../utils/apiCalls';
-import { useQueries, type UseQueryResult } from '@tanstack/react-query';
+import { fetchCurrency, getCityCards } from '../utils/apiCalls';
+import { useQueries, useQuery, type UseQueryResult } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import CitiesList from '../components/Cities/CitiesList';
 import { flowCounties } from '../utils/saveNet';
 import type { CityCardsResponse } from '../types/api.types';
 import FlagElement from '../components/Basic/FlagElement';
 import FaqElement from '../components/Basic/Faq';
+import { CurrencySelector } from '../components/Basic/CurrencySelector';
 
 function Index() {
   useEffect(() => {
@@ -28,6 +29,13 @@ function Index() {
       retry: 1,
       staleTime: 60 * 60 * 1000,
     })),
+  });
+
+  const { data: currency } = useQuery({
+    queryKey: ['GET_CURRENCY'],
+    queryFn: () => fetchCurrency(),
+    retry: 2,
+    staleTime: 60 * 60 * 1000,
   });
 
   const handleScrollClick = () => {
@@ -98,6 +106,11 @@ function Index() {
               furthest. Click any city below to get a free, detailed breakdown of your take-home
               pay.
             </p>
+            <div className="flex flex-col items-center md:items-end max-w-5xl mx-auto mt-10">
+              <div className="max-w-[190px]">
+                <CurrencySelector rates={currency?.eur || { eur: 1 }} reverse={false} />
+              </div>
+            </div>
             <div className="flex flex-col gap-6" id="cities-start" ref={contentRef}>
               {queries.map((query: UseQueryResult<CityCardsResponse>, index: number) => (
                 <div key={`cityGroup${index}`}>
@@ -106,7 +119,7 @@ function Index() {
                     isError={query.isError}
                     error={query.error}
                   >
-                    <div key={flowCounties[index]} className="mt-12">
+                    <div key={flowCounties[index]} className="mt-8">
                       {/* Country Header Row */}
                       <div className="flex flex-col items-center justify-center space-y-4 mb-6">
                         <div className="flex gap-2 items-center">

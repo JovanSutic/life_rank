@@ -90,7 +90,7 @@ export default function CitySide() {
           aria-label="Close filters"
           className="text-2xl text-gray-500 hover:text-black cursor-pointer"
         >
-          <XMarkIcon className="h-6 w-6" />
+          <XMarkIcon className="h-7 w-7" />
         </button>
       </div>
       <AsyncStateWrapper

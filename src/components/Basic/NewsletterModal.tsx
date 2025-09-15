@@ -62,7 +62,7 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
   const isLoading = mutation.isPending;
 
   return (
-    <Modal show={show}>
+    <Modal show={show} close={onClose}>
       <h3 className="text-xl font-semibold mb-3 text-center">📧 Newsletter</h3>
       <p className="text-sm text-gray-600 text-center mb-6">
         Hey each week, we share insights on <strong>places in Europe</strong> where you can earn
@@ -118,13 +118,6 @@ function NewsletterModal({ show, onClose }: { show: boolean; onClose: () => void
           className={`flex items-center text-sm text-white transition bg-blue-500 hover:bg-blue-600 cursor-pointer py-2 px-4 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed`}
         >
           {isLoading ? 'Submitting...' : 'Submit'}
-        </button>
-        <button
-          onClick={onClose}
-          disabled={isLoading}
-          className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-2 px-4 bg-gray-200 rounded-lg disabled:opacity-50"
-        >
-          Close
         </button>
       </div>
     </Modal>
