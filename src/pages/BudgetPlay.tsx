@@ -269,7 +269,7 @@ function BudgetPlay() {
         />
       </article>
       <div className="relative flex flex-col min-h-screen w-full px-2 pb-6">
-        <Modal show={isModal}>
+        <Modal show={isModal} close={() => setIsModal(false)}>
           <h3 className="text-xl font-semibold mb-6 text-center">Budget Categories Explained</h3>
           <ul className="text-sm text-gray-700 space-y-2">
             <li>
@@ -304,14 +304,6 @@ function BudgetPlay() {
               families. Adjust the settings to see how expenses might change depending on your
               situation.
             </p>
-          </div>
-          <div className="flex justify-end">
-            <button
-              onClick={() => setIsModal(false)}
-              className="flex items-center text-sm text-black hover:bg-gray-300 transition cursor-pointer py-2 px-4 bg-gray-200 rounded-lg"
-            >
-              Close
-            </button>
           </div>
         </Modal>
         <NewsletterModal show={newsLetterShow} onClose={toggleNewsletterShow} />
