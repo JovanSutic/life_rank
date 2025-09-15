@@ -395,4 +395,5 @@ export const countryTaxHeadline: Record<string, string> = {
   Italy: '~21%',
   'Czech Republic': '~12%',
   Bulgaria: '~15%',
+  Serbia: '~8.5%',
 };

@@ -4,12 +4,13 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import type { ReportUserData } from '../../types/api.types';
-import Tooltip from '../Basic/Tooltip';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { getBaseData, getStepItems, prepData, formatCurrency } from '../../utils/saveNet';
 import { getSchema } from '../../data/validation';
 import type { FormItem } from '../../types/city.types';
 import { currencyMap } from '../../utils/budgetMaps';
+import InfoModals from './InfoModals';
+import Modal from '../Basic/Modal';
 
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
@@ -56,6 +57,8 @@ const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total 
 function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const totalSteps = 3;
   const [step, setStep] = useState(1);
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>('');
 
   const schema = getSchema(country);
 
@@ -109,8 +112,6 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     } else if (step === 2) {
       fieldsToValidate = ['dependents'];
     }
-
-    console.log(errors);
 
     const valid = await trigger(fieldsToValidate as any);
     if (!valid) return;
@@ -173,9 +174,13 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
             <label className="block text-xs mb-1">
               {item.label}
               {item.tooltip && (
-                <Tooltip text={item.tooltip}>
-                  <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
-                </Tooltip>
+                <InformationCircleIcon
+                  className="h-5 w-5 inline-block stroke-black"
+                  onClick={() => {
+                    setModalType(item.name);
+                    setIsModal(true);
+                  }}
+                />
               )}
             </label>
             <div className="relative w-full">
@@ -201,9 +206,13 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
             <label className="block text-xs mb-1">
               {item.label}
               {item.tooltip && (
-                <Tooltip text={item.tooltip}>
-                  <InformationCircleIcon className="h-4 w-4 inline-block stroke-black" />
-                </Tooltip>
+                <InformationCircleIcon
+                  className="h-5 w-5 inline-block stroke-black"
+                  onClick={() => {
+                    setModalType(item.name);
+                    setIsModal(true);
+                  }}
+                />
               )}
             </label>
             <select {...register(fieldName as any)} className="w-full p-2 border rounded">
@@ -234,9 +243,13 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
               </label>
               {item.tooltip && (
                 <div className="flex self-start">
-                  <Tooltip text={item.tooltip}>
-                    <InformationCircleIcon className="h-5 w-5 inline-block stroke-black" />
-                  </Tooltip>
+                  <InformationCircleIcon
+                    className="h-5 w-5 inline-block stroke-black"
+                    onClick={() => {
+                      setModalType(item.name);
+                      setIsModal(true);
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -250,6 +263,15 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
   return (
     <div className="max-w-xl mx-auto">
+      <Modal
+        show={isModal}
+        close={() => {
+          setIsModal(false);
+          setModalType('');
+        }}
+      >
+        <InfoModals modalType={modalType} />
+      </Modal>
       <StepIndicator step={step} total={totalSteps} />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -11,16 +11,18 @@ import OtherTaxes from './OtherTaxes';
 import { mapCompass, regionsSpain } from '../../data/taxes';
 import BudgetPresentation from './BudgetPresentation';
 import { Link } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
 import { convertCurrencyInString } from '../../utils/city';
 import { getEssentialReportData, getRegime } from '../../utils/reports';
 import Tooltip from '../Basic/Tooltip';
+import Modal from '../Basic/Modal';
+import { CurrencySelector } from '../Basic/CurrencySelector';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="space-y-6 mb-8">
+    <div className="space-y-6 mb-6">
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
       <p className="text-sm md:text-base text-gray-600 mb-4">{subtitle}</p>
     </div>
@@ -41,10 +43,10 @@ function Card({
   style?: 'normal' | 'future';
 }) {
   return (
-    <div className="w-full grid grid-cols-2 gap-2 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
+    <div className="w-full bg-gray-50 grid grid-cols-2 gap-2 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
       <div className="flex flex-col items-center">
         <p className="text-gray-400 mt-2 text-sm md:text-base">Annual Period</p>
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+        <div className="relative flex flex-col items-center p-4 transition-all duration-300 transform hover:scale-105">
           <div
             className={`p-3 mb-4 rounded-full ${style === 'normal' ? 'bg-blue-50' : 'bg-gray-50'}`}
           >
@@ -65,7 +67,7 @@ function Card({
 
       <div className="flex flex-col gap-1">
         <div className="">
-          <div className="relative flex flex-col items-center px-2 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="relative flex flex-col items-center px-2 py-1 transition-all duration-300 transform hover:scale-105">
             <div className={`p-1 rounded-full`}>
               <ChartBarIcon
                 className={`${style === 'normal' ? 'text-purple-600' : 'text-gray-600'} w-5 h-5`}
@@ -87,7 +89,7 @@ function Card({
         </div>
 
         <div className="">
-          <div className="relative flex flex-col items-center px-4 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="relative flex flex-col items-center px-4 py-1 transition-all duration-300 transform hover:scale-105">
             <div className={`p-1 rounded-full`}>
               <ArrowTrendingUpIcon
                 className={`${style === 'normal' ? 'text-green-600' : 'text-gray-600'} w-5 h-5`}
@@ -115,14 +117,14 @@ function ReportResult({
   data,
   city,
   capitalGains,
-  activeTab = 'Summery',
 }: {
   data: ReportDto;
   city: City | undefined;
   capitalGains?: DefValue[];
-  activeTab?: string;
 }) {
   const { currency, currencyIndex } = useMapStore();
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>('');
 
   const { cumulativeTax, effectiveTax, earners, future, displayMessages } = useMemo(() => {
     return getEssentialReportData(data, currencyIndex, currency, city?.country);
@@ -131,9 +133,9 @@ function ReportResult({
   const regimes = getRegime(data, city?.country || '');
 
   function getSection() {
-    if (activeTab === 'Breakdown') {
+    if (modalType === 'Breakdown') {
       return (
-        <section className="border-b border-gray-300 pb-10">
+        <section className="border-b border-gray-300 pb-10 w-full overflow-y-auto max-h-[90vh]">
           <SectionHeader
             title="Step-by-Step Breakdown"
             subtitle="It is good to know how your tax figures are calculated. This information helps you understand how your final tax amount was determined, from your taxable base to the application of any allowances, reductions, and tax credits."
@@ -213,9 +215,9 @@ function ReportResult({
       );
     }
 
-    if (activeTab === 'Other Taxes') {
+    if (modalType === 'Other Taxes') {
       return (
-        <section className="border-b border-gray-300 pb-10">
+        <section className="border-b border-gray-300 pb-10 w-full overflow-y-auto max-h-[90vh]">
           <SectionHeader
             title="Other Relevant Taxes"
             subtitle="Outline of other taxes that may be relevant to your financial situation. This information helps you be aware of other taxes which can potentially create new financial obligations for you."
@@ -229,6 +231,8 @@ function ReportResult({
             <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
               <Link
                 to={`/taxes/${city?.country}?country=${city?.countriesId}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
               >
                 Check out other taxes in {city?.country}
@@ -239,9 +243,9 @@ function ReportResult({
       );
     }
 
-    if (activeTab === 'Cost of Living') {
+    if (modalType === 'Cost of Living') {
       return (
-        <section className="border-b border-gray-300 pb-10">
+        <section className="border-b border-gray-300 pb-10 w-full overflow-y-auto max-h-[90vh]">
           <SectionHeader
             title="The Cost of Living"
             subtitle={`Practical comparison of your net income with the estimated cost of living in ${city?.name}. This information helps you plan your budget and understand your lifestyle comfort level.`}
@@ -285,6 +289,8 @@ function ReportResult({
             <div className="w-full mt-6 flex flex-col items-center justify-center">
               <Link
                 to={mapCompass[city?.country || 'Spain']}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
               >
                 Cost of Living Map
@@ -294,22 +300,75 @@ function ReportResult({
         </section>
       );
     }
+  }
 
-    return (
+  return (
+    <div className="space-y-8">
+      <Modal
+        show={isModal}
+        close={() => {
+          setIsModal(false);
+          setModalType('');
+        }}
+      >
+        {getSection()}
+      </Modal>
       <section className="border-b border-gray-300 pb-10">
         <SectionHeader
           title="Financial Summery"
           subtitle="Quick financial summery that presents most important income features. This information helps you see
           what you'll be paying and what you'll be taking home."
         />
-        <div className="flex flex-col">
-          <h4 className="text-xl font-semibold text-gray-800 mb-4">{`1st year`}</h4>
-          <Card
-            net={data.net * currencyIndex}
-            cumulativeTax={cumulativeTax}
-            effectiveTax={effectiveTax}
-            currency={currency}
-          />
+
+        <hr className="border-gray-300" />
+
+        <div className="flex flex-col items-end mt-4">
+          <div className="max-w-[190px]">
+            <CurrencySelector rates={data!.userData!.rates!} reverse={true} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+          <div>
+            <h4 className="text-xl font-semibold text-gray-800 mb-4">{`1st year`}</h4>
+            <Card
+              net={data.net * currencyIndex}
+              cumulativeTax={cumulativeTax}
+              effectiveTax={effectiveTax}
+              currency={currency}
+            />
+          </div>
+          <div className="flex mt-4 md:mt-0">
+            <div className="w-full flex flex-col self-end gap-4">
+              <button
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
+                onClick={() => {
+                  setModalType('Breakdown');
+                  setIsModal(true);
+                }}
+              >
+                Calculation Breakdown
+              </button>
+              <button
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
+                onClick={() => {
+                  setModalType('Cost of Living');
+                  setIsModal(true);
+                }}
+              >
+                Cost of Living Check
+              </button>
+              <button
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
+                onClick={() => {
+                  setModalType('Other Taxes');
+                  setIsModal(true);
+                }}
+              >
+                Beyond Income Tax
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="mt-8">
@@ -317,19 +376,24 @@ function ReportResult({
             title="What's Next?"
             subtitle="Your finances are evolving, as some reductions and reliefs can change with time. This information helps you see how your taxes and net will develop in the near future."
           />
-          {future.map((item) => (
-            <div key={`future${item.year}`} className="mb-8">
-              <h4 className="text-xl font-semibold text-gray-800 mb-4">{`${item.year} year`}</h4>
-              <div className="flex">
-                <Card
-                  net={item.net}
-                  cumulativeTax={item.cumulativeTax}
-                  effectiveTax={item.effectiveTax}
-                  currency={currency}
-                />
+
+          <hr className="border-gray-300" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            {future.map((item) => (
+              <div key={`future${item.year}`} className="mb-8">
+                <h4 className="text-xl font-semibold text-gray-800 mb-4">{`${item.year} year`}</h4>
+                <div className="flex">
+                  <Card
+                    net={item.net}
+                    cumulativeTax={item.cumulativeTax}
+                    effectiveTax={item.effectiveTax}
+                    currency={currency}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
           <div className="space-y-4">
             {displayMessages.map((item) => (
               <DisplayBox
@@ -349,10 +413,8 @@ function ReportResult({
           />
         </div>
       </section>
-    );
-  }
-
-  return <div className="space-y-8">{getSection()}</div>;
+    </div>
+  );
 }
 
 export default ReportResult;

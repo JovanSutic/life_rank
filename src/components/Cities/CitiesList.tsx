@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 import { formatCurrency, formatNumber } from '../../utils/saveNet';
 import { safetyTags } from '../../utils/map';
 import type { CardCity } from '../../types/api.types';
+import { useMapStore } from '../../stores/mapStore';
 
 function CitiesList({ data }: { data: CardCity[] }) {
+  const { currency, currencyIndex } = useMapStore();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-gray-50 p-6 py-10 rounded-2xl">
       {data.map((city) => (
@@ -43,7 +45,7 @@ function CitiesList({ data }: { data: CardCity[] }) {
                 <div className="flex gap-2 items-end justify-center">
                   <span className="text-base font-semibold text-gray-800">from</span>
                   <span className="text-3xl font-bold text-blue-600">
-                    {formatCurrency(city.costOfLiving, 'EUR')}
+                    {formatCurrency(city.costOfLiving * currencyIndex, currency)}
                   </span>
                 </div>
               </div>
