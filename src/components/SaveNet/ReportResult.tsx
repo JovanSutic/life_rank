@@ -18,10 +18,11 @@ import { convertCurrencyInString } from '../../utils/city';
 import { getEssentialReportData, getRegime } from '../../utils/reports';
 import Tooltip from '../Basic/Tooltip';
 import Modal from '../Basic/Modal';
+import { CurrencySelector } from '../Basic/CurrencySelector';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="space-y-6 mb-8">
+    <div className="space-y-6 mb-6">
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
       <p className="text-sm md:text-base text-gray-600 mb-4">{subtitle}</p>
     </div>
@@ -42,10 +43,10 @@ function Card({
   style?: 'normal' | 'future';
 }) {
   return (
-    <div className="w-full grid grid-cols-2 gap-2 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
+    <div className="w-full bg-gray-50 grid grid-cols-2 gap-2 px-4 py-2 border border-gray-200 shadow-lg rounded-xl">
       <div className="flex flex-col items-center">
         <p className="text-gray-400 mt-2 text-sm md:text-base">Annual Period</p>
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+        <div className="relative flex flex-col items-center p-4 transition-all duration-300 transform hover:scale-105">
           <div
             className={`p-3 mb-4 rounded-full ${style === 'normal' ? 'bg-blue-50' : 'bg-gray-50'}`}
           >
@@ -66,7 +67,7 @@ function Card({
 
       <div className="flex flex-col gap-1">
         <div className="">
-          <div className="relative flex flex-col items-center px-2 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="relative flex flex-col items-center px-2 py-1 transition-all duration-300 transform hover:scale-105">
             <div className={`p-1 rounded-full`}>
               <ChartBarIcon
                 className={`${style === 'normal' ? 'text-purple-600' : 'text-gray-600'} w-5 h-5`}
@@ -88,7 +89,7 @@ function Card({
         </div>
 
         <div className="">
-          <div className="relative flex flex-col items-center px-4 py-1 bg-white rounded-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="relative flex flex-col items-center px-4 py-1 transition-all duration-300 transform hover:scale-105">
             <div className={`p-1 rounded-full`}>
               <ArrowTrendingUpIcon
                 className={`${style === 'normal' ? 'text-green-600' : 'text-gray-600'} w-5 h-5`}
@@ -319,7 +320,15 @@ function ReportResult({
           what you'll be paying and what you'll be taking home."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <hr className="border-gray-300" />
+
+        <div className="flex flex-col items-end mt-4">
+          <div className="max-w-[190px]">
+            <CurrencySelector rates={data!.userData!.rates!} reverse={true} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
           <div>
             <h4 className="text-xl font-semibold text-gray-800 mb-4">{`1st year`}</h4>
             <Card
@@ -332,7 +341,7 @@ function ReportResult({
           <div className="flex mt-4 md:mt-0">
             <div className="w-full flex flex-col self-end gap-4">
               <button
-                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg"
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
                 onClick={() => {
                   setModalType('Breakdown');
                   setIsModal(true);
@@ -341,7 +350,7 @@ function ReportResult({
                 Calculation Breakdown
               </button>
               <button
-                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg"
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
                 onClick={() => {
                   setModalType('Cost of Living');
                   setIsModal(true);
@@ -350,7 +359,7 @@ function ReportResult({
                 Cost of Living Check
               </button>
               <button
-                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg"
+                className="cursor-pointer font-semibold text-lg text-blue-500 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg"
                 onClick={() => {
                   setModalType('Other Taxes');
                   setIsModal(true);
@@ -367,7 +376,10 @@ function ReportResult({
             title="What's Next?"
             subtitle="Your finances are evolving, as some reductions and reliefs can change with time. This information helps you see how your taxes and net will develop in the near future."
           />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+          <hr className="border-gray-300" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
             {future.map((item) => (
               <div key={`future${item.year}`} className="mb-8">
                 <h4 className="text-xl font-semibold text-gray-800 mb-4">{`${item.year} year`}</h4>
