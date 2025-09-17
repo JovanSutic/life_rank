@@ -17,13 +17,7 @@ function CitiesPage() {
 
   const { country } = useParams();
 
-  const {
-    data: spainData,
-    isLoading: spainIsLoading,
-    isFetching: spainIsFetching,
-    isError: spainIsError,
-    error: spainError,
-  } = useQuery({
+  const { data, isLoading, isFetching, isError, error } = useQuery({
     queryKey: ['GET_CITY_CARDS', `${country}-60`],
     queryFn: () => getCityCards(country!, 60),
     enabled: !!country,
@@ -56,11 +50,7 @@ function CitiesPage() {
               will see your net earnings, local tax rates, and total financial impact. All for free.
             </p>
 
-            <AsyncStateWrapper
-              isLoading={spainIsFetching || spainIsLoading}
-              isError={spainIsError}
-              error={spainError}
-            >
+            <AsyncStateWrapper isLoading={isLoading || isFetching} isError={isError} error={error}>
               <div>
                 <div className="mt-12">
                   <div className="flex flex-col items-center justify-center space-y-4 mb-8">
@@ -76,7 +66,7 @@ function CitiesPage() {
                       <ChevronRightIcon className="ml-1 h-4 w-4" />
                     </Link>
                   </div>
-                  <CitiesList data={spainData?.data || []} />
+                  <CitiesList data={data?.data || []} loading={isLoading || isFetching} />
                 </div>
                 <Link
                   to="/"

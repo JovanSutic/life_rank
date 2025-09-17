@@ -14,13 +14,7 @@ const currencyData = {
   GBP: { icon: CurrencyPoundIcon, name: 'GBP' },
 };
 
-export function CurrencySelector({
-  rates,
-  reverse,
-}: {
-  rates: Record<string, number>;
-  reverse: boolean;
-}) {
+function CurrencySelector({ rates, reverse }: { rates: Record<string, number>; reverse: boolean }) {
   const { currency: activeCurrency, setCurrency } = useMapStore();
 
   const handleCurrencyChange = (currency: CurrencyOptions) => {
@@ -32,7 +26,7 @@ export function CurrencySelector({
   };
 
   return (
-    <div className="inline-flex rounded-lg border border-gray-200 bg-white shadow-md">
+    <div className="inline-flex divide-x divide-gray-200 border border-gray-200 rounded-xl overflow-hidden bg-white">
       {Object.entries(currencyData).map(([key, { icon: Icon, name }]) => {
         const currency = key as CurrencyOptions;
         const isActive = activeCurrency === currency;
@@ -40,22 +34,20 @@ export function CurrencySelector({
           <button
             key={currency}
             onClick={() => handleCurrencyChange(currency)}
-            className={`
-              flex flex-col cursor-pointer items-center justify-center py-2 px-5 transition-colors duration-200 ease-in-out
+            className={`flex cursor-pointer items-center gap-1 px-4 py-2 text-sm font-medium transition-colors 
               ${
                 isActive
-                  ? 'bg-blue-500 text-white hover:bg-blue-600'
-                  : 'text-gray-900 hover:bg-gray-100'
-              }
-              
-              first:rounded-l-lg last:rounded-r-lg
-            `}
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+              }`}
           >
-            <Icon className="h-5 w-5" />
-            <span className="text-xs font-medium">{name}</span>
+            <Icon className="h-4 w-4" />
+            <span>{name}</span>
           </button>
         );
       })}
     </div>
   );
 }
+
+export default CurrencySelector;
