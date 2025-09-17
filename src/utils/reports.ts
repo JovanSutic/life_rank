@@ -4,6 +4,19 @@ import type { CurrencyOptions } from '../types/budget.types';
 import type { BreakdownItem, DisplayItems, Earners, RegimeItem } from '../types/flow.types';
 import { formatCurrency } from './saveNet';
 
+export function getDescriptionForType(type: string) {
+  switch (type) {
+    case 'Breakdown':
+      return 'How we calculated your net income';
+    case 'Cost of Living':
+      return 'Compare income against real monthly costs';
+    case 'Other Taxes':
+      return 'Understand additional taxes';
+    default:
+      return '';
+  }
+}
+
 function getDisplayMessages(country: string) {
   if (country === 'Portugal') {
     return displayMessages.portugal;

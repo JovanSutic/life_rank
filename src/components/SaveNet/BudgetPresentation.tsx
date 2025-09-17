@@ -1,13 +1,57 @@
-import { WalletIcon, TrophyIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { formatCurrency } from '../../utils/saveNet';
 import type { CurrencyOptions } from '../../types/budget.types';
-import Tooltip from '../Basic/Tooltip';
 
 interface BudgetCostData {
   name: string;
   description: string;
   num: number;
   savings?: string;
+}
+
+function YearlySavingsCard({
+  year,
+  savingsLowCost,
+  savingsComfort,
+  currency,
+}: {
+  year: string;
+  savingsLowCost: number;
+  savingsComfort: number;
+  currency: CurrencyOptions;
+}) {
+  return (
+    <div className="w-full bg-white p-2 space-y-2">
+      {/* Year */}
+      <h3 className="text-base text-gray-500">{year}</h3>
+
+      {/* Savings Comparison */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Low Cost */}
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl p-4">
+          <div className="text-xl">🧺</div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">Low Cost Budget</span>
+            <span className="text-xl font-semibold text-blue-700 mt-1">
+              {formatCurrency(savingsLowCost, currency)}
+            </span>
+            <span className="text-xs text-gray-400">Estimated savings</span>
+          </div>
+        </div>
+
+        {/* Comfort */}
+        <div className="flex items-start gap-3 bg-purple-50 border border-purple-100 rounded-xl p-4">
+          <div className="text-xl">🌟</div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">Comfort Budget</span>
+            <span className="text-xl font-semibold text-purple-700 mt-1">
+              {formatCurrency(savingsComfort, currency)}
+            </span>
+            <span className="text-xs text-gray-400">Estimated savings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BudgetPresentation({
@@ -29,78 +73,51 @@ function BudgetPresentation({
 
   return (
     <>
-      <div className="rounded-2xl shadow-lg border border-gray-200 px-2 py-6 mb-8">
-        <div className="flex flex-col items-center gap-2 mb-8">
-          <h3 className="text-sm md:text-base font-bold text-blue-500 uppercase">
-            Cost of Living Info for {city}
+      <div className="w-full bg-white rounded-2xl space-y-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-1">
+            Your Cost of Living in {city}
           </h3>
-          <p className="text-base text-gray-700">Your use case: {peopleTrack}</p>
+          <p className="text-base text-gray-500">{peopleTrack}</p>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {costOfLiving.map((item, index) => (
-            <div className="flex flex-col items-center gap-1" key={index}>
-              <div className={`p-3 rounded-full ${index === 0 ? 'bg-blue-50' : 'bg-green-50'}`}>
-                {index === 0 ? (
-                  <WalletIcon className={`text-blue-700 w-8 h-8`} />
-                ) : (
-                  <TrophyIcon className={`text-green-700 w-8 h-8`} />
-                )}
-              </div>
-              <div className="flex gap-1">
-                <Tooltip text={item.description}>
-                  <InformationCircleIcon className="h-5 w-5 inline-block stroke-black align-super" />
-                </Tooltip>
-                <p className="text-gray-500 text-sm md:text-base">{item.name}</p>
-              </div>
 
-              <p className="text-xl md:text-2xl font-bold">{formatCurrency(item.num, currency)}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {costOfLiving.map((item, idx) => (
+            <div
+              key={item.name}
+              className={`flex flex-col gap-2 border rounded-xl px-4 py-3 transition-all duration-200
+              ${idx === 0 ? 'border-blue-200 bg-blue-50' : 'border-purple-200 bg-purple-50'}`}
+            >
+              {/* Label + Monthly cost */}
+              <div className="flex flex-col gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-gray-700 mb-2">{item.name}</p>
+                  <p className="text-xs text-gray-500">{item.description}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <p className="text-xl font-bold text-gray-900">
+                    {formatCurrency(item.num, currency)}
+                  </p>
+                  <p className="text-sm text-gray-500">/year</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="mb-2">
-        <div className="flex flex-col items-center gap-2 mb-4">
-          <h3 className="text-sm md:text-base font-bold text-blue-500 uppercase">
-            Lifestyle & Savings Projection
-          </h3>
+      <div className="mb-2 mt-6">
+        <div className="flex flex-col gap-2 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Savings Projection</h3>
         </div>
         <div>
-          {netIncomeProjection.map((item, index) => (
-            <div
-              key={index}
-              className={`bg-white px-4 py-6 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 gap-2 items-center ${index !== netIncomeProjection.length - 1 ? 'border-b border-gray-300 mb-3' : ''}`}
-            >
-              <div className="w-full flex flex-col gap-1">
-                <div className="w-full flex gap-6 items-center">
-                  <p className="font-medium text-gray-500 text-xl md:text-2xl">{item.name}</p>
-                  <p className="font-bold text-gray-800 text-base md:text-lg">
-                    Net: {formatCurrency(item.num, currency)}
-                  </p>
-                </div>
-                <div className="w-full flex gap-2 items-center">
-                  <p className="text-sm md:text-base text-gray-500 italic">{item.description}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {costOfLiving.map((itemC, indexC) => (
-                  <div
-                    className={`flex flex-col items-center gap-1 p-2 border rounded-lg ${indexC === 0 ? 'border-blue-300' : 'border-green-300'}`}
-                    key={indexC}
-                  >
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm md:text-base font-base text-center">{itemC.savings}</p>
-                    </div>
-                    <div className="flex flex-col mt-2">
-                      <p
-                        className={`text-xl font-bold ${item.num - itemC.num < 0 ? 'text-red-500' : indexC === 0 ? 'text-blue-600' : 'text-green-600'}`}
-                      >
-                        {formatCurrency(item.num - itemC.num, currency)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {netIncomeProjection.map((item) => (
+            <YearlySavingsCard
+              year={item.name}
+              key={item.name}
+              savingsLowCost={item.num - costOfLiving[0].num}
+              savingsComfort={item.num - costOfLiving[1].num}
+              currency={currency}
+            />
           ))}
         </div>
       </div>
