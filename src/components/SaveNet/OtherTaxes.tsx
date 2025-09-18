@@ -18,15 +18,19 @@ const OtherTaxes = ({
     regionalWealthTaxDetails[regionName] || 'Details for this region are not available.';
 
   const renderTaxCard = (definitionValues: DefValue[]) => (
-    <div className="bg-gray-100 p-4 rounded-2xl shadow-inner mt-4">
-      <h4 className="text-xl font-semibold text-gray-800 mb-2">Key Rates</h4>
+    <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm mt-6">
+      <h4 className="text-base font-semibold text-gray-800 mb-4">Key Tax Rates</h4>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {definitionValues
           .filter((item) => item.note?.includes('Tax Bracket'))
           .map((item) => (
-            <div key={item.id} className="bg-white p-4 rounded-xl shadow-md border border-gray-200">
-              <p className="text-lg font-bold text-blue-500">{item.value}</p>
-              <p className="text-sm md:text-base text-gray-600 mt-1">
+            <div
+              key={item.id}
+              className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-blue-400 hover:shadow transition"
+            >
+              <p className="text-base font-semibold text-blue-600">{item.value}</p>
+              <p className="text-sm text-gray-600 mt-1 leading-snug">
                 {convertCurrencyInString(item.comment || '', currencyIndex, currency)}
               </p>
             </div>
@@ -65,18 +69,21 @@ const OtherTaxes = ({
         <div>
           {renderTaxCard(capitalGainsData)}
 
-          <div className="mt-8 pb-6">
+          <div className="mt-10 pb-8">
             <h4 className="text-base font-semibold text-gray-800 mb-4">Additional Details</h4>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {capitalGainsData
                 .filter((item) => !item.note?.includes('Tax'))
                 .map((detail) => (
                   <div
                     key={detail.id}
-                    className="bg-white p-5 rounded-xl shadow-md border border-gray-200"
+                    className="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:border-blue-400 hover:shadow-sm transition"
                   >
-                    <p className="font-bold md:text-lg text-gray-800 mb-1">{detail.note}</p>
-                    <p className="text-gray-600 text-sm md:text-base">{detail.comment}</p>
+                    <p className="text-sm font-medium text-gray-700 mb-1">{detail.note}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {convertCurrencyInString(detail.comment || '', currencyIndex, currency)}
+                    </p>
                   </div>
                 ))}
             </div>

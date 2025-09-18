@@ -2,6 +2,7 @@ import { ExclamationTriangleIcon, FaceSmileIcon } from '@heroicons/react/24/outl
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState, type FormEvent } from 'react';
+import { Button } from './Button';
 
 const Newsletter = () => {
   const [honeypot, setHoneypot] = useState<string>('');
@@ -111,13 +112,9 @@ const Newsletter = () => {
             disabled={isLoading}
             required
           />
-          <button
-            type="submit"
-            className="w-full cursor-pointer sm:w-auto px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gray-700 hover:bg-gray-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-            disabled={isLoading}
-          >
+          <Button type="submit" variant="secondary" disabled={isLoading}>
             {isLoading ? 'Subscribing...' : 'Subscribe'}
-          </button>
+          </Button>
         </form>
       )}
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}

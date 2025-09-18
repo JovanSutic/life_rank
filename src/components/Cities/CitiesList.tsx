@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
 import { formatCurrency, formatNumber } from '../../utils/saveNet';
 import { safetyTags } from '../../utils/map';
 import type { CardCity } from '../../types/api.types';
 import { useMapStore } from '../../stores/mapStore';
+import { Button } from '../Basic/Button';
 
 const AffordabilityTag = ({ amount }: { amount: number }) => {
   if (amount <= 1100) {
@@ -155,17 +155,13 @@ function CitiesList({
             </div>
 
             {/* CTA */}
-            <Link
+            <Button
               to={`/net-save?cityId=${city.id}`}
-              className="mt-6 w-full inline-flex items-center justify-center px-5 py-3 
-                text-sm font-semibold rounded-xl shadow bg-blue-600 hover:bg-blue-700 
-                text-white transition-all duration-200 focus:outline-none focus:ring-2 
-                focus:ring-offset-2 focus:ring-blue-500"
-              title={`Calculate for ${city.name}`}
+              className="mt-6 w-full"
               aria-label={`Calculate net income in ${city.name}`}
             >
               Calculate Your Net Income →
-            </Link>
+            </Button>
           </div>
         </div>
       ))}

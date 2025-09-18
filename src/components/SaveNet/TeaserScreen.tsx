@@ -3,6 +3,7 @@ import { trackEvent } from '../../utils/analytics';
 import type { City, DefValue, ReportDto } from '../../types/api.types';
 import ReportResult from './ReportResult';
 import { Link } from 'react-router-dom';
+import { Button } from '../Basic/Button';
 
 function TeaserScreen({
   city,
@@ -26,19 +27,16 @@ function TeaserScreen({
       </h1>
       <div className="mb-8">
         <ReportResult data={data} city={city} capitalGains={capitalGains} />
-        <div className="w-full mt-10 flex flex-col items-center justify-center gap-6">
-          <button
-            onClick={reset}
-            className="w-full block md:w-[320px] py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer"
-          >
+        <div className="w-full mt-10 flex flex-col items-center justify-center">
+          <Button onClick={reset} className="w-full block md:w-[320px]">
             Reset calculator for {city?.name}
-          </button>
+          </Button>
 
           <Link
             to={`/cities/${city?.country}`}
-            className="cursor-pointer font-semibold text-center text-base text-gray-500 hover:underline "
+            className="inline-flex mt-8 items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
           >
-            Back to cities in {city?.country}
+            ← Go Back to Cities in {city?.country}
           </Link>
         </div>
       </div>

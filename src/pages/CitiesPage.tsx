@@ -1,4 +1,3 @@
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { trackPageview } from '../utils/analytics';
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -60,19 +59,19 @@ function CitiesPage() {
                     </div>
                     <Link
                       to={mapCompass[country || '']}
-                      className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                      className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      See {country} on the Map
-                      <ChevronRightIcon className="ml-1 h-4 w-4" />
+                      View Map of {country} →
                     </Link>
                   </div>
                   <CitiesList data={data?.data || []} loading={isLoading || isFetching} />
                 </div>
+
                 <Link
                   to="/"
-                  className="mt-8 inline-flex items-center text-lg underline text-gray-600 hover:text-gray-800 transition-colors"
+                  className="inline-flex mt-8 items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
                 >
-                  Back to Home
+                  ← Go Back to Home
                 </Link>
               </div>
             </AsyncStateWrapper>
