@@ -10,7 +10,6 @@ import DisplayBox from '../Basic/DisplayBox';
 import OtherTaxes from './OtherTaxes';
 import { mapCompass, regionsSpain } from '../../data/taxes';
 import BudgetPresentation from './BudgetPresentation';
-import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { useMapStore } from '../../stores/mapStore';
 import type { CurrencyOptions } from '../../types/budget.types';
@@ -19,23 +18,18 @@ import { getDescriptionForType, getEssentialReportData, getRegime } from '../../
 import Modal from '../Basic/Modal';
 import CurrencySelector from '../Basic/CurrencySelector';
 import type { BreakdownItem } from '../../types/flow.types';
+import { Button } from '../Basic/Button';
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="space-y-6 mb-6">
-      <h2 className="text-lg font-semibold mb-3">{title}</h2>
-      <p className="text-sm md:text-base text-gray-600 mb-4">{subtitle}</p>
+    <div className="mb-6">
+      <h2 className="text-base md:text-lg font-semibold text-gray-800">{title}</h2>
+      <p className="mt-2 text-sm text-gray-600 leading-relaxed">{subtitle}</p>
     </div>
   );
 }
 
-export function IncomeBreakdownTable({
-  items,
-  name = '',
-}: {
-  items: BreakdownItem[];
-  name?: string;
-}) {
+function IncomeBreakdownTable({ items, name = '' }: { items: BreakdownItem[]; name?: string }) {
   return (
     <div className="w-full bg-white border border-gray-200 rounded-2xl shadow-sm">
       <div className="px-4 py-4 border-b border-gray-100">
@@ -209,14 +203,14 @@ function ReportResult({
               country={city?.country || ''}
             />
             <div className="w-full mt-6 px-4 flex flex-col items-center justify-center">
-              <Link
+              <Button
                 to={`/taxes/${city?.country}?country=${city?.countriesId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+                variant="neutral"
+                isTarget
+                className="w-full md:w-[320px]"
               >
                 Check out other taxes in {city?.country}
-              </Link>
+              </Button>
             </div>
           </div>
         </section>
@@ -263,14 +257,14 @@ function ReportResult({
               />
             </div>
             <div className="w-full mt-6 flex flex-col items-center justify-center">
-              <Link
+              <Button
                 to={mapCompass[city?.country || 'Spain']}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors"
+                variant="neutral"
+                isTarget
+                className="w-full md:w-[320px]"
               >
                 Cost of Living Map
-              </Link>
+              </Button>
             </div>
           </div>
         </section>

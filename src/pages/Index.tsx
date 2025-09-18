@@ -161,10 +161,9 @@ function Index() {
 
                   <Link
                     to={`/cities/${activeCountry}`}
-                    className="mt-8 inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+                    className="mt-8 inline-flex items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
                   >
-                    See all cities in {activeCountry}
-                    <ChevronRightIcon className="ml-1 h-4 w-4" />
+                    See all cities in {activeCountry} →
                   </Link>
                 </AsyncStateWrapper>
               </div>

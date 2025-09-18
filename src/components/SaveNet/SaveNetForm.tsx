@@ -11,6 +11,7 @@ import type { FormItem } from '../../types/city.types';
 import { currencyMap } from '../../utils/budgetMaps';
 import InfoModals from './InfoModals';
 import Modal from '../Basic/Modal';
+import { Button } from '../Basic/Button';
 
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
@@ -151,12 +152,8 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
         idx !== undefined
           ? `earners[${idx}].${item.condition.dependsOn}`
           : item.condition.dependsOn;
-
       const dependsOnValue = getNestedValue(watchedValues, dependsOnPath);
-
-      if (!item.condition.assertionFunction(dependsOnValue)) {
-        return null; // Don't render if the assertion is false
-      }
+      if (!item.condition.assertionFunction(dependsOnValue)) return null;
     }
 
     const fieldName =
@@ -166,96 +163,95 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
         ? (errors.earners as any)?.[idx]?.[item.name]?.message
         : (errors.dependents as any)?.[item.name]?.message;
 
+    const label = (
+      <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+        {item.label}
+        {item.tooltip && (
+          <InformationCircleIcon
+            className="h-4 w-4 ml-1 text-gray-400 hover:text-blue-600 transition cursor-pointer"
+            onClick={() => {
+              setModalType(item.name);
+              setIsModal(true);
+            }}
+          />
+        )}
+      </label>
+    );
+
     switch (item.type) {
       case 'text':
       case 'number':
         return (
           <div key={fieldName} className="flex-1">
-            <label className="block text-xs mb-1">
-              {item.label}
-              {item.tooltip && (
-                <InformationCircleIcon
-                  className="h-5 w-5 inline-block stroke-black"
-                  onClick={() => {
-                    setModalType(item.name);
-                    setIsModal(true);
-                  }}
-                />
-              )}
-            </label>
-            <div className="relative w-full">
+            {label}
+            <div className="relative">
               <input
                 type={item.type}
                 step="0.01"
-                {...register(fieldName as any, { valueAsNumber: item.type === 'number' })}
-                className="w-full p-2 pr-10 border rounded appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 placeholder={item.label}
+                {...register(fieldName as any, { valueAsNumber: item.type === 'number' })}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               />
               {item.name !== 'age' && (
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
                   {currencyMap[watchedValues.earners[idx || 0].currency]}
                 </span>
               )}
             </div>
-            {error && <p className="text-xs text-red-500">{String(error)}</p>}
+            {error && <p className="text-xs text-red-500 mt-1">{String(error)}</p>}
           </div>
         );
+
       case 'select':
         return (
           <div key={fieldName} className="flex-1">
-            <label className="block text-xs mb-1">
-              {item.label}
-              {item.tooltip && (
-                <InformationCircleIcon
-                  className="h-5 w-5 inline-block stroke-black"
-                  onClick={() => {
-                    setModalType(item.name);
-                    setIsModal(true);
-                  }}
-                />
-              )}
-            </label>
-            <select {...register(fieldName as any)} className="w-full p-2 border rounded">
+            {label}
+            <select
+              {...register(fieldName as any)}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            >
               {item.options?.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </select>
-            {error && <p className="text-xs text-red-500">{String(error)}</p>}
+            {error && <p className="text-xs text-red-500 mt-1">{String(error)}</p>}
           </div>
         );
+
       case 'checkbox':
         return (
-          <div key={fieldName} className="flex-1 flex">
-            <div className="w-full min-h-[40px] flex items-center self-end rounded-sm">
-              <input
-                type="checkbox"
-                id={`earners[${idx}].${item.name}`}
-                {...register(fieldName as any)}
-                className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-              />
-              <label
-                htmlFor={`earners[${idx}].${item.name}`}
-                className="ms-2 text-sm font-medium text-gray-900 mr-2"
-              >
-                {item.label}
-              </label>
-              {item.tooltip && (
-                <div className="flex self-start">
+          <div key={fieldName} className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id={`earners[${idx}].${item.name}`}
+              {...register(fieldName as any)}
+              className="w-5 h-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <div className="flex-1">
+              <div className="flex justify-between items-start">
+                <label
+                  htmlFor={`earners[${idx}].${item.name}`}
+                  className="text-sm font-medium text-gray-700 cursor-pointer mr-2"
+                >
+                  {item.label}
+                </label>
+                {item.tooltip && (
                   <InformationCircleIcon
-                    className="h-5 w-5 inline-block stroke-black"
+                    className="h-4 w-4 text-gray-400 hover:text-blue-600 cursor-pointer transition mt-0.5 shrink-0"
                     onClick={() => {
                       setModalType(item.name);
                       setIsModal(true);
                     }}
                   />
-                </div>
-              )}
+                )}
+              </div>
+              {error && <p className="text-xs text-red-500 mt-1">{String(error)}</p>}
             </div>
-            {error && <p className="text-xs text-red-500">{String(error)}</p>}
           </div>
         );
+
       default:
         return null;
     }
@@ -311,14 +307,14 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                   Are you calculating for a couple or family? You can add a second income earner
                   below.
                 </p>
-                <button
-                  type="button"
-                  disabled={!canAddEarner}
+                <Button
                   onClick={() => appendEarner(baseEarner)}
-                  className={`w-full md:w-[320px] py-2 rounded-lg ${canAddEarner ? 'cursor-pointer bg-blue-500 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+                  disabled={!canAddEarner}
+                  variant="neutral"
+                  className="w-full md:w-[320px]"
                 >
                   Add second earner
-                </button>
+                </Button>
               </div>
             </div>
           </section>
@@ -335,42 +331,42 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
             <div className="space-y-6">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-end gap-3">
                   <input
                     id="hasSpouse"
                     type="checkbox"
                     {...register('dependents.hasSpouse' as const)}
-                    className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2"
+                    className="w-5 h-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label
                     htmlFor="hasSpouse"
-                    className="ms-2 text-sm font-medium text-gray-900 mr-2"
+                    className="text-sm font-medium text-gray-700 cursor-pointer inline-flex items-start gap-1 flex-wrap"
                   >
-                    I have dependents
+                    <span>I have dependents</span>
                   </label>
                 </div>
                 {errors.dependents?.hasSpouse && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-red-500 mt-1">
                     {String(errors.dependents?.hasSpouse?.message)}
                   </p>
                 )}
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-end gap-3">
                   <input
                     id="spouseDependent"
                     type="checkbox"
                     {...register('dependents.spouseDependent' as const)}
-                    className="w-5 h-5 text-blue-700 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
+                    className="w-5 h-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label
                     htmlFor="spouseDependent"
-                    className="ms-2 text-sm font-medium text-gray-900 mr-2"
+                    className="text-sm font-medium text-gray-700 cursor-pointer inline-flex items-start gap-1 flex-wrap"
                   >
-                    Dependent spouse (financially dependent)
+                    <span>Dependent spouse (financially dependent)</span>
                   </label>
                 </div>
                 {errors.dependents?.spouseDependent && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-red-500 mt-1">
                     {String(errors.dependents?.spouseDependent?.message)}
                   </p>
                 )}
@@ -378,7 +374,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-base font-medium">Children</div>
+                  <div className="text-base font-medium text-gray-800">Children</div>
                   <div className="text-sm text-gray-500">Add dependent children (ages)</div>
                 </div>
 
@@ -386,38 +382,51 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                   {childFields.map((c, i) => {
                     const ageVal = children?.[i]?.age;
                     return (
-                      <div key={c.id} className="p-3 border border-gray-400 rounded-lg bg-white">
-                        <div className="flex items-center justify-between">
-                          <div className="font-medium">Child {i + 1}</div>
+                      <div
+                        key={c.id}
+                        className="p-3 border border-gray-300 rounded-xl bg-white shadow-sm"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-medium text-gray-800">Child {i + 1}</div>
                           <button
                             type="button"
-                            className="text-sm text-red-600 cursor-pointer"
+                            className="text-sm text-red-600 hover:text-red-800 cursor-pointer transition"
                             onClick={() => removeChild(i)}
                           >
                             Remove
                           </button>
                         </div>
 
-                        <label className="block text-xs mt-2">Age</label>
+                        <label
+                          htmlFor={`dependents.children.${i}.age`}
+                          className="block text-xs font-medium text-gray-700 mb-1"
+                        >
+                          Age
+                        </label>
                         <input
+                          id={`dependents.children.${i}.age`}
                           type="number"
                           min={0}
                           {...register(`dependents.children.${i}.age` as const, {
                             valueAsNumber: true,
                           })}
-                          className="w-28 p-2 border rounded"
+                          className="w-28 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
 
                         {country === 'Spain' &&
                           typeof ageVal === 'number' &&
-                          ageVal < 3 &&
-                          ageVal > 0 && (
+                          ageVal > 0 &&
+                          ageVal < 3 && (
                             <div className="mt-3">
-                              <label className="flex items-center gap-2 text-sm">
+                              <label
+                                htmlFor={`dependents.children.${i}.motherIsEarner`}
+                                className="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer"
+                              >
                                 <input
+                                  id={`dependents.children.${i}.motherIsEarner`}
                                   type="checkbox"
                                   {...register(`dependents.children.${i}.motherIsEarner` as const)}
-                                  className="w-4 h-4"
+                                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                 />
                                 Is the mother one of the income earners?
                               </label>
@@ -425,7 +434,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                           )}
 
                         {errors.dependents?.children?.[i]?.age && (
-                          <p className="text-xs text-red-500">
+                          <p className="text-xs text-red-500 mt-1">
                             {String(errors.dependents?.children?.[i]?.age?.message)}
                           </p>
                         )}
@@ -434,13 +443,9 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
                   })}
 
                   <div>
-                    <button
-                      type="button"
-                      onClick={() => appendChild({ name: '', age: 0 })}
-                      className="mt-4 px-3 py-2 cursor-pointer rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
-                    >
+                    <Button onClick={() => appendChild({ name: '', age: 0 })} variant="secondary">
                       Add child
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -515,12 +520,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
               </div>
 
               <div className="text-right">
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer text-white"
-                >
-                  Confirm & Calculate
-                </button>
+                <Button type="submit">Confirm & Calculate</Button>
               </div>
             </div>
           </section>
@@ -529,22 +529,21 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
         <div className="fixed left-0 right-0 bottom-0 py-4 px-4 md:px-0 bg-white sm:static sm:bg-transparent">
           <div className="max-w-xl mx-auto flex md:justify-center gap-3 pt-6 border-t border-gray-300">
             {step > 1 && (
-              <button
-                type="button"
+              <Button
                 onClick={onBack}
-                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[320px]'} py-2 rounded-lg border cursor-pointer`}
+                variant="neutral"
+                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[320px]'}`}
               >
                 Back
-              </button>
+              </Button>
             )}
             {step < totalSteps && (
-              <button
-                type="button"
+              <Button
                 onClick={onNext}
-                className={`${step > 1 ? 'flex-1' : 'w-full md:w-[320px]'} py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
+                className={`${step === 2 ? 'flex-1' : 'w-full md:w-[320px]'}`}
               >
                 Next step
-              </button>
+              </Button>
             )}
           </div>
         </div>

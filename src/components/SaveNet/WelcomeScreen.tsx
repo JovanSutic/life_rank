@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { trackEvent } from '../../utils/analytics';
 import type { City } from '../../types/api.types';
+import { Button } from '../Basic/Button';
 
 function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) {
   useEffect(() => {
@@ -41,17 +42,14 @@ function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) 
         </li>
       </ul>
 
-      <button
-        onClick={onStart}
-        className="w-full md:w-[320px] mt-6 py-2 cursor-pointer text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors"
-      >
+      <Button onClick={onStart} className="w-full md:w-[320px] mt-6">
         Calculate My Net Income in {city?.name}
-      </button>
+      </Button>
       <Link
         to={`/cities/${city?.country}`}
-        className="w-full block md:w-[320px] cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-6 rounded-lg transition-colors mt-4"
+        className="inline-flex mt-8 items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
       >
-        Go Back to Cities
+        ← Go Back to Cities
       </Link>
     </div>
   );

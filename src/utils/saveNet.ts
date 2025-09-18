@@ -170,7 +170,7 @@ const stepsMap: Record<string, FormItem> = {
   },
   usCitizen: {
     name: 'isUSCitizen',
-    label: 'US Citizen?',
+    label: 'Are you US citizen?',
     type: 'checkbox',
     tooltip: 'Check this box if you are a US citizen.',
   },
