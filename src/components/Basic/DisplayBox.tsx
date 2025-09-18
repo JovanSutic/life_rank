@@ -42,14 +42,15 @@ function DisplayBox({
     },
   };
   return (
-    <div className={`border p-4 rounded-lg ${colorMap[color].box}`}>
+    <div className={`border border-l-4 p-4 rounded-xl ${colorMap[color].box}`}>
       {title && (
-        <h4 className={`font-semibold text-lg md:text-xl ${colorMap[color].title} mb-2`}>
+        <h4 className={`font-semibold text-base text-gray-800 mb-2 ${colorMap[color].title}`}>
           {title}
         </h4>
       )}
-
-      <p className={`text-sm md:text-base ${colorMap[color].message} leading-relaxed`}>{message}</p>
+      <p className={`text-sm text-gray-600 leading-relaxed ${colorMap[color].message}`}>
+        {message}
+      </p>
     </div>
   );
 }
