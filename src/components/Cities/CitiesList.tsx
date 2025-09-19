@@ -132,13 +132,11 @@ function CitiesList({
                 </div>
               </div>
 
-              <p className="text-xs text-gray-400 mb-1 leading-snug">
-                Estimated minimum to cover basic monthly expenses.
-              </p>
+              <p className="text-xs text-gray-400 mb-2 leading-snug">Monthly minimum budget</p>
             </div>
 
             {/* Safety Tags */}
-            <div className="mt-4 w-full border-t border-gray-100 pt-3 space-y-2 text-left">
+            <div className="w-full border-t border-gray-100 pt-3 space-y-2 text-left">
               <div className="flex flex-col gap-1">
                 {safetyTags(city.safetyRating).map((tag, idx) => (
                   <div

@@ -11,10 +11,8 @@ const Newsletter = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
 
-  // Use useMutation for handling the subscription API call
   const mutation = useMutation({
     mutationFn: (email: string) => {
-      // Note: In a real app, VITE_API_URL would be configured. Here we use a placeholder.
       return axios.post(`${import.meta.env.VITE_API_URL}/specials/subscriber`, { email });
     },
     onSuccess: () => {
@@ -23,10 +21,10 @@ const Newsletter = () => {
       setSuccess(true);
     },
     onError: (error) => {
-      let message = 'There was an error. Please, close this window and try try again later.';
+      let message = 'There was an error. Please, close this window and try again later.';
       if (error.message === 'Request failed with status code 404') {
         message =
-          'You are using email of an existing or unsubscribed user which can not be processed at the moment.';
+          'You are using an email of an existing or unsubscribed user which cannot be processed at the moment.';
       }
       setApiError(message);
     },
@@ -42,13 +40,11 @@ const Newsletter = () => {
     setApiError(null);
     setSuccess(null);
 
-    // Basic bot detection using honeypot field
     if (honeypot !== '') {
       console.warn('Bot detected - honeypot field was filled.');
       return;
     }
 
-    // Client-side email validation
     if (!validateEmail(email)) {
       setError('Please enter a valid email address.');
       return;
@@ -61,7 +57,7 @@ const Newsletter = () => {
   const isLoading = mutation.isPending;
 
   return (
-    <div className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 max-w-2xl mx-auto">
+    <div className="text-center p-6 bg-white rounded-2xl shadow-md border border-gray-200 max-w-2xl mx-auto">
       <h3 className="text-3xl font-bold text-gray-800">
         <span className="mr-2 text-4xl">📧</span>
         Subscribe To Our Newsletter
@@ -71,26 +67,29 @@ const Newsletter = () => {
         email.
       </p>
 
-      {/* Conditional rendering for success, error, and form */}
       {success || apiError ? (
         <div
-          className={`mt-6 p-4 rounded-xl flex items-center justify-center space-x-2 ${success ? 'bg-green-100' : 'bg-red-100'}`}
+          className={`mt-6 p-4 rounded-lg border text-sm flex items-center gap-3 transition ${
+            success
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}
         >
           {success ? (
-            <FaceSmileIcon className="h-6 w-6 text-green-600" />
+            <FaceSmileIcon className="h-5 w-5 text-green-500" />
           ) : (
-            <ExclamationTriangleIcon className="h-6 w-6 text-red-600" />
+            <ExclamationTriangleIcon className="h-5 w-5 text-red-500" />
           )}
-          <p className={`text-sm font-medium ${success ? 'text-green-800' : 'text-red-800'}`}>
+          <p className="font-medium">
             {success ? 'Thanks for subscribing! Check your inbox for a confirmation.' : apiError}
           </p>
         </div>
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="mt-6 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4"
+          className="mt-6 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full"
         >
-          {/* Honeypot field for bot prevention */}
+          {/* Honeypot field */}
           <input
             type="text"
             name="honeypot"
@@ -104,19 +103,20 @@ const Newsletter = () => {
           <input
             aria-label="email"
             type="email"
-            className="w-full sm:w-auto flex-grow px-4 py-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:opacity-50 transition"
             placeholder="Your email address"
             autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             disabled={isLoading}
             required
+            className="w-full sm:w-auto flex-grow rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 transition"
           />
-          <Button type="submit" variant="secondary" disabled={isLoading}>
+          <Button type="submit" variant="neutral" disabled={isLoading}>
             {isLoading ? 'Subscribing...' : 'Subscribe'}
           </Button>
         </form>
       )}
+
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </div>
   );

@@ -38,24 +38,34 @@ function IncomeBreakdownTable({ items, name = '' }: { items: BreakdownItem[]; na
 
       <div className="divide-y divide-gray-100">
         {items.map((item, idx) => (
-          <div
-            key={idx}
-            className="grid grid-cols-12 gap-2 items-start px-4 py-3 hover:bg-gray-50 transition-colors"
-          >
-            {/* Name + Explain */}
-            <div className="col-span-5">
-              <p className="text-sm font-medium text-gray-800">{item.name}</p>
-              <p className="text-xs text-gray-500">{item.explain}</p>
+          <div key={idx} className="px-4 py-4 hover:bg-gray-50 transition-colors">
+            {/* Mobile Layout (default), stacked */}
+            <div className="flex flex-col space-y-2 md:hidden">
+              <div>
+                <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.explain}</p>
+              </div>
+              <div className="text-sm text-gray-600 font-mono">{item.calc}</div>
+              <div className="text-sm font-semibold text-gray-900 text-right">{item.total}</div>
             </div>
 
-            {/* Calculation */}
-            <div className="col-span-4 text-sm text-gray-600 flex items-center justify-start font-mono">
-              {item.calc}
-            </div>
+            {/* Desktop Layout (md+), 3 columns */}
+            <div className="hidden md:grid md:grid-cols-12 md:gap-2 md:items-start">
+              {/* Name + Explain */}
+              <div className="col-span-5">
+                <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.explain}</p>
+              </div>
 
-            {/* Total */}
-            <div className="col-span-3 text-sm text-right font-semibold text-gray-900">
-              {item.total}
+              {/* Calculation */}
+              <div className="col-span-4 text-sm text-gray-600 flex items-center font-mono">
+                {item.calc}
+              </div>
+
+              {/* Total */}
+              <div className="col-span-3 text-sm text-right font-semibold text-gray-900">
+                {item.total}
+              </div>
             </div>
           </div>
         ))}
@@ -76,54 +86,46 @@ function IncomeSummaryCard({
   currency: CurrencyOptions;
 }) {
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 space-y-6 transition-all duration-300 hover:shadow-md hover:border-blue-500 hover:-translate-y-0.5">
-      {/* NET INCOME */}
-      <div className="flex items-center gap-4">
-        <div className="p-3 bg-blue-50 rounded-xl">
-          <BanknotesIcon className="w-6 h-6 text-blue-600" />
+    <div className="w-full bg-white border border-gray-200 rounded-xl shadow-sm p-4 md:p-5 transition-all duration-200 hover:shadow-md hover:border-blue-500 hover:-translate-y-[1px]">
+      {/* Net Income */}
+      <div className="flex items-start gap-4 mb-4">
+        <div className="p-2 bg-blue-50 rounded-md">
+          <BanknotesIcon className="w-5 h-5 text-blue-600" />
         </div>
         <div className="flex flex-col">
-          <p className="text-sm font-medium text-gray-500 tracking-wide">Net Income (Annual)</p>
-          <p className="text-3xl font-bold text-gray-900 leading-snug tracking-tight">
-            {formatCurrency(net, currency)}
-          </p>
+          <p className="text-sm text-gray-500">Net Income (Annual)</p>
+          <p className="text-xl font-semibold text-gray-900">{formatCurrency(net, currency)}</p>
         </div>
       </div>
 
       {/* Divider */}
-      <div className="border-t border-gray-100" />
+      <hr className="border-gray-100 mb-4" />
 
-      {/* TAX DATA */}
+      {/* Tax Data */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Total Tax */}
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500 md:text-center tracking-wide">
-            Taxes & Contributions
-          </p>
-          <div className="flex items-center gap-2">
-            <div className="p-2.5 bg-gray-100 rounded-xl">
-              <ChartBarIcon className="w-5 h-5 text-purple-600" />
-            </div>
-            <div className="flex flex-col">
-              <p className="text-lg font-semibold text-gray-900">
-                {formatCurrency(cumulativeTax, currency)}
-              </p>
-            </div>
+        {/* Taxes & Contributions */}
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-gray-100 rounded-md">
+            <ChartBarIcon className="w-5 h-5 text-purple-600" />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm text-gray-500">Taxes & Contributions</p>
+            <p className="text-base font-medium text-gray-800">
+              {formatCurrency(cumulativeTax, currency)}
+            </p>
           </div>
         </div>
 
         {/* Effective Tax Rate */}
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500 md:text-center tracking-wide">Effective Tax Rate</p>
-          <div className="flex items-center gap-2">
-            <div className="p-2.5 bg-gray-100 rounded-xl">
-              <ArrowTrendingUpIcon className="w-5 h-5 text-green-600" />
-            </div>
-            <div className="flex flex-col">
-              <p className="text-lg font-semibold text-gray-900">
-                {formatPercentage(effectiveTax * 100)}
-              </p>
-            </div>
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-gray-100 rounded-md">
+            <ArrowTrendingUpIcon className="w-5 h-5 text-green-600" />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm text-gray-500">Effective Tax Rate</p>
+            <p className="text-base font-medium text-gray-800">
+              {formatPercentage(effectiveTax * 100)}
+            </p>
           </div>
         </div>
       </div>
@@ -301,8 +303,8 @@ function ReportResult({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           {/* Left Column – Income Summary */}
           <div>
-            <div className="mb-5">
-              <h4 className="text-base font-semibold text-gray-700 tracking-wide uppercase">
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-gray-700 tracking-wide uppercase">
                 Year 1 Summary
               </h4>
             </div>
@@ -367,7 +369,7 @@ function ReportResult({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
             {future.map((item) => (
               <div key={`future${item.year}`} className="mb-8">
-                <h4 className="text-base font-semibold text-gray-700 tracking-wide uppercase mb-6">{`Year ${item.year} Summary`}</h4>
+                <h4 className="text-sm font-semibold text-gray-700 tracking-wide uppercase mb-4">{`Year ${item.year} Summary`}</h4>
                 <div className="flex">
                   <IncomeSummaryCard
                     net={item.net}
