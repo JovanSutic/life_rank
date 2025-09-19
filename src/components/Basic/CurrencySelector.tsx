@@ -9,9 +9,9 @@ import { getCurrencyRate } from '../../utils/budget';
 import type { CurrencyString } from '../../types/api.types';
 
 const currencyData = {
-  EUR: { icon: CurrencyEuroIcon, name: 'EUR' },
-  USD: { icon: CurrencyDollarIcon, name: 'USD' },
-  GBP: { icon: CurrencyPoundIcon, name: 'GBP' },
+  EUR: { icon: CurrencyEuroIcon, label: 'EUR' },
+  USD: { icon: CurrencyDollarIcon, label: 'USD' },
+  GBP: { icon: CurrencyPoundIcon, label: 'GBP' },
 };
 
 function CurrencySelector({ rates, reverse }: { rates: Record<string, number>; reverse: boolean }) {
@@ -26,26 +26,33 @@ function CurrencySelector({ rates, reverse }: { rates: Record<string, number>; r
   };
 
   return (
-    <div className="inline-flex divide-x divide-gray-200 border border-gray-200 rounded-xl overflow-hidden bg-white">
-      {Object.entries(currencyData).map(([key, { icon: Icon, name }]) => {
-        const currency = key as CurrencyOptions;
-        const isActive = activeCurrency === currency;
-        return (
-          <button
-            key={currency}
-            onClick={() => handleCurrencyChange(currency)}
-            className={`flex cursor-pointer items-center gap-1 px-4 py-2 text-sm font-medium transition-colors 
-              ${
-                isActive
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
-              }`}
-          >
-            <Icon className="h-4 w-4" />
-            <span>{name}</span>
-          </button>
-        );
-      })}
+    <div className="flex flex-col items-start gap-2">
+      {/* Label */}
+      <p className="text-sm font-medium text-gray-700">Display Currency</p>
+
+      {/* Selector Buttons */}
+      <div className="inline-flex divide-x divide-gray-200 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+        {Object.entries(currencyData).map(([key, { icon: Icon, label }]) => {
+          const currency = key as CurrencyOptions;
+          const isActive = activeCurrency === currency;
+
+          return (
+            <button
+              key={currency}
+              onClick={() => handleCurrencyChange(currency)}
+              className={`flex cursor-pointer items-center gap-1 px-4 py-2 text-sm transition-colors duration-150
+                ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700 font-semibold'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                }`}
+            >
+              <Icon className="h-4 w-4" />
+              <span>{label}</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

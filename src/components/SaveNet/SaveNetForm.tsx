@@ -273,11 +273,10 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {step === 1 && (
           <section className="pb-12 md:pb-0 mb-10 md:mb-2">
-            <h2 className="text-lg font-semibold mb-3">Tell us about your income</h2>
+            <h2 className="text-base font-medium text-gray-800 mb-2">Your Income Details</h2>
             <p className="text-sm text-gray-600 mb-4">
-              We only ask for the tax relevant information necessary to perform on-the-fly tax
-              calculations for {country}. You have full privacy and none of this information will be
-              saved or stored.
+              We only ask for details needed to calculate your taxes accurately — nothing more. All
+              data stays private and is never stored.
             </p>
             <div className="space-y-6">
               {earnerFields.map((f, idx) => (
@@ -322,11 +321,10 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
         {step === 2 && (
           <section>
-            <h2 className="text-lg font-semibold mb-3">Tell us about your dependents</h2>
+            <h2 className="text-base font-medium text-gray-800 mb-2">Family & Dependents</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Your dependent information is essential for calculating potential tax reliefs,
-              deductions, and credits that could significantly lower your tax liability. You have
-              full privacy and none of this information will be saved or stored.
+              We factor in dependents to identify tax reliefs and deductions you may qualify for.
+              Your data stays private and is never stored.
             </p>
 
             <div className="space-y-6">
@@ -455,10 +453,10 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
         {step === 3 && (
           <section>
-            <h2 className="text-lg font-semibold mb-3">Review & submit</h2>
+            <h2 className="text-base font-medium text-gray-800 mb-2">Review Your Details</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Check your data. Tap Edit to go back to a step and change values. Your progress will
-              be preserved.
+              Take a moment to confirm your inputs. You can go back and edit any step — your
+              progress will be saved.
             </p>
 
             <div className="space-y-4">

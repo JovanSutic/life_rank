@@ -22,7 +22,7 @@ function TeaserScreen({
 
   return (
     <div className="w-full py-6 bg-white rounded-xl pt-6">
-      <h1 className="text-xl md:text-2xl text-center font-bold text-blue-500 mb-6 md:mb-8">
+      <h1 className="text-xl md:text-2xl font-semibold text-gray-900 text-center mb-6 leading-snug">
         Your Net Calculation for {city?.name}
       </h1>
       <div className="mb-8">
