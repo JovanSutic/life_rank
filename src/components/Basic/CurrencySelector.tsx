@@ -28,7 +28,7 @@ function CurrencySelector({ rates, reverse }: { rates: Record<string, number>; r
   return (
     <div className="flex flex-col items-start gap-2">
       {/* Label */}
-      <p className="text-sm font-medium text-gray-700">Display Currency</p>
+      <p className="text-base font-medium text-gray-700">Display Currency</p>
 
       {/* Selector Buttons */}
       <div className="inline-flex divide-x divide-gray-200 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">

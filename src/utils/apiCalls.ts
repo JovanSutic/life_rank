@@ -4,6 +4,7 @@ import type {
   Budget,
   CardCity,
   City,
+  CityCardFilters,
   CityContext,
   CityFeel,
   CrimesSummary,
@@ -237,11 +238,29 @@ export async function getTaxDefValues(countryId: number): Promise<FieldData[]> {
   }
 }
 
-export async function getCityCards(country: string, take: number): Promise<{ data: CardCity[] }> {
+export async function getCityCards(filters: CityCardFilters): Promise<{ data: CardCity[] }> {
+  const { sortBy, take, offset, size, country, seaside } = filters;
   try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/cities/cards?country=${country}&take=${take}&sortBy=id&orderBy=asc`
-    );
+    let queryParams = 'north=56.04725&south=28.14911&east=54.00879&west=-21.00586&order=desc';
+    if (sortBy) {
+      queryParams = `${queryParams}&sortBy=${sortBy}`;
+    }
+    if (take) {
+      queryParams = `${queryParams}&take=${take}`;
+    }
+    if (offset) {
+      queryParams = `${queryParams}&offset=${offset}`;
+    }
+    if (size) {
+      queryParams = `${queryParams}&size=${size}`;
+    }
+    if (country) {
+      queryParams = `${queryParams}&country=${country}`;
+    }
+    if (seaside) {
+      queryParams = `${queryParams}&seaside=true`;
+    }
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/cities/cards?${queryParams}`);
     return res.data;
   } catch (error) {
     console.error('Failed to fetch layer types:', error);

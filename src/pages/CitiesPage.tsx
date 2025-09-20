@@ -18,7 +18,7 @@ function CitiesPage() {
 
   const { data, isLoading, isFetching, isError, error } = useQuery({
     queryKey: ['GET_CITY_CARDS', `${country}-60`],
-    queryFn: () => getCityCards(country!, 60),
+    queryFn: () => getCityCards({ sortBy: 'size', take: 35, country }),
     enabled: !!country,
     retry: 1,
     staleTime: 60 * 60 * 1000,
