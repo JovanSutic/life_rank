@@ -180,6 +180,7 @@ function Index() {
                   isError={isError}
                   error={error}
                   fixed={true}
+                  hidden={true}
                 >
                   <div className="max-w-5xl mx-auto mt-4 mb-4 space-y-3">
                     <div className="flex justify-end">

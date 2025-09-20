@@ -9,6 +9,7 @@ type AsyncStateWrapperProps = {
   children: React.ReactNode;
   transparent?: boolean;
   fixed?: boolean;
+  hidden?: boolean;
 };
 
 function AsyncStateWrapper({
@@ -18,13 +19,16 @@ function AsyncStateWrapper({
   children,
   transparent = false,
   fixed = false,
+  hidden = false,
 }: AsyncStateWrapperProps) {
   return (
     <>
       {isError && (
         <ErrorOverlay message={error instanceof Error ? error.message : 'Something went wrong.'} />
       )}
-      {isLoading && !isError && (transparent ? <DotLoader /> : <LoadingOverlay isFixed={fixed} />)}
+      {isLoading &&
+        !isError &&
+        (transparent ? <DotLoader /> : <LoadingOverlay isFixed={fixed} isHidden={hidden} />)}
       {children}
     </>
   );
