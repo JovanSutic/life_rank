@@ -292,3 +292,12 @@ export interface CardCity extends City {
 export interface CityCardsResponse {
   data: CardCity[];
 }
+
+export interface CityCardFilters {
+  country?: string;
+  sortBy?: string;
+  take?: number;
+  offset?: number;
+  size?: number;
+  seaside?: boolean;
+}

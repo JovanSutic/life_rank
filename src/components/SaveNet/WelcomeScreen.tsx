@@ -9,47 +9,53 @@ function WelcomeScreen({ city, onStart }: { city?: City; onStart: () => void }) 
     trackEvent('net-flow-welcome');
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center pt-16">
-      <h1 className="text-xl text-center font-bold text-gray-800 mb-8">
-        See What Living in {city?.name} Would Actually Cost You — Taxes Included.
+    <div className="flex flex-col items-center justify-center pt-10 px-4 md:px-0">
+      <h1 className="text-xl md:text-2xl font-semibold text-gray-900 text-center mb-6 leading-snug">
+        Understand the True Cost of Living in {city?.name}
       </h1>
 
-      <ul className="text-left space-y-3 mb-6">
-        <li className="flex items-start">
-          <span className="text-green-600 text-lg mr-2">✅</span>
-          <span className="text-gray-700">
-            Personalized for <strong>your tax situation</strong> — whether you're solo, a couple, or
-            family.
-          </span>
-        </li>
-        <li className="flex items-start">
-          <span className="text-green-600 text-lg mr-2">✅</span>
-          <span className="text-gray-700">
-            Includes <strong>income tax + cost of living</strong> — all in one easy estimate.
-          </span>
-        </li>
-        <li className="flex items-start">
-          <span className="text-green-600 text-lg mr-2">✅</span>
-          <span className="text-gray-700">
-            Takes <strong>under 60 seconds</strong> — no signup required.
-          </span>
-        </li>
-        <li className="flex items-start">
-          <span className="text-green-600 text-lg mr-2">✅</span>
-          <span className="text-gray-700">
-            Designed for <strong>remote workers and digital nomads</strong> like you.
-          </span>
-        </li>
-      </ul>
+      <p className="text-gray-600 text-sm text-center max-w-2xl mb-10">
+        Get a personalized breakdown of your potential income, local taxes, and cost of living — all
+        in under a minute. Whether you're solo, a couple, or a family, we tailor the insights to
+        your situation.
+      </p>
 
-      <Button onClick={onStart} className="w-full md:w-[320px] mt-6">
+      <div className="grid gap-4 md:gap-5 mb-12 max-w-2xl w-full">
+        <div className="flex items-start space-x-3">
+          <div className="text-blue-600">✔</div>
+          <div className="text-gray-700">
+            Fully customized for <strong>your tax profile</strong> and lifestyle setup.
+          </div>
+        </div>
+        <div className="flex items-start space-x-3">
+          <div className="text-blue-600">✔</div>
+          <div className="text-gray-700">
+            Includes <strong>net income, taxes, and cost of living</strong> — all in one view.
+          </div>
+        </div>
+        <div className="flex items-start space-x-3">
+          <div className="text-blue-600">✔</div>
+          <div className="text-gray-700">
+            No signup required — <strong>60 seconds or less</strong> to complete.
+          </div>
+        </div>
+        <div className="flex items-start space-x-3">
+          <div className="text-blue-600">✔</div>
+          <div className="text-gray-700">
+            Built specifically for <strong>remote workers and self-employed pros</strong>.
+          </div>
+        </div>
+      </div>
+
+      <Button onClick={onStart} className="w-full md:w-[320px] mt-4">
         Calculate My Net Income in {city?.name}
       </Button>
+
       <Link
         to={`/cities/${city?.country}`}
-        className="inline-flex mt-8 items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
+        className="inline-flex mt-8 items-center text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
       >
-        ← Go Back to Cities
+        ← Back to City Overview
       </Link>
     </div>
   );

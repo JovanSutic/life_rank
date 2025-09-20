@@ -7,6 +7,7 @@ import {
   contextData,
   cityFeelList,
   city,
+  cityCards,
   cityFeel,
   healthcareCityData,
   healthcareCountryData,
@@ -92,6 +93,15 @@ export const handlers = [
     try {
       await delay(700);
       return HttpResponse.json(contextData);
+    } catch (error) {
+      console.error('Failed to parse request:', error);
+      return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
+    }
+  }),
+  http.get(`${import.meta.env.VITE_API_URL}/cities/cards`, async () => {
+    try {
+      await delay(700);
+      return HttpResponse.json(cityCards);
     } catch (error) {
       console.error('Failed to parse request:', error);
       return HttpResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });

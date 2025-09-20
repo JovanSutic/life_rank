@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import FlagElement from './FlagElement';
+import FlagElement from '../Basic/FlagElement';
 
 type CountrySelectorProps = {
   countries: string[];
