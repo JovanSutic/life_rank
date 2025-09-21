@@ -3,6 +3,7 @@ import { safetyTags } from '../../utils/map';
 import type { CardCity } from '../../types/api.types';
 import { useMapStore } from '../../stores/mapStore';
 import { Button } from '../Basic/Button';
+import FlagElement from '../Basic/FlagElement';
 
 const AffordabilityTag = ({ amount }: { amount: number }) => {
   if (amount <= 1100) {
@@ -81,7 +82,7 @@ function CitiesList({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-gray-50 p-6 py-10 rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-white md:bg-gray-50 px-0 md:px-6 py-6 md:py-10 rounded-2xl">
         {Array.from({ length: skeletonCount }).map((_, i) => (
           <SkeletonCityCard key={i} />
         ))}
@@ -89,8 +90,18 @@ function CitiesList({
     );
   }
 
+  if (data.length < 1) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-white md:bg-gray-50 px-0 md:px-6 py-6 md:py-10 rounded-2xl place-items-center min-h-[200px]">
+        <p className="col-span-full text-center text-gray-600 text-base md:text-lg font-medium">
+          No cities found matching your filters. Try adjusting your search criteria.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-gray-50 p-6 py-10 rounded-2xl">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto bg-white md:bg-gray-50 px-0 md:px-6 py-6 md:py-10 rounded-2xl">
       {data.map((city) => (
         <div
           key={city.name}
@@ -98,30 +109,35 @@ function CitiesList({
             transition-all duration-300 hover:shadow-lg hover:border-blue-500 hover:-translate-y-1"
         >
           <div className="w-full flex flex-col items-start">
-            {/* Header: City Name + Seaside Tag */}
-            <div className="w-full flex justify-between items-center pb-3">
+            <div className="w-full flex flex-col justify-between items-start pb-2">
+              <div className="flex justify-end gap-2 w-full mb-1">
+                {city.country && (
+                  <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-50 px-2 py-0.5 rounded-lg">
+                    <FlagElement country={city.country} width={14} height={14} />
+                    {city.country}
+                  </div>
+                )}
+                {city.seaside && (
+                  <div className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg">
+                    🏖️ Seaside
+                  </div>
+                )}
+              </div>
               <h4
                 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors
-                  max-w-[calc(100%-100px)] overflow-hidden text-ellipsis whitespace-nowrap"
+                  max-w-[calc(100%)] overflow-hidden text-ellipsis whitespace-nowrap"
                 title={city.name}
               >
                 {city.name}
               </h4>
-              {city.seaside && (
-                <div className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg">
-                  🏖️ Seaside
-                </div>
-              )}
             </div>
 
-            {/* Meta: Population */}
-            <div className="flex justify-start items-center gap-2 mb-4">
+            <div className="flex justify-start items-center gap-2 mb-2">
               <span className="text-xs text-gray-500 uppercase tracking-wide">Population</span>
               <span className="text-sm font-medium text-gray-700">{formatNumber(city.size)}</span>
             </div>
 
-            {/* Cost Section */}
-            <div className="w-full flex flex-col border-t border-gray-100 pt-3">
+            <div className="w-full flex flex-col border-t border-gray-100 pt-2">
               <div className="flex items-center justify-between mb-1">
                 <AffordabilityTag amount={city.costOfLiving} />
                 <div className="flex items-baseline gap-1">
@@ -135,7 +151,6 @@ function CitiesList({
               <p className="text-xs text-gray-400 mb-2 leading-snug">Monthly minimum budget</p>
             </div>
 
-            {/* Safety Tags */}
             <div className="w-full border-t border-gray-100 pt-3 space-y-2 text-left">
               <div className="flex flex-col gap-1">
                 {safetyTags(city.safetyRating).map((tag, idx) => (
@@ -152,7 +167,6 @@ function CitiesList({
               </div>
             </div>
 
-            {/* CTA */}
             <Button
               to={`/net-save?cityId=${city.id}`}
               className="mt-6 w-full"

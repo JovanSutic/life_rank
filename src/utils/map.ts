@@ -350,3 +350,32 @@ export function getPinValue(pin: Layer, currency: CurrencyOptions, currencyIndex
 
   return '';
 }
+
+export function setMapWithFilters(filters: Record<string, any>) {
+  let result =
+    '/europe?layerTypeId=2&centerLat=45.00312&centerLng=14.25352&north=56.04725&south=28.14911&east=54.00879&west=-21.005861&zoom=6&rank=false&budget=7000';
+  Object.keys(filters).map((key) => {
+    if (key === 'country' && filters[key] !== 'All countries') {
+      result = `${result}&country=${filters[key]}`;
+    }
+    if (key === 'size' && filters[key]) {
+      result = `${result}&size=${filters[key]}`;
+    }
+    if (key === 'seaside' && filters[key]) {
+      result = `${result}&sea=${filters[key]}`;
+    }
+  });
+
+  return result;
+}
+
+export function setMapRelatedParams(params: Record<string, any>) {
+  let result = '';
+  Object.keys(params).map((key) => {
+    if (params[key]) {
+      result = `${result}&${key}=${params[key]}`;
+    }
+  });
+
+  return result;
+}
