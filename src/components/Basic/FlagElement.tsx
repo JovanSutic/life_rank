@@ -1,8 +1,16 @@
-function FlagElement({ country }: { country: string }) {
+function FlagElement({
+  country,
+  width = 32,
+  height = 32,
+}: {
+  country: string;
+  width?: number;
+  height?: number;
+}) {
   return (
     <>
       {country === 'Italy' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path fill="#fff" d="M10 4H22V28H10z"></path>
           <path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#41914d"></path>
           <path
@@ -22,7 +30,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'Spain' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path fill="#f1c142" d="M1 10H31V22H1z"></path>
           <path d="M5,4H27c2.208,0,4,1.792,4,4v3H1v-3c0-2.208,1.792-4,4-4Z" fill="#a0251e"></path>
           <path
@@ -58,7 +66,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'Portugal' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
           <path
             d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z"
@@ -82,7 +90,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'Czech Republic' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path d="M1,24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V15H1v9Z" fill="#c62d25"></path>
           <path d="M27,4H5c-2.209,0-4,1.791-4,4v8H31V8c0-2.209-1.791-4-4-4Z" fill="#fff"></path>
           <path
@@ -101,7 +109,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'Bulgaria' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path fill="#439571" d="M1 11H31V21H1z"></path>
           <path d="M5,4H27c2.208,0,4,1.792,4,4v4H1v-4c0-2.208,1.792-4,4-4Z" fill="#fff"></path>
           <path
@@ -121,7 +129,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'Serbia' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <path fill="#1a3d73" d="M1 11H31V21H1z"></path>
           <path d="M5,4H27c2.208,0,4,1.792,4,4v4H1v-4c0-2.208,1.792-4,4-4Z" fill="#b8403f"></path>
           <path
@@ -157,7 +165,7 @@ function FlagElement({ country }: { country: string }) {
         </svg>
       )}
       {country === 'All countries' && (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 32 32">
           <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#b6b6b9ff"></rect>
           <path
             d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z"
