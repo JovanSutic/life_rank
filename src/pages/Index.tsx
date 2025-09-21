@@ -1,7 +1,7 @@
 import { trackPageview } from '../utils/analytics';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { faqData, mapCompass } from '../data/taxes';
+import { Link, useSearchParams } from 'react-router-dom';
+import { faqData } from '../data/taxes';
 import Newsletter from '../components/Basic/Newsletter';
 import { fetchCurrency, getCityCards } from '../utils/apiCalls';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +15,7 @@ import { Button } from '../components/Basic/Button';
 import type { CardCity } from '../types/api.types';
 import CitySizeSelector from '../components/Filters/CitySizeSelector';
 import BooleanSwitch from '../components/Filters/BooleanSwitch';
+import { setMapWithFilters } from '../utils/map';
 
 function Index() {
   useEffect(() => {
@@ -24,25 +25,34 @@ function Index() {
   const contentRef = useRef<HTMLDivElement>(null);
   const [cityCards, setCityCards] = useState<CardCity[]>([]);
   const [openFilters, setOpenFilters] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [queryOffset, setQueryOffset] = useState<number>(0);
 
-  const [filters, setFilters] = useState({
-    citySize: null as number | null,
-    isSeasideOnly: false,
-    activeCountry: 'All countries',
-  });
+  const parsedFilters = {
+    country: searchParams.get('country') || 'All countries',
+    seaside: searchParams.get('seaside') === 'true',
+    size: searchParams.get('size') ? Number(searchParams.get('size')) : null,
+  };
 
   const { data, isLoading, error, isFetching, isError } = useQuery({
-    queryKey: ['GET_CITY_CARDS', filters, queryOffset],
+    queryKey: [
+      'GET_CITY_CARDS',
+      {
+        country: parsedFilters.country === 'All countries' ? null : parsedFilters.country,
+        size: parsedFilters.size || 100000000,
+        seaside: parsedFilters.seaside,
+        offset: queryOffset,
+      },
+    ],
     queryFn: () =>
       getCityCards({
         sortBy: 'size',
         take: 9,
         offset: queryOffset,
-        country: filters.activeCountry === 'All countries' ? undefined : filters.activeCountry,
-        size: filters.citySize || 100000000,
-        seaside: filters.isSeasideOnly,
+        country: parsedFilters.country === 'All countries' ? undefined : parsedFilters.country,
+        size: parsedFilters.size || 100000000,
+        seaside: parsedFilters.seaside,
       }),
     enabled: true,
     retry: 1,
@@ -56,8 +66,17 @@ function Index() {
     staleTime: 60 * 60 * 1000,
   });
 
-  function handleFilterChange(newFilters: Partial<typeof filters>) {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+  function handleFilterChange(newFilters: Partial<typeof parsedFilters>) {
+    const newParams = new URLSearchParams(searchParams);
+
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== 'All countries' && value !== false) {
+        newParams.set(key, String(value));
+      } else {
+        newParams.delete(key);
+      }
+    });
+    setSearchParams(newParams);
     setQueryOffset(0);
   }
 
@@ -69,7 +88,7 @@ function Index() {
     } else {
       setCityCards((prev) => [...prev, ...data.data]);
     }
-  }, [data?.data?.[0]?.id]);
+  }, [data?.data?.[0]?.id, data?.data?.[1]?.id, data?.data?.length]);
 
   return (
     <>
@@ -151,21 +170,21 @@ function Index() {
                 >
                   <div className="flex flex-col md:flex-row items-center md:justify-between gap-6 border border-gray-200 rounded-lg bg-white p-4 shadow-sm">
                     <CitySizeSelector
-                      selectedSize={filters.citySize}
-                      onChange={(value) => handleFilterChange({ citySize: value })}
+                      selectedSize={parsedFilters.size}
+                      onChange={(value) => handleFilterChange({ size: value })}
                     />
 
                     <BooleanSwitch
                       label="Seaside only"
-                      value={filters.isSeasideOnly}
-                      onChange={(value) => handleFilterChange({ isSeasideOnly: value })}
+                      value={parsedFilters.seaside}
+                      onChange={(value) => handleFilterChange({ seaside: value })}
                     />
 
                     <div className="w-full md:w-1/2 max-w-xs mx-auto md:mx-0">
                       <CountrySelector
                         countries={['All countries', ...flowCounties]}
-                        selectedCountry={filters.activeCountry}
-                        onChange={(value) => handleFilterChange({ activeCountry: value })}
+                        selectedCountry={parsedFilters.country}
+                        onChange={(value) => handleFilterChange({ country: value })}
                       />
                     </div>
                   </div>
@@ -182,10 +201,10 @@ function Index() {
                   fixed={true}
                   hidden={true}
                 >
-                  <div className="max-w-5xl mx-auto mt-4 mb-4 space-y-3">
+                  <div className="max-w-5xl mx-auto mt-4 mb-0 md:mb-4 space-y-3">
                     <div className="flex justify-end">
                       <Link
-                        to={mapCompass[filters.activeCountry]}
+                        to={`${setMapWithFilters(parsedFilters)}`}
                         className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
                       >
                         Explore the Map View →
@@ -201,6 +220,7 @@ function Index() {
 
                   <Button
                     variant="neutral"
+                    disabled={!data?.hasMore}
                     onClick={() => setQueryOffset(queryOffset + 9)}
                     className="mt-6"
                   >

@@ -5,6 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useMapStore } from '../../stores/mapStore';
 import { flowCounties } from '../../utils/saveNet';
+import { Button } from '../Basic/Button';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const { toggleNewsletterShow, currency, currencyIndex } = useMapStore();
@@ -39,13 +40,13 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
           <h3 className="text-base font-semibold text-center tracking-wide text-gray-700">
             {`Check tax residency effects in ${cityName}`}
           </h3>
-          <Link
+          <Button
             to={`/net-save?cityId=${cityId}`}
-            className="w-max-auto text-center inline-block py-2 px-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200"
-            aria-label={`Calculate your tax rate ${cityName}`}
+            className="w-full"
+            aria-label={`Calculate net income in ${cityName}`}
           >
-            {`Calculate your tax rate`}
-          </Link>
+            Calculate Your Net Income →
+          </Button>
         </section>
       ) : (
         <div className="flex justify-end pb-4">

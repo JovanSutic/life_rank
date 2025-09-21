@@ -291,6 +291,10 @@ export interface CardCity extends City {
 
 export interface CityCardsResponse {
   data: CardCity[];
+  hasMore: boolean;
+  limit: number;
+  offset: number;
+  total: number;
 }
 
 export interface CityCardFilters {
