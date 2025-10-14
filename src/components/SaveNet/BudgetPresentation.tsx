@@ -21,12 +21,9 @@ function YearlySavingsCard({
 }) {
   return (
     <div className="w-full bg-white p-2 space-y-2">
-      {/* Year */}
       <h3 className="text-base text-gray-500">{year}</h3>
 
-      {/* Savings Comparison */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Low Cost */}
         <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl p-4">
           <div className="text-xl">🧺</div>
           <div className="flex flex-col">
@@ -38,7 +35,6 @@ function YearlySavingsCard({
           </div>
         </div>
 
-        {/* Comfort */}
         <div className="flex items-start gap-3 bg-purple-50 border border-purple-100 rounded-xl p-4">
           <div className="text-xl">🌟</div>
           <div className="flex flex-col">
@@ -88,7 +84,6 @@ function BudgetPresentation({
               className={`flex flex-col gap-2 border rounded-xl px-4 py-3 transition-all duration-200
               ${idx === 0 ? 'border-blue-200 bg-blue-50' : 'border-purple-200 bg-purple-50'}`}
             >
-              {/* Label + Monthly cost */}
               <div className="flex flex-col gap-4">
                 <div>
                   <p className="text-sm font-semibold text-gray-700 mb-2">{item.name}</p>

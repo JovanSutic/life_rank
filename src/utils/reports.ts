@@ -45,6 +45,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
     secondBase,
     usTax,
     regional,
+    municipal,
     state,
     credit,
     taxes,
@@ -113,7 +114,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         {
           name: 'Taxes',
           explain: 'regional tax + state tax (with applied allowances) - tax credit',
-          calc: `(${formatCurrency(regional * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+          calc: `(${formatCurrency((regional + municipal) * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
           total: formatCurrency(taxes * rate, currency),
         },
       ]
@@ -131,7 +132,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
           {
             name: 'Taxes',
             explain: 'regional tax + state tax (with applied allowances) - tax credit',
-            calc: `(${formatCurrency(regional * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+            calc: `(${formatCurrency((regional + municipal) * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
             total: formatCurrency(taxes * rate, currency),
           },
         ]
@@ -150,7 +151,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
           {
             name: 'Taxes',
             explain: 'regional tax + state tax (with applied allowances) - tax credit',
-            calc: `(${formatCurrency(regional * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+            calc: `(${formatCurrency((regional + municipal) * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
             total: formatCurrency(taxes * rate, currency),
           },
         ]
@@ -168,7 +169,7 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
           {
             name: 'Taxes',
             explain: 'regional tax + state tax (with applied allowances) - tax credit',
-            calc: `(${formatCurrency(regional * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+            calc: `(${formatCurrency((regional + municipal) * rate, currency)} + ${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
             total: formatCurrency(taxes * rate, currency),
           },
         ]
@@ -177,7 +178,11 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
     if (regime === 'Flat Czech Regime' || regime === 'Flat Serbian Regime') {
       res[res.length - 2].explain = 'taxes and social contributions + business expenses';
       res[res.length - 2].calc =
-        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)})`;
+        `(${formatCurrency(taxes * rate, currency)} + ${regime === 'Flat Serbian Regime' ? formatCurrency(0, currency) : formatCurrency(expenses * rate, currency)})`;
+      res[res.length - 2].total =
+        regime === 'Flat Serbian Regime'
+          ? formatCurrency(taxes * rate, currency)
+          : res[res.length - 2].total;
       res.unshift({
         name: 'Flat monthly payments',
         explain: 'taxes + health insurance + social contributions in single monthly payment',
@@ -395,6 +400,7 @@ function getEarnersData(
     let initialNet = 0;
     let salaryContributions = 0;
     let additionalTax = 0;
+    let municipal = 0;
 
     data.costItems?.forEach((cost) => {
       if (cost.incomeMaker === index) {
@@ -430,6 +436,9 @@ function getEarnersData(
           }
           if (cost.label === 'Regional income tax') {
             regional = cost.amount;
+          }
+          if (cost.label === 'Municipal income tax') {
+            municipal = cost.amount;
           }
           if (cost.label === 'Corporate income tax') {
             corporate = cost.amount;
@@ -468,7 +477,7 @@ function getEarnersData(
 
     const firstBase = gross - expenses - social;
     const secondBase = firstBase - reductions;
-    const taxes = Math.max(0, regional + additionalTax + state - credit);
+    const taxes = Math.max(0, municipal + regional + additionalTax + state - credit);
     const businessCost = taxes + expenses + social;
     const net = initialNet;
 
@@ -498,6 +507,7 @@ function getEarnersData(
         grossSalary,
         salaryContributions,
         additionalTax,
+        municipal,
       },
       data.costItems?.find((item) => item.type === 'tax_type')?.label
     );
