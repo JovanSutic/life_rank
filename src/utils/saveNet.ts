@@ -17,6 +17,7 @@ export const flowCounties: string[] = [
   'Czech Republic',
   'Bulgaria',
   'Serbia',
+  'Romania',
 ];
 
 function getWorkType(type: string, country: string) {

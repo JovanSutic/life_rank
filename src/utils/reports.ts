@@ -700,6 +700,21 @@ export function getRegime(data: ReportDto, country: string) {
             });
           }
         }
+        if (country === 'Romania') {
+          if (cost.label === 'Sistem Real') {
+            result.push({
+              id: index,
+              regime: taxRegimes.romania_real.regime,
+              description: taxRegimes.romania_real.description,
+            });
+          } else {
+            result.push({
+              id: index,
+              regime: taxRegimes.romania_norma.regime,
+              description: taxRegimes.romania_norma.description,
+            });
+          }
+        }
       });
   }
 
