@@ -20,6 +20,30 @@ const BaseEarnerSchema = z.object({
   isUSCitizen: z.boolean(),
 });
 
+const BaseEarnerSchemaFlat = z.object({
+  income: z.number().min(15000),
+  currency: z.enum(currencyEnum),
+  accountantCost: z.number().min(0),
+  expensesCost: z.number().optional(),
+  isUSCitizen: z.boolean(),
+});
+
+const applyCostLogicAndValidation = (
+  schema: typeof BaseEarnerSchemaFlat,
+  incomeThreshold: number,
+  minAccountantCost: number
+) => {
+  return schema.superRefine((data, ctx) => {
+    if (data.income < incomeThreshold && data.accountantCost < minAccountantCost) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['accountantCost'],
+        message: `Monthly accountant costs must be at least ${minAccountantCost} for this income level.`,
+      });
+    }
+  });
+};
+
 const BaseDependentSchema = z
   .object({
     hasSpouse: z.boolean(),
@@ -71,13 +95,17 @@ const ItalyEarnerSchema = BaseEarnerSchema.extend({
   }
 });
 
-const SerbianEarnersSchema = BaseEarnerSchema.extend({
+const SerbianEarnerBase = BaseEarnerSchemaFlat.extend({
   age: z
     .number()
     .min(18, { message: 'Can not be younger than 18' })
     .max(70, { message: 'Can not be older than 70' }),
   isIndependent: z.boolean().optional(),
 });
+
+const SerbianEarnersSchema = applyCostLogicAndValidation(SerbianEarnerBase, 50000, 100);
+
+const RomaniaEarnersSchema = applyCostLogicAndValidation(BaseEarnerSchemaFlat, 25000, 100);
 
 const SpainSchema = z.object({
   earners: z.array(SpainEarnerSchema).min(1).max(2, 'We support up to two income earners'),
@@ -121,11 +149,19 @@ const ItalySchema = z.object({
   }),
 });
 
+const RomaniaSchema = z.object({
+  earners: z.array(RomaniaEarnersSchema).min(1).max(2, 'We support up to two income earners'),
+  dependents: BaseDependentSchema.extend({
+    children: z.array(BaseChildSchema),
+  }),
+});
+
 export const getSchema = (country: string) => {
   if (country === 'Bulgaria') return BulgariaSchema;
   if (country === 'Spain') return SpainSchema;
   if (country === 'Italy') return ItalySchema;
   if (country === 'Czech Republic') return CzechSchema;
+  if (country === 'Romania') return RomaniaSchema;
   if (country === 'Serbia') return SerbianSchema;
   return PortugalSchema;
 };

@@ -169,8 +169,8 @@ function ReportResult({
                 />
               </div>
               <DisplayBox
-                title={`${city?.country || ''} - ${regimes[0].regime}`}
-                message={regimes[0].description}
+                title={`${city?.country || ''} - ${regimes[0]?.regime}`}
+                message={regimes[0]?.description}
                 color="blue"
               />
             </>
@@ -181,8 +181,8 @@ function ReportResult({
                 <IncomeBreakdownTable items={earners[1]} name={'earner 2'} />
               </div>
               <DisplayBox
-                title={`${city?.country || ''} - ${regimes[1].regime}`}
-                message={regimes[1].description}
+                title={`${city?.country || ''} - ${regimes[1]?.regime}`}
+                message={regimes[1]?.description}
                 color="blue"
               />
             </>
