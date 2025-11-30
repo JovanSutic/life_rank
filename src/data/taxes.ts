@@ -240,6 +240,32 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         'Serbia does not have a double taxation treaty with the United States, which means that U.S. require careful tax planning and extra effort for being compliant with IRS obligations. Also, the lack of this treaty can result in more tax costs for investment incomes like bond coupons and stock dividends.',
     },
   ],
+  Romania: [
+    {
+      id: 1,
+      title: 'Microcompany Tax Regime (Low Revenue Tax)',
+      message:
+        'This is a major incentive for small businesses (SRLs) with annual revenues below €500,000. These companies pay corporate income tax of only 1% of total revenue (if they have at least one employee) or 3% of revenue (if they have no employees). This revenue-based taxation is a significant reduction from the standard 16% corporate profit tax, simplifying compliance and lowering the burden for new or small operations.',
+    },
+    {
+      id: 2,
+      title: 'Favorable Capital Gains Tax on Securities',
+      message:
+        'Gains from the sale of publicly traded stocks and securities are subject to a highly favorable flat rate depending on the holding period. **Long-term gains (held for over 365 days)** are taxed at only **1%**, while **short-term gains (held for less than 365 days)** are taxed at **3%**. This applies to transactions made through licensed Romanian intermediaries and is significantly lower than the standard 10% PIT rate.',
+    },
+    {
+      id: 3,
+      title: 'No General Wealth or Inheritance Tax',
+      message:
+        'Romania does not impose a general tax on global net wealth. Furthermore, there is **no inheritance tax** on assets received, provided the legal procedures (like finalizing the inheritance) are completed within **2 years** of the death of the owner. This makes it an attractive jurisdiction for HNW individuals concerned about multi-generational wealth transfer taxes.',
+    },
+    {
+      id: 4,
+      title: 'Special Tax on High-Value Assets',
+      message:
+        "While there is no general Wealth Tax, Romania recently introduced a 'Special Tax on High-Value Assets.' This tax applies to residential real estate with a tax value exceeding approx. €500,000 and cars with an acquisition value exceeding approx. €75,000. The tax is 0.3% on the value exceeding the threshold.",
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
@@ -386,6 +412,18 @@ export const taxRegimes: Record<string, TaxRegime> = {
     regime: 'Self employed with bookkeeping',
     description:
       'This calculation is based on registering as self employed with mandatory bookkeeping (not simplified) that allows you to pay yourself a minimal salary with income tax and complete social contributions and withdraw your profits with paying profit tax that is significantly lower that total of income tax and complete social contributions.',
+  },
+  romania_real: {
+    country: 'Romania',
+    regime: 'Regim Real - Income Tax on Net Profit',
+    description:
+      'This calculation is based on registering as an Authorized Individual Person (PFA) under the Regim Real system, where income tax (10%) and social contributions (CAS/CASS) are calculated on the actual net profit (total revenue minus deductible business expenses). It requires double-entry or simplified bookkeeping, allows for deduction of business expenses, and generally becomes advantageous for individuals with moderate to high incomes and significant verifiable operational costs.',
+  },
+  romania_norma: {
+    country: 'Romania',
+    regime: 'Norma de Venit - Fixed Income Standard',
+    description:
+      'This calculation is based on registering as an Authorized Individual Person (PFA) under the Norma de Venit system. Taxation (10% income tax and social contributions) is applied to a fixed, pre-determined annual income amount (Normă de Venit) set by local tax authorities based on the nature of the activity and location, regardless of actual revenue or expenses. It provides maximum simplicity with virtually no accounting requirements and predictable monthly/quarterly tax payments, making it ideal for low-to-moderate gross incomes and minimal business expenses.',
   },
 };
 

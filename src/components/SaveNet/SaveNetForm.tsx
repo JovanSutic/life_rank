@@ -12,6 +12,7 @@ import { currencyMap } from '../../utils/budgetMaps';
 import InfoModals from './InfoModals';
 import Modal from '../Basic/Modal';
 import { Button } from '../Basic/Button';
+import { useAccountantCostOverride } from './useAccountantCostOverride';
 
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
@@ -51,10 +52,6 @@ const StepIndicator: React.FC<{ step: number; total: number }> = ({ step, total 
   );
 };
 
-// -----------------------------
-// Main Component
-// -----------------------------
-
 function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   const totalSteps = 3;
   const [step, setStep] = useState(1);
@@ -73,7 +70,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
     trigger,
     reset,
   } = useForm<FormValues>({
@@ -95,6 +92,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   });
 
   const children = watch('dependents.children');
+  const earners = watch('earners');
   const watchedValues = watch();
 
   const {
@@ -129,6 +127,8 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     sendData(fullData);
   };
 
+  const accountingOverride = useAccountantCostOverride(earners, country);
+
   const canAddEarner = earnerFields.length < 2;
   const hasSpouse = watch('dependents.hasSpouse');
   const spouseDependent = watch('dependents.spouseDependent');
@@ -145,6 +145,16 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
       });
     }
   }, [earnerFields.length, spouseDependent]);
+
+  useEffect(() => {
+    if (accountingOverride.length) {
+      accountingOverride.forEach((item) => {
+        if (item.isViolation && isValid) {
+          setValue(`earners.${item.index}.accountantCost`, item.value);
+        }
+      });
+    }
+  }, [accountingOverride, isValid]);
 
   const renderField = (item: FormItem, idx?: number) => {
     if (item.condition) {
