@@ -363,6 +363,43 @@ function getBreakdown(data: Record<string, any>, regime?: string) {
         ]
       );
     }
+    if (regime === 'Sistem Real') {
+      res[res.length - 2].explain =
+        'taxes + business expenses + social contributions + health insurance';
+      res[res.length - 2].calc =
+        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)} + ${formatCurrency(health * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency((businessCost + health) * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency((businessCost + health) * rate, currency)})`;
+
+      res.unshift(
+        ...[
+          {
+            name: 'Taxable base',
+            explain: 'gross income - expenses - social contributions',
+            calc: `(${formatCurrency(gross * rate, currency)} - ${formatCurrency(expenses * rate, currency)} - ${formatCurrency(social * rate, currency)})`,
+            total: formatCurrency((gross - expenses - social) * rate, currency),
+          },
+          {
+            name: 'Taxes',
+            explain: 'state tax - tax credit',
+            calc: `(${formatCurrency(state * rate, currency)} - ${formatCurrency(credit * rate, currency)})`,
+            total: formatCurrency(taxes * rate, currency),
+          },
+        ]
+      );
+    }
+    if (regime === 'Norma de Venit') {
+      res[res.length - 2].explain =
+        'taxes + business expenses + social contributions + health insurance';
+      res[res.length - 2].calc =
+        `(${formatCurrency(taxes * rate, currency)} + ${formatCurrency(expenses * rate, currency)} + ${formatCurrency(social * rate, currency)} + ${formatCurrency(health * rate, currency)})`;
+      res[res.length - 2].total = formatCurrency((businessCost + health) * rate, currency);
+
+      res[res.length - 1].calc =
+        `(${formatCurrency(gross * rate, currency)} - ${formatCurrency((businessCost + health) * rate, currency)})`;
+    }
   }
 
   return res;

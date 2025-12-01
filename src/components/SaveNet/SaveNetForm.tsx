@@ -70,7 +70,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors },
     trigger,
     reset,
   } = useForm<FormValues>({
@@ -148,13 +148,14 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
   useEffect(() => {
     if (accountingOverride.length) {
+      const hasNoErrors = !Object.keys(errors).length;
       accountingOverride.forEach((item) => {
-        if (item.isViolation && isValid) {
+        if (item.isViolation && hasNoErrors) {
           setValue(`earners.${item.index}.accountantCost`, item.value);
         }
       });
     }
-  }, [accountingOverride, isValid]);
+  }, [accountingOverride, Object.keys(errors).length]);
 
   const renderField = (item: FormItem, idx?: number) => {
     if (item.condition) {
