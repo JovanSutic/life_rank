@@ -49,7 +49,7 @@ export const useAccountantCostOverride = (
           value: 0,
           index,
         });
-      } else {
+      } else if (item.income >= countryLimitMap[country] && item.accountantCost === 0) {
         defaultResult.push({
           isViolation: true,
           value: 120,

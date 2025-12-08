@@ -34,7 +34,7 @@ const applyCostLogicAndValidation = (
   minAccountantCost: number
 ) => {
   return schema.superRefine((data, ctx) => {
-    if (data.income < incomeThreshold && data.accountantCost < minAccountantCost) {
+    if (data.income > incomeThreshold && data.accountantCost < minAccountantCost) {
       ctx.addIssue({
         code: 'custom',
         path: ['accountantCost'],
@@ -105,7 +105,7 @@ const SerbianEarnerBase = BaseEarnerSchemaFlat.extend({
 
 const SerbianEarnersSchema = applyCostLogicAndValidation(SerbianEarnerBase, 50000, 100);
 
-const RomaniaEarnersSchema = applyCostLogicAndValidation(BaseEarnerSchemaFlat, 25000, 100);
+const RomaniaEarnersSchema = applyCostLogicAndValidation(BaseEarnerSchemaFlat, 25000, 120);
 
 const SpainSchema = z.object({
   earners: z.array(SpainEarnerSchema).min(1).max(2, 'We support up to two income earners'),
