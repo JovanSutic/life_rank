@@ -752,6 +752,13 @@ export function getRegime(data: ReportDto, country: string) {
             });
           }
         }
+        if (country === 'Georgia') {
+          result.push({
+            id: index,
+            regime: taxRegimes.georgia_ie.regime,
+            description: taxRegimes.georgia_ie.description,
+          });
+        }
       });
   }
 

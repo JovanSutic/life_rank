@@ -156,6 +156,13 @@ const RomaniaSchema = z.object({
   }),
 });
 
+const GeorgiaSchema = z.object({
+  earners: z.array(BaseEarnerSchema).min(1).max(2, 'We support up to two income earners'),
+  dependents: BaseDependentSchema.extend({
+    children: z.array(BaseChildSchema),
+  }),
+});
+
 export const getSchema = (country: string) => {
   if (country === 'Bulgaria') return BulgariaSchema;
   if (country === 'Spain') return SpainSchema;
@@ -163,5 +170,6 @@ export const getSchema = (country: string) => {
   if (country === 'Czech Republic') return CzechSchema;
   if (country === 'Romania') return RomaniaSchema;
   if (country === 'Serbia') return SerbianSchema;
+  if (country === 'Georgia') return GeorgiaSchema;
   return PortugalSchema;
 };
