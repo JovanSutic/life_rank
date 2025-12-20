@@ -266,6 +266,32 @@ export const otherTaxesInitial: Record<string, DisplayItems[]> = {
         "While there is no general Wealth Tax, Romania recently introduced a 'Special Tax on High-Value Assets.' This tax applies to residential real estate with a tax value exceeding approx. €500,000 and cars with an acquisition value exceeding approx. €75,000. The tax is 0.3% on the value exceeding the threshold.",
     },
   ],
+  Georgia: [
+    {
+      id: 1,
+      title: '0% Tax on Foreign Income',
+      message:
+        'Georgia applies a territorial tax system, meaning that income sourced outside Georgia is not subject to personal income tax for Georgian tax residents. This includes foreign employment income, freelance income from foreign clients, and investment income from foreign stocks, bonds, ETFs, and other financial instruments, resulting in a 0% tax rate on qualifying foreign-source income.',
+    },
+    {
+      id: 2,
+      title: 'Crypto-Friendly Tax Treatment',
+      message:
+        'Income and capital gains from cryptocurrencies are generally not taxed for individual tax residents in Georgia. Crypto gains are treated as non-Georgian source income, making Georgia one of the most crypto-friendly jurisdictions in Europe for individual investors.',
+    },
+    {
+      id: 3,
+      title: '1% Turnover Tax for Individual Entrepreneurs',
+      message:
+        'Individual Entrepreneurs (IEs) registered under Georgia’s Small Business Status benefit from a highly attractive 1% tax on gross turnover (up to the statutory annual limit). This tax replaces profit-based income tax and comes with minimal bookkeeping and reporting requirements, making it especially popular with freelancers and remote professionals.',
+    },
+    {
+      id: 4,
+      title: 'No Wealth, Inheritance, or Gift Tax',
+      message:
+        'Georgia does not impose a general wealth tax, inheritance tax, or gift tax for individuals. Assets can be transferred to heirs or gifted without triggering additional taxation, which is particularly appealing for long-term wealth planning.',
+    },
+  ],
 };
 
 export const otherTaxTitles: Record<string, string> = {
@@ -424,6 +450,12 @@ export const taxRegimes: Record<string, TaxRegime> = {
     regime: 'Norma de Venit - Fixed Income Standard',
     description:
       'This calculation is based on registering as an Authorized Individual Person (PFA) under the Norma de Venit system. Taxation (10% income tax and social contributions) is applied to a fixed, pre-determined annual income amount (Normă de Venit) set by local tax authorities based on the nature of the activity and location, regardless of actual revenue or expenses. It provides maximum simplicity with virtually no accounting requirements and predictable monthly/quarterly tax payments, making it ideal for low-to-moderate gross incomes and minimal business expenses.',
+  },
+  georgia_ie: {
+    country: 'Georgia',
+    regime: 'Individual Entrepreneur (IE)',
+    description:
+      "You're seeing calculations based on the Individual Entrepreneur (IE) regime in Georgia, typically combined with Small Business Status. This regime applies a low turnover-based tax (usually 1% on annual revenue up to the statutory limit) instead of profit-based income tax. It features minimal bookkeeping, no corporate tax, and simplified reporting, making it highly attractive for freelancers, consultants, and remote workers with primarily foreign clients.",
   },
 };
 

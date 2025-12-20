@@ -18,6 +18,7 @@ export const flowCounties: string[] = [
   'Bulgaria',
   'Serbia',
   'Romania',
+  'Georgia',
 ];
 
 function getWorkType(type: string, country: string) {
@@ -239,6 +240,10 @@ export function getBaseData(country: string) {
 
   if (country === 'Serbia') {
     baseEarner.age = 18;
+  }
+
+  if (country === 'Georgia') {
+    baseEarner.accountantCost = 100;
   }
 
   return {
