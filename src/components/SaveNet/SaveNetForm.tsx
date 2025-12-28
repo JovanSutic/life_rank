@@ -13,6 +13,7 @@ import InfoModals from './InfoModals';
 import Modal from '../Basic/Modal';
 import { Button } from '../Basic/Button';
 import { useAccountantCostOverride } from './useAccountantCostOverride';
+import { Link } from 'react-router-dom';
 
 interface SaveNetFormProps {
   sendData: (data: ReportUserData) => void;
@@ -219,7 +220,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
             {label}
             <select
               {...register(fieldName as any)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               {item.options?.map((option) => (
                 <option key={option} value={option}>
@@ -233,7 +234,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
 
       case 'checkbox':
         return (
-          <div key={fieldName} className="flex items-center gap-3">
+          <div key={fieldName} className="flex items-center gap-3 pb-1">
             <input
               type="checkbox"
               id={`earners[${idx}].${item.name}`}
@@ -269,7 +270,7 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto pb-[60px] sm:pb-0">
       <Modal
         show={isModal}
         close={() => {
@@ -555,6 +556,23 @@ function SaveNetForm({ sendData, cityId, country }: SaveNetFormProps) {
               </Button>
             )}
           </div>
+          {step === 1 && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-4 sm:pt-10">
+              <Link
+                to="/europe?layerTypeId=2&centerLat=45.00312&centerLng=14.25352&north=56.04725&south=28.14911&east=54.00879&west=-21.005861&zoom=6&rank=false&budget=7000"
+                className="flex justify-center sm:justify-start items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                Explore the Map View →
+              </Link>
+
+              <Link
+                to="/"
+                className="flex justify-center sm:justify-end items-center text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Checkout Homepage →
+              </Link>
+            </div>
+          )}
         </div>
       </form>
     </div>
