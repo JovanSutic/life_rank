@@ -7,7 +7,6 @@ import { fetchCurrency, getCityCards } from '../utils/apiCalls';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStateWrapper from '../components/AsyncWrapper';
 import CitiesList from '../components/Cities/CitiesList';
-import { flowCounties } from '../utils/saveNet';
 import FaqElement from '../components/Basic/Faq';
 import CurrencySelector from '../components/Basic/CurrencySelector';
 import CountrySelector from '../components/Filters/CountrySelector';
@@ -16,6 +15,7 @@ import type { CardCity } from '../types/api.types';
 import CitySizeSelector from '../components/Filters/CitySizeSelector';
 import BooleanSwitch from '../components/Filters/BooleanSwitch';
 import { setMapWithFilters } from '../utils/map';
+import { useCalculatorCountries } from '../hooks/useCalculatorCountries';
 
 function Index() {
   useEffect(() => {
@@ -34,6 +34,14 @@ function Index() {
     seaside: searchParams.get('seaside') === 'true',
     size: searchParams.get('size') ? Number(searchParams.get('size')) : null,
   };
+
+  const {
+    data: countriesData,
+    isLoading: countriesIsLoading,
+    isFetching: countriesIsFetching,
+    isError: countriesIsError,
+    error: countriesError,
+  } = useCalculatorCountries();
 
   const { data, isLoading, error, isFetching, isError } = useQuery({
     queryKey: [
@@ -182,7 +190,10 @@ function Index() {
 
                     <div className="w-full md:w-1/2 max-w-xs mx-auto md:mx-0">
                       <CountrySelector
-                        countries={['All countries', ...flowCounties]}
+                        countries={[
+                          'All countries',
+                          ...(countriesData || []).map((item) => item.name),
+                        ]}
                         selectedCountry={parsedFilters.country}
                         onChange={(value) => handleFilterChange({ country: value })}
                       />
@@ -195,9 +206,9 @@ function Index() {
             <div className="flex flex-col gap-6" id="cities-start">
               <div>
                 <AsyncStateWrapper
-                  isLoading={isFetching || isLoading}
-                  isError={isError}
-                  error={error}
+                  isLoading={isFetching || isLoading || countriesIsFetching || countriesIsLoading}
+                  isError={isError || countriesIsError}
+                  error={error || countriesError}
                   fixed={true}
                   hidden={true}
                 >
