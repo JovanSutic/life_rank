@@ -305,3 +305,8 @@ export interface CityCardFilters {
   size?: number;
   seaside?: boolean;
 }
+
+export interface CountryDto {
+  id: number;
+  name: string;
+}

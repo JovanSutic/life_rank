@@ -7,6 +7,7 @@ import type {
   CityCardsResponse,
   CityContext,
   CityFeel,
+  CountryDto,
   CrimesSummary,
   Currency,
   FieldData,
@@ -248,6 +249,16 @@ export async function getCityCards(filters: CityCardFilters): Promise<CityCardsR
     return res.data;
   } catch (error) {
     console.error('Failed to fetch layer types:', error);
+    throw error;
+  }
+}
+
+export async function getCalculatorCountries(): Promise<CountryDto[]> {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/countries?definitionId=50`);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch calculator countries:', error);
     throw error;
   }
 }

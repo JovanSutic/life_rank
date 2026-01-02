@@ -4,12 +4,14 @@ import type { CityPanelData } from '../../types/map.types';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useMapStore } from '../../stores/mapStore';
-import { flowCounties } from '../../utils/saveNet';
 import { Button } from '../Basic/Button';
+import { useCalculatorCountries } from '../../hooks/useCalculatorCountries';
 
 const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
   const { toggleNewsletterShow, currency, currencyIndex } = useMapStore();
   const [searchParams] = useSearchParams();
+
+  const { data: countriesData } = useCalculatorCountries();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { cityId, cityName, countryName, inhabitants, budgets, safety, countryId } = cityData;
@@ -35,7 +37,7 @@ const CityInfoPanel = ({ cityData }: { cityData: CityPanelData }) => {
         <p className="text-gray-500 text-sm">Population: {inhabitants.toLocaleString()}</p>
       </div>
 
-      {flowCounties.includes(countryName) ? (
+      {(countriesData || []).filter((item) => item.name === countryName) ? (
         <section className="flex flex-col gap-4 justify-center p-3 rounded-lg bg-slate-50 border border-gray-200 shadow-sm mb-3">
           <h3 className="text-base font-semibold text-center tracking-wide text-gray-700">
             {`Check tax residency effects in ${cityName}`}
