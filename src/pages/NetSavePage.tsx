@@ -7,11 +7,11 @@ import AsyncStateWrapper from '../components/AsyncWrapper';
 import WelcomeScreen from '../components/SaveNet/WelcomeScreen';
 import TeaserScreen from '../components/SaveNet/TeaserScreen';
 import InvalidScreen from '../components/SaveNet/InvalidScreen';
-import { flowCounties } from '../utils/saveNet';
 import type { ReportUserData } from '../types/api.types';
 import { checkAndRefreshToken, getIdToken } from '../utils/token';
 import TopLogo from '../components/Basic/TopLogo';
 import { trackEvent } from '../utils/analytics';
+import { useCalculatorCountries } from '../hooks/useCalculatorCountries';
 
 function NetSavePage() {
   const [welcome, setWelcome] = useState<boolean>(true);
@@ -20,6 +20,8 @@ function NetSavePage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const cityId = searchParams.get('cityId');
+
+  const { data: countriesData } = useCalculatorCountries();
 
   const {
     data: cityData,
@@ -117,12 +119,12 @@ function NetSavePage() {
   }
 
   useEffect(() => {
-    if (citySuccess) {
-      if (!flowCounties.includes(cityData.country)) {
+    if (citySuccess && countriesData?.length) {
+      if (!countriesData.find((item) => item.name === cityData.country)) {
         setInvalidCity(true);
       }
     }
-  }, [citySuccess, cityData?.country]);
+  }, [citySuccess, cityData?.country, countriesData]);
 
   return (
     <>
